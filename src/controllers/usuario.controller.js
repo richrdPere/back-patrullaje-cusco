@@ -126,13 +126,30 @@ const obtenerUsuarioPorId = async (req, res) => {
 
     const usuario = await Usuario.findByPk(id, {
       attributes: { exclude: ["password"] },
+      include: [
+        {
+          model: Roles,
+          as: 'roles',
+          attributes: ['nombre'],
+          through: { attributes: [] } // oculta tabla intermedia
+        }
+      ]
     });
 
     if (!usuario) {
       return res.status(404).json({ message: "Usuario no encontrado" });
     }
 
-    res.json(usuario);
+    // Convertir a JSON y mapear roles
+    const user = usuario.toJSON();
+
+    const usuarioFormateado = {
+      ...user,
+      roles: user.roles?.map(r => r.nombre) || []
+    };
+
+    res.json(usuarioFormateado);
+
   } catch (error) {
     res.status(500).json({
       message: "Error al obtener usuario",
@@ -268,26 +285,62 @@ const crearUsuario = async (req, res) => {
 // 4. ACTUALIZAR USUARIO
 // ======================================================
 const actualizarUsuario = async (req, res) => {
+  const t = await sequelize.transaction();
+
   try {
     const { id } = req.params;
+    const { roles, ...data } = req.body;
 
-    const usuario = await Usuario.findByPk(id);
+    const usuario = await Usuario.findByPk(id, { transaction: t });
 
     if (!usuario) {
+      await t.rollback();
       return res.status(404).json({ message: "Usuario no encontrado" });
     }
 
-    const data = req.body;
-
-    // Si se actualiza password, volver a encriptar
+    // Password
     if (data.password) {
-      data.password = await bcrypt.hash(data.password, 10);
+      data.password = await bcrypt.hash(data.password, 12);
     }
 
-    await usuario.update(data);
+    // Actualizar usuario
+    await usuario.update(data, { transaction: t });
+
+    // Actualizar roles
+    if (roles && Array.isArray(roles)) {
+
+      // 1. Buscar roles en DB
+      const rolesDB = await Roles.findAll({
+        where: {
+          nombre: {
+            [Op.in]: roles
+          }
+        },
+        transaction: t
+      });
+
+      // 2. Eliminar roles actuales
+      await UsuarioRol.destroy({
+        where: { usuario_id: id },
+        transaction: t
+      });
+
+      // 3. Insertar nuevos roles
+      const nuevosRoles = rolesDB.map(r => ({
+        usuario_id: id,
+        rol_id: r.id
+      }));
+
+      await UsuarioRol.bulkCreate(nuevosRoles, { transaction: t });
+    }
+
+    await t.commit();
 
     res.json({ message: "Usuario actualizado correctamente" });
+
   } catch (error) {
+    await t.rollback();
+
     res.status(500).json({
       message: "Error al actualizar usuario",
       error: error.message,

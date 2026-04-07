@@ -10,6 +10,7 @@ const patrullajeProgramadoRoutes = require("./patrullaje_programado.routes");
 const alertaRoutes = require("./alerta.routes");
 const unidadPatrullajeRoutes = require("./unidad_patrullaje.routes");
 const unidadSerenoRoutes = require("./unidad_sereno.route");
+const policiasRoutes = require("./policia.routes");
 
 // usar rutas
 router.use("/auth", authRoutes);
@@ -20,6 +21,7 @@ router.use("/patrullaje-programado", patrullajeProgramadoRoutes);
 router.use("/alertas", alertaRoutes);
 router.use("/unidad-patrullaje", unidadPatrullajeRoutes);
 router.use("/unidad-sereno", unidadSerenoRoutes);
+router.use("/policias", policiasRoutes);
 
 // exportar router
 module.exports = router;
