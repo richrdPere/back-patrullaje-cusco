@@ -11,7 +11,8 @@ const {
   actualizarUsuario,
   desactivarUsuario,
   activarUsuario,
-  eliminarUsuario
+  eliminarUsuario,
+  getSerenosAndConductores
 } = require("../controllers/usuario.controller");
 
 // ==========================
@@ -19,11 +20,13 @@ const {
 // ==========================
 
 router.get("/", verificarToken, listarUsuarios);
+router.get("/serenos", verificarToken, getSerenosAndConductores);
 router.get("/:id", verificarToken, obtenerUsuarioPorId);
 router.post("/", verificarToken, crearUsuario);
 router.put("/:id", verificarToken, actualizarUsuario);
 router.patch("/deshabilitar/:id", verificarToken, desactivarUsuario);
 router.patch("/habilitar/:id", verificarToken, activarUsuario);
 router.delete("/:id", verificarToken, eliminarUsuario);
+
 
 module.exports = router;

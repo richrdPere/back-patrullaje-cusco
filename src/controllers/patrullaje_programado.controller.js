@@ -1,16 +1,21 @@
 const db = require('../models');
+const { Op } = require("sequelize");
 
-const Usuario = db.Usuario;
 const PatrullajeProgramado = db.PatrullajeProgramado;
-const Zonas = db.Zonas;
+const PatrullajePersonal = db.PatrullajePersonal;
 const UnidadPatrullaje = db.UnidadPatrullaje;
-
-
+const Usuario = db.Usuario;
+const Roles = db.Roles;
+const Policia = db.Policia;
+const Zonas = db.Zonas;
 
 // ======================================================
-// CREAR PATRULLAJE
+// 1. CREAR PATRULLAJE
 // ======================================================
-const crearPatrullaje = async (req, res) => {
+const newPatrullajeProgramado = async (req, res) => {
+
+  const t = await db.sequelize.transaction();
+
   try {
     const {
       unidad_id,
@@ -18,7 +23,9 @@ const crearPatrullaje = async (req, res) => {
       fecha,
       hora_inicio,
       hora_fin,
-      descripcion
+      descripcion,
+      serenos,
+      policias
     } = req.body;
 
     const unidad = await UnidadPatrullaje.findByPk(unidad_id);
@@ -29,6 +36,31 @@ const crearPatrullaje = async (req, res) => {
       });
     }
 
+    // Validar existencia de serenos
+    const serenosDB = await Usuario.findAll({
+      where: { id: serenos }
+    });
+
+    if (serenosDB.length !== serenos.length) {
+      return res.status(400).json({
+        message: "Uno o más serenos no existen"
+      });
+    }
+
+    // Validar existencia de policías
+    const policiasDB = await Policia.findAll({
+      where: { id: policias }
+    });
+
+    if (policiasDB.length !== policias.length) {
+      return res.status(400).json({
+        message: "Uno o más policías no existen"
+      });
+    }
+
+    // =========================
+    // - CREAR PATRULLAJE
+    // =========================
     const patrullaje = await PatrullajeProgramado.create({
       unidad_id,
       zona_id,
@@ -38,48 +70,184 @@ const crearPatrullaje = async (req, res) => {
       descripcion
     });
 
+    // =========================
+    // - INSERTAR PERSONAL
+    // =========================
+    const personalData = [
+      ...serenos.map(id => ({
+        patrullaje_id: patrullaje.id,
+        tipo_personal: "SERENO",
+        personal_id: id
+      })),
+      ...policias.map(id => ({
+        patrullaje_id: patrullaje.id,
+        tipo_personal: "POLICIA",
+        personal_id: id
+      }))
+    ];
+
+    await PatrullajePersonal.bulkCreate(personalData, { transaction: t });
+
+    // =========================
+    // - COMMIT
+    // =========================
+    await t.commit();
+
     res.status(201).json({
       message: "Patrullaje programado correctamente",
       patrullaje
     });
 
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    await t.rollback();
+
+    res.status(500).json({
+      message: "Error al crear patrullaje",
+      error: error.message
+    });
   }
 };
 
 // ======================================================
-// LISTAR PATRULLAJES
+// 2.- LISTAR PATRULLAJES PROGRAMADO + PAGINATED Y FILTERS
 // ======================================================
-const listarPatrullajes = async (req, res) => {
+const getPatrullajesProgramadosPaginated = async (req, res) => {
   try {
+    let {
+      page = 1,
+      limit = 5,
+      fecha,
+      descripcion
+    } = req.query;
 
-    const patrullajes = await PatrullajeProgramado.findAll({
+    // =========================
+    // - NORMALIZAR PAGINACIÓN
+    // =========================
+    page = parseInt(page);
+    limit = parseInt(limit);
 
+    const offset = (page - 1) * limit;
+
+    // =========================
+    // - FILTROS DINÁMICOS
+    // =========================
+    let where = {};
+
+    if (fecha) {
+      where.fecha = fecha;
+    }
+
+    if (descripcion) {
+      where.descripcion = {
+        [Op.like]: `%${descripcion}%`
+      };
+    }
+
+    // =========================
+    // - CONSULTA
+    // =========================
+    const { count, rows } = await PatrullajeProgramado.findAndCountAll({
+      where,
+      limit,
+      offset,
+      order: [["fecha", "DESC"], ["hora_inicio", "ASC"]],
       include: [
         {
-          model: UnidadPatrullaje,
-          as: "unidad"
-        },
-        {
-          model: Zonas,
-          as: "zona"
+          model: PatrullajePersonal,
+          as: "personal",
+          include: [
+            {
+              model: Usuario,
+              as: "usuario",
+              attributes: ["id", "nombre", "apellidos"],
+              include: [
+                {
+                  model: Roles,
+                  attributes: ["nombre"],
+                  as: 'roles',
+                  through: { attributes: [] }
+                }
+              ]
+            },
+            {
+              model: Policia,
+              as: "policia",
+              include: [
+                {
+                  model: Usuario,
+                  as: "usuario",
+                  attributes: ["id", "nombre", "apellidos"]
+                }
+              ]
+            }
+          ]
         }
       ],
-      order: [["fecha", "DESC"]]
+      distinct: true
     });
+
+    // =========================
+    // - FORMATEAR RESPUESTA
+    // =========================
+    const data = rows.map(p => {
+      const patrullaje = p.toJSON();
+
+      const serenos = [];
+      const policias = [];
+
+      patrullaje.personal.forEach(item => {
+
+        if (item.tipo_personal === "SERENO" && item.usuario) {
+          serenos.push({
+            id: item.usuario.id,
+            nombre: item.usuario.nombre,
+            apellidos: item.usuario.apellidos,
+            roles: item.usuario.roles?.map(r => r.nombre) || []
+          });
+        }
+
+        if (item.tipo_personal === "POLICIA" && item.policia) {
+          policias.push({
+            id: item.policia.id,
+            grado: item.policia.grado,
+            comisaria: item.policia.comisaria,
+            usuario: item.policia.Usuario
+          });
+        }
+
+      });
+
+      return {
+        ...patrullaje,
+        serenos,
+        policias,
+        personal: undefined // opcional: ocultar crudo
+      };
+    });
+
+
+    // =========================
+    // - RESPUESTA PAGINADA
+    // =========================
     res.json({
-      total: patrullajes.length,
-      patrullajes
+      total: count,
+      page,
+      limit,
+      totalPages: Math.ceil(count / limit),
+      data
     });
 
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.status(500).json({
+      message: "Error al listar patrullajes",
+      error: error.message
+    });
   }
 };
 
+
 // ======================================================
-// OBTENER PATRULLAJE POR ID
+// 3. OBTENER PATRULLAJE PROGRAMADO POR ID
 // ======================================================
 const obtenerPatrullajePorId = async (req, res) => {
   try {
@@ -120,6 +288,36 @@ const obtenerPatrullajePorId = async (req, res) => {
     }
 
     res.json(patrullaje);
+
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+// ======================================================
+// 4. LISTAR TODOS PATRULLAJE PROGRAMADO
+// ======================================================
+const listarPatrullajes = async (req, res) => {
+  try {
+
+    const patrullajes = await PatrullajeProgramado.findAll({
+
+      include: [
+        {
+          model: UnidadPatrullaje,
+          as: "unidad"
+        },
+        {
+          model: Zonas,
+          as: "zona"
+        }
+      ],
+      order: [["fecha", "DESC"]]
+    });
+    res.json({
+      total: patrullajes.length,
+      patrullajes
+    });
 
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -185,7 +383,6 @@ const updatePatrullaje = async (req, res) => {
 // ======================================================
 // ELIMINAR PATRULLAJE
 // ======================================================
-
 const deletePatrullaje = async (req, res) => {
 
   try {
@@ -214,7 +411,8 @@ const deletePatrullaje = async (req, res) => {
 
 
 module.exports = {
-  crearPatrullaje,
+  newPatrullajeProgramado,
+  getPatrullajesProgramadosPaginated,
   listarPatrullajes,
   obtenerPatrullajePorId,
   finalizarPatrullaje,

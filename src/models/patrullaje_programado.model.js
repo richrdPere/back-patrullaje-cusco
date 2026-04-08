@@ -18,11 +18,6 @@ const PatrullajeProgramado = sequelize.define("PatrullajeProgramado", {
     allowNull: false
   },
 
-  sereno_id: {
-    type: DataTypes.INTEGER,
-    allowNull: true
-  },
-
   fecha: {
     type: DataTypes.DATEONLY,
     allowNull: false

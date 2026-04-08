@@ -10,6 +10,7 @@ const PatrullajeProgramado = require("./patrullaje_programado.model");
 const Roles = require("./roles.model");
 const UsuarioRol = require("./usuario_role.model");
 const Policia = require("./policia.model");
+const PatrullajePersonal = require("./patrullaje_personal.model");
 
 // Creamos un objeto db para centralizar todos los modelos y la instancia de Sequelize
 const db = {};
@@ -29,6 +30,7 @@ db.PatrullajeProgramado = PatrullajeProgramado;
 db.Roles = Roles;
 db.UsuarioRol = UsuarioRol;
 db.Policia = Policia;
+db.PatrullajePersonal = PatrullajePersonal;
 
 // =========================================
 // ASOCIACIONES ENTRE MODELOS
@@ -126,6 +128,30 @@ db.Zonas.hasMany(db.PatrullajeProgramado, {
   foreignKey: "zona_id"
 });
 
+// ================================
+// PATRULLAJE PROGRAMADO - PATRULLAJE PERSONAL
+// ================================
+db.PatrullajeProgramado.hasMany(db.PatrullajePersonal, {
+  as: "personal",
+  foreignKey: "patrullaje_id",
+});
+
+db.PatrullajePersonal.belongsTo(db.PatrullajeProgramado, {
+  as: "patrullaje",
+  foreignKey: "patrullaje_id",
+});
+
+db.PatrullajePersonal.belongsTo(db.Usuario, {
+  foreignKey: "personal_id",
+  as: "usuario",
+  constraints: false
+});
+
+db.PatrullajePersonal.belongsTo(db.Policia, {
+  foreignKey: "personal_id",
+  as: "policia",
+  constraints: false
+});
 
 // ================================
 // USUARIOS - ROLES
@@ -155,5 +181,8 @@ db.Policia.belongsTo(db.Usuario, {
   foreignKey: "usuario_id",
   as: "usuario"
 });
+
+
+
 
 module.exports = db;

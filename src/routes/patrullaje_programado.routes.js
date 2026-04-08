@@ -2,7 +2,8 @@ const express = require("express");
 const router = express.Router();
 
 const {
-    crearPatrullaje,
+    newPatrullajeProgramado,
+    getPatrullajesProgramadosPaginated,
     listarPatrullajes,
     obtenerPatrullajePorId,
     finalizarPatrullaje,
@@ -13,11 +14,11 @@ const {
 const verificarToken = require("../middlewares/auth.middleware");
 
 // ============================
-// PATRULLAJES
+// RUTAS PATRULLAJES PROGRAMADOS
 // ============================
-
-router.post("/crear", verificarToken, crearPatrullaje);
+router.post("/crear", verificarToken, newPatrullajeProgramado);
 router.get("/todos", verificarToken, listarPatrullajes);
+router.get("/paginado", verificarToken, getPatrullajesProgramadosPaginated);
 router.get("/detalle/:id", verificarToken, obtenerPatrullajePorId);
 router.put("/finalizar/:id", verificarToken, finalizarPatrullaje);
 router.put("/editar/:id", verificarToken, updatePatrullaje);

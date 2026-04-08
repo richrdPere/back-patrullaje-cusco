@@ -74,6 +74,14 @@ const listarUsuarios = async (req, res) => {
         nombre: rol
       };
       includeRoles.required = true; // INNER JOIN
+    } else {
+      // EXCLUIR POLICIA
+      includeRoles.where = {
+        nombre: {
+          [Op.ne]: 'POLICIA'
+        }
+      };
+      includeRoles.required = true;
     }
 
     // ==========================
@@ -252,8 +260,6 @@ const crearUsuario = async (req, res) => {
     }
 
     // Asociar roles al usuario
-
-
     const relaciones = rolesDB.map((rol) => ({
       usuario_id: usuario.id,
       rol_id: rol.id,
@@ -420,6 +426,54 @@ const eliminarUsuario = async (req, res) => {
   }
 };
 
+
+// ======================================================
+// 7. LISTAR TODOS LOS SERENOS
+// ======================================================
+const getSerenosAndConductores = async (req, res) => {
+  try {
+
+    const usuarios = await Usuario.findAll({
+      include: [
+        {
+          model: Roles,
+          attributes: ["nombre"],
+          as: 'roles',
+          where: {
+            nombre: {
+              [Op.in]: ["SERENO", "CONDUCTOR"]
+            },
+
+          },
+          through: { attributes: [] }
+        }
+      ],
+      distinct: true
+    });
+
+    // TRANSFORMACIÓN
+    const serenos = usuarios.map(u => {
+      const usuario = u.toJSON();
+
+      return {
+        ...usuario,
+        roles: usuario.roles.map(r => r.nombre) // 👈 aquí está la magia
+      };
+    });
+
+    res.json({
+      total: usuarios.length,
+      serenos
+    });
+
+  } catch (error) {
+    res.status(500).json({
+      message: "Error al listar usuarios",
+      error: error.message
+    });
+  }
+};
+
 module.exports = {
   listarUsuarios,
   obtenerUsuarioPorId,
@@ -427,5 +481,6 @@ module.exports = {
   actualizarUsuario,
   desactivarUsuario,
   activarUsuario,
-  eliminarUsuario
+  eliminarUsuario,
+  getSerenosAndConductores
 };

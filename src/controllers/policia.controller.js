@@ -64,6 +64,29 @@ const newPolicia = async (req, res) => {
     }, { transaction: t });
 
     // ==========================
+    // ASIGNAR ROL POLICIA
+    // ==========================
+    const rolPolicia = await Roles.findOne({
+      where: { nombre: 'POLICIA' }
+    });
+
+    if (!rolPolicia) {
+      await t.rollback();
+      return res.status(500).json({
+        message: "El rol POLICIA no existe en la base de datos"
+      });
+    }
+
+    // Asociar roles al usuario
+    const relaciones = rolPolicia.map((rol) => ({
+      usuario_id: usuario.id,
+      rol_id: rol.id,
+    }));
+    await UsuarioRol.bulkCreate(relaciones);
+
+    // await usuario.addRole(rolPolicia, { transaction: t });
+
+    // ==========================
     // CREAR POLICIA
     // ==========================
     const policia = await Policia.create({
@@ -169,7 +192,16 @@ const getPoliciasPaginated = async (req, res) => {
       page: parseInt(page),
       limit: parseInt(limit),
       totalPages: Math.ceil(count / limit),
-      data: rows
+      data: rows.map(usuario => {
+
+        const user = usuario.toJSON();
+
+        return {
+          ...user,
+          roles: user.roles?.map(r => r.nombre) || []
+        };
+
+      }),
     });
 
   } catch (error) {
@@ -329,7 +361,10 @@ const getAllPolicias = async (req, res) => {
       ]
     });
 
-    res.json(policias);
+    res.json({
+      total: policias.length,
+      policias
+    });
 
   } catch (error) {
     res.status(500).json({
