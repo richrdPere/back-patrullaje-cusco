@@ -120,17 +120,11 @@ const getPatrullajesProgramadosPaginated = async (req, res) => {
       descripcion
     } = req.query;
 
-    // =========================
-    // - NORMALIZAR PAGINACIÓN
-    // =========================
     page = parseInt(page);
     limit = parseInt(limit);
 
     const offset = (page - 1) * limit;
 
-    // =========================
-    // - FILTROS DINÁMICOS
-    // =========================
     let where = {};
 
     if (fecha) {
@@ -143,15 +137,20 @@ const getPatrullajesProgramadosPaginated = async (req, res) => {
       };
     }
 
-    // =========================
-    // - CONSULTA
-    // =========================
     const { count, rows } = await PatrullajeProgramado.findAndCountAll({
       where,
       limit,
       offset,
       order: [["fecha", "DESC"], ["hora_inicio", "ASC"]],
       include: [
+        {
+          model: UnidadPatrullaje,
+          attributes: ["id", "codigo", "tipo", "placa", "estado"]
+        },
+        {
+          model: Zonas,
+          attributes: ["id", "nombre", "descripcion", "riesgo"]
+        },
         {
           model: PatrullajePersonal,
           as: "personal",
@@ -172,6 +171,7 @@ const getPatrullajesProgramadosPaginated = async (req, res) => {
             {
               model: Policia,
               as: "policia",
+              attributes: ["id", "grado", "comisaria"],
               include: [
                 {
                   model: Usuario,
@@ -187,7 +187,7 @@ const getPatrullajesProgramadosPaginated = async (req, res) => {
     });
 
     // =========================
-    // - FORMATEAR RESPUESTA
+    // FORMATEAR
     // =========================
     const data = rows.map(p => {
       const patrullaje = p.toJSON();
@@ -195,8 +195,11 @@ const getPatrullajesProgramadosPaginated = async (req, res) => {
       const serenos = [];
       const policias = [];
 
-      patrullaje.personal.forEach(item => {
+      (patrullaje.personal || []).forEach(item => {
 
+        // =========================
+        // SERENOS
+        // =========================
         if (item.tipo_personal === "SERENO" && item.usuario) {
           serenos.push({
             id: item.usuario.id,
@@ -206,29 +209,36 @@ const getPatrullajesProgramadosPaginated = async (req, res) => {
           });
         }
 
+        // =========================
+        // POLICIAS
+        // =========================
         if (item.tipo_personal === "POLICIA" && item.policia) {
           policias.push({
             id: item.policia.id,
             grado: item.policia.grado,
             comisaria: item.policia.comisaria,
-            usuario: item.policia.Usuario
+            usuario: item.policia.usuario
           });
         }
 
       });
 
       return {
-        ...patrullaje,
+        id: patrullaje.id,
+        fecha: patrullaje.fecha,
+        hora_inicio: patrullaje.hora_inicio,
+        hora_fin: patrullaje.hora_fin,
+        descripcion: patrullaje.descripcion,
+        unidad: patrullaje.UnidadPatrullaje || null,
+        zona: patrullaje.Zona || patrullaje.Zonas || null,
+        estado: patrullaje.estado,
+        createdAt: patrullaje.createdAt,
+        updatedAt: patrullaje.updatedAt,
         serenos,
         policias,
-        personal: undefined // opcional: ocultar crudo
       };
     });
 
-
-    // =========================
-    // - RESPUESTA PAGINADA
-    // =========================
     res.json({
       total: count,
       page,
@@ -249,7 +259,7 @@ const getPatrullajesProgramadosPaginated = async (req, res) => {
 // ======================================================
 // 3. OBTENER PATRULLAJE PROGRAMADO POR ID
 // ======================================================
-const obtenerPatrullajePorId = async (req, res) => {
+const getPatrullajeById = async (req, res) => {
   try {
 
     const { id } = req.params;
@@ -257,25 +267,49 @@ const obtenerPatrullajePorId = async (req, res) => {
     const patrullaje = await PatrullajeProgramado.findByPk(id, {
 
       include: [
+        // UNIDAD
         {
           model: UnidadPatrullaje,
-          as: "unidad",
+          attributes: ["id", "codigo", "tipo", "placa", "estado"]
+        },
+
+        // ZONA
+        {
+          model: Zonas,
+          attributes: ["id", "nombre", "descripcion", "riesgo"]
+        },
+
+        // PERSONAL
+        {
+          model: PatrullajePersonal,
+          as: "personal",
           include: [
             {
-              model: UnidadSereno,
-              as: "serenos_unidad",
+              model: Usuario,
+              as: "usuario",
+              attributes: ["id", "nombre", "apellidos"],
+              include: [
+                {
+                  model: Roles,
+                  as: "roles",
+                  attributes: ["nombre"],
+                  through: { attributes: [] }
+                }
+              ]
+            },
+            {
+              model: Policia,
+              as: "policia",
+              attributes: ["id", "grado", "comisaria"],
               include: [
                 {
                   model: Usuario,
-                  as: "sereno"
+                  as: "usuario",
+                  attributes: ["id", "nombre", "apellidos"]
                 }
               ]
             }
           ]
-        },
-        {
-          model: Zonas,
-          as: "zona"
         }
       ]
 
@@ -287,10 +321,60 @@ const obtenerPatrullajePorId = async (req, res) => {
       });
     }
 
-    res.json(patrullaje);
+    const data = patrullaje.toJSON();
+
+    const serenos = [];
+    const policias = [];
+
+    (data.personal || []).forEach(item => {
+
+      // =========================
+      // SERENOS
+      // =========================
+      if (item.tipo_personal === "SERENO" && item.usuario) {
+        serenos.push({
+          id: item.usuario.id,
+          nombre: item.usuario.nombre,
+          apellidos: item.usuario.apellidos,
+          roles: item.usuario.roles?.map(r => r.nombre) || []
+        });
+      }
+
+      // =========================
+      // POLICIAS
+      // =========================
+      if (item.tipo_personal === "POLICIA" && item.policia) {
+        policias.push({
+          id: item.policia.id,
+          grado: item.policia.grado,
+          comisaria: item.policia.comisaria,
+          usuario: item.policia.usuario
+        });
+      }
+
+    });
+
+    res.json({
+      id: data.id,
+      fecha: data.fecha,
+      hora_inicio: data.hora_inicio,
+      hora_fin: data.hora_fin,
+      descripcion: data.descripcion,
+      estado: data.estado,
+      createdAt: data.createdAt,
+      updatedAt: data.updatedAt,
+      unidad: data.UnidadPatrullaje || null,
+      zona: data.Zona || null,
+
+      serenos,
+      policias
+    });
 
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.status(500).json({
+      message: "Error al obtener patrullaje",
+      error: error.message
+    });
   }
 };
 
@@ -305,11 +389,11 @@ const listarPatrullajes = async (req, res) => {
       include: [
         {
           model: UnidadPatrullaje,
-          as: "unidad"
+
         },
         {
           model: Zonas,
-          as: "zona"
+
         }
       ],
       order: [["fecha", "DESC"]]
@@ -355,31 +439,131 @@ const finalizarPatrullaje = async (req, res) => {
 // ======================================================
 const updatePatrullaje = async (req, res) => {
 
-  try {
+  const t = await db.sequelize.transaction();
 
+  try {
     const { id } = req.params;
 
-    const patrullaje = await PatrullajeProgramado.findByPk(id);
+    const {
+      unidad_id,
+      zona_id,
+      fecha,
+      hora_inicio,
+      hora_fin,
+      descripcion,
+      serenos = [],
+      policias = []
+    } = req.body;
+
+    // =========================
+    // VALIDAR EXISTENCIA
+    // =========================
+    const patrullaje = await PatrullajeProgramado.findByPk(id, { transaction: t });
 
     if (!patrullaje) {
+      await t.rollback();
       return res.status(404).json({
         message: "Patrullaje no encontrado"
       });
     }
 
-    await patrullaje.update(req.body);
+    // Validar unidad
+    const unidad = await UnidadPatrullaje.findByPk(unidad_id);
+
+    if (!unidad) {
+      await t.rollback();
+      return res.status(404).json({
+        message: "Unidad no encontrada"
+      });
+    }
+
+    // =========================
+    // VALIDAR SERENOS
+    // =========================
+    const serenosDB = await Usuario.findAll({
+      where: { id: serenos },
+      transaction: t
+    });
+
+    if (serenosDB.length !== serenos.length) {
+      await t.rollback();
+      return res.status(400).json({
+        message: "Uno o más serenos no existen"
+      });
+    }
+
+    // =========================
+    // VALIDAR POLICIAS
+    // =========================
+    const policiasDB = await Policia.findAll({
+      where: { id: policias },
+      transaction: t
+    });
+
+    if (policiasDB.length !== policias.length) {
+      await t.rollback();
+      return res.status(400).json({
+        message: "Uno o más policías no existen"
+      });
+    }
+
+    // =========================
+    // ACTUALIZAR PATRULLAJE
+    // =========================
+    await patrullaje.update({
+      unidad_id,
+      zona_id,
+      fecha,
+      hora_inicio,
+      hora_fin,
+      descripcion
+    }, { transaction: t });
+
+    // =========================
+    // ELIMINAR PERSONAL ANTERIOR
+    // =========================
+    await PatrullajePersonal.destroy({
+      where: { patrullaje_id: id },
+      transaction: t
+    });
+
+    // =========================
+    // INSERTAR NUEVO PERSONAL
+    // =========================
+    const personalData = [
+      ...serenos.map(id => ({
+        patrullaje_id: id ? patrullaje.id : null,
+        tipo_personal: "SERENO",
+        personal_id: id
+      })),
+      ...policias.map(id => ({
+        patrullaje_id: id ? patrullaje.id : null,
+        tipo_personal: "POLICIA",
+        personal_id: id
+      }))
+    ];
+
+    await PatrullajePersonal.bulkCreate(personalData, { transaction: t });
+
+    // =========================
+    // COMMIT
+    // =========================
+    await t.commit();
 
     res.json({
-      message: "Patrullaje actualizado",
+      message: "Patrullaje actualizado correctamente",
       patrullaje
     });
 
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    await t.rollback();
+
+    res.status(500).json({
+      message: "Error al actualizar patrullaje",
+      error: error.message
+    });
   }
-
 };
-
 // ======================================================
 // ELIMINAR PATRULLAJE
 // ======================================================
@@ -414,7 +598,7 @@ module.exports = {
   newPatrullajeProgramado,
   getPatrullajesProgramadosPaginated,
   listarPatrullajes,
-  obtenerPatrullajePorId,
+  getPatrullajeById,
   finalizarPatrullaje,
   updatePatrullaje,
   deletePatrullaje

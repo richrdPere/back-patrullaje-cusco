@@ -5,7 +5,7 @@ const {
     newPatrullajeProgramado,
     getPatrullajesProgramadosPaginated,
     listarPatrullajes,
-    obtenerPatrullajePorId,
+    getPatrullajeById,
     finalizarPatrullaje,
     updatePatrullaje,
     deletePatrullaje
@@ -19,7 +19,7 @@ const verificarToken = require("../middlewares/auth.middleware");
 router.post("/crear", verificarToken, newPatrullajeProgramado);
 router.get("/todos", verificarToken, listarPatrullajes);
 router.get("/paginado", verificarToken, getPatrullajesProgramadosPaginated);
-router.get("/detalle/:id", verificarToken, obtenerPatrullajePorId);
+router.get("/detalle/:id", verificarToken, getPatrullajeById);
 router.put("/finalizar/:id", verificarToken, finalizarPatrullaje);
 router.put("/editar/:id", verificarToken, updatePatrullaje);
 router.delete("/eliminar/:id", verificarToken, deletePatrullaje);
