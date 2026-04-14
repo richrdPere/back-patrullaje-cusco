@@ -66,23 +66,23 @@ const newPolicia = async (req, res) => {
     // ==========================
     // ASIGNAR ROL POLICIA
     // ==========================
-    const rolPolicia = await Roles.findOne({
-      where: { nombre: 'POLICIA' }
-    });
+    // const rolPolicia = await Roles.findOne({
+    //   where: { nombre: 'POLICIA' }
+    // });
 
-    if (!rolPolicia) {
-      await t.rollback();
-      return res.status(500).json({
-        message: "El rol POLICIA no existe en la base de datos"
-      });
-    }
+    // if (!rolPolicia) {
+    //   await t.rollback();
+    //   return res.status(500).json({
+    //     message: "El rol POLICIA no existe en la base de datos"
+    //   });
+    // }
 
-    // Asociar roles al usuario
-    const relaciones = rolPolicia.map((rol) => ({
-      usuario_id: usuario.id,
-      rol_id: rol.id,
-    }));
-    await UsuarioRol.bulkCreate(relaciones);
+    // // Asociar roles al usuario
+    // const relaciones = rolPolicia.map((rol) => ({
+    //   usuario_id: usuario.id,
+    //   rol_id: rol.id,
+    // }));
+    // await UsuarioRol.bulkCreate(relaciones);
 
     // await usuario.addRole(rolPolicia, { transaction: t });
 

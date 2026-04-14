@@ -3,11 +3,12 @@ const router = express.Router();
 
 const {
   registrarGps,
-  obtenerUltimaUbicacion,
-  listarHistorialGps,
+  getUltimaUbicacion,
+  getHistorialGps,
+  getUltimasUbicaciones,
 } = require("../controllers/gps.controller");
 
-const  verificarToken  = require("../middlewares/auth.middleware");
+const verificarToken = require("../middlewares/auth.middleware");
 
 // ============================
 // GPS
@@ -17,7 +18,8 @@ const  verificarToken  = require("../middlewares/auth.middleware");
 router.post("/", verificarToken, registrarGps);
 
 // Web / monitoreo
-router.get("/ultima/:usuarioId", verificarToken, obtenerUltimaUbicacion);
-router.get("/historial/:usuarioId", verificarToken, listarHistorialGps);
+router.get("/usuario/:usuario_id", verificarToken, getUltimaUbicacion);
+router.get("/historial/:usuario_id", verificarToken, getHistorialGps);
+router.get("/ultimas", verificarToken, getUltimasUbicaciones)
 
 module.exports = router;

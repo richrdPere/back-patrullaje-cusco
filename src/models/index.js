@@ -11,6 +11,9 @@ const Roles = require("./roles.model");
 const UsuarioRol = require("./usuario_role.model");
 const Policia = require("./policia.model");
 const PatrullajePersonal = require("./patrullaje_personal.model");
+const PatrullajeGps = require("./patrullaje_gps.model");
+const Incidencia = require("./incidencia.model");
+const IncidenciaArchivo = require('./incidencia_archivo.model');
 
 // Creamos un objeto db para centralizar todos los modelos y la instancia de Sequelize
 const db = {};
@@ -31,6 +34,9 @@ db.Roles = Roles;
 db.UsuarioRol = UsuarioRol;
 db.Policia = Policia;
 db.PatrullajePersonal = PatrullajePersonal;
+db.PatrullajeGps = PatrullajeGps;
+db.Incidencia = Incidencia;
+db.IncidenciaArchivo = IncidenciaArchivo;
 
 // =========================================
 // ASOCIACIONES ENTRE MODELOS
@@ -183,6 +189,59 @@ db.Policia.belongsTo(db.Usuario, {
 });
 
 
+
+// ================================
+// USUARIO - GPS (1 a N)
+// ================================
+db.Usuario.hasMany(db.Gps, {
+  foreignKey: "usuario_id",
+  as: "gps_registros"
+});
+
+db.Gps.belongsTo(db.Usuario, {
+  foreignKey: "usuario_id",
+  as: "usuario"
+});
+
+
+// ================================
+// PATRULLAJE - GPS
+// ================================
+db.PatrullajeProgramado.hasMany(db.PatrullajeGps, {
+  foreignKey: "patrullaje_id",
+  as: "gps"
+});
+
+db.PatrullajeGps.belongsTo(db.PatrullajeProgramado, {
+  foreignKey: "patrullaje_id",
+  as: "patrullaje"
+});
+
+
+// ================================
+// INCIDENCIA - INCIDENCIA ARCHIVO
+// ================================
+db.Incidencia.hasMany(db.IncidenciaArchivo, {
+  foreignKey: "incidencia_id",
+  as: "archivos"
+});
+
+db.IncidenciaArchivo.belongsTo(db.Incidencia, {
+  foreignKey: "incidencia_id"
+});
+
+
+// ================================
+// USUARIO - INCIDENCIA 
+// ================================
+db.Usuario.hasMany(db.Incidencia, {
+  foreignKey: "usuario_id"
+});
+
+db.Incidencia.belongsTo(db.Usuario, {
+  foreignKey: "usuario_id",
+  as: "usuario"
+});
 
 
 module.exports = db;

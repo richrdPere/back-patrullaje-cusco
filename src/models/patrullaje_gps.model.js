@@ -1,19 +1,21 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("../config/database");
-const Usuario = require("./usuario.model");
 
-const Gps = sequelize.define("Gps", {
+const PatrullajeProgramado = require("./patrullaje_programado.model");
+
+const PatrullajeGps = sequelize.define("PatrullajeGps", {
+
   id: {
     type: DataTypes.INTEGER,
     autoIncrement: true,
     primaryKey: true,
   },
 
-  usuario_id: {
+  patrullaje_id: {
     type: DataTypes.INTEGER,
     allowNull: false,
     references: {
-      model: Usuario,
+      model: PatrullajeProgramado,
       key: "id"
     },
     onDelete: "CASCADE"
@@ -41,7 +43,6 @@ const Gps = sequelize.define("Gps", {
 
   fecha_hora: {
     type: DataTypes.DATE,
-    allowNull: false,
     defaultValue: DataTypes.NOW,
   },
 
@@ -50,12 +51,13 @@ const Gps = sequelize.define("Gps", {
     defaultValue: 'TRACKING'
   }
 
-
 }, {
-  tableName: "gps_registros",
+  tableName: "patrullaje_gps",
   timestamps: true,
+  indexes: [
+    { fields: ['patrullaje_id'] },
+    { fields: ['fecha_hora'] }
+  ]
 });
 
-
-
-module.exports = Gps;
+module.exports = PatrullajeGps;

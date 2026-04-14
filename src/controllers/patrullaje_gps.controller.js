@@ -1,18 +1,17 @@
 const db = require('../models');
 const { Op } = require("sequelize");
 
-const Gps = db.Gps;
-const Usuario = db.Usuario;
+const PatrullajeGps = db.PatrullajeGps;
+const PatrullajeProgramado = db.PatrullajeProgramado;
 
 // ======================================================
 // 1. REGISTRAR POSICIÓN GPS (DESDE MÓVIL)
 // ======================================================
-
-const registrarGps = async (req, res) => {
+const registrarGpsPatrulla = async (req, res) => {
   try {
 
     const {
-      usuario_id,
+      patrullaje_id,
       latitud,
       longitud,
       velocidad,
@@ -21,27 +20,27 @@ const registrarGps = async (req, res) => {
       tipo
     } = req.body;
 
-
     // VALIDACIONES
-    if (!usuario_id || !latitud || !longitud) {
+    if (!patrullaje_id || !latitud || !longitud) {
       return res.status(400).json({
-        message: "usuario_id, latitud y longitud son obligatorios"
+        message: "patrullaje_id, latitud y longitud son obligatorios"
       });
     }
 
-    // Validar usuario
-    const usuario = await Usuario.findByPk(usuario_id);
+    // Validar existencia de patrullaje
+    const patrullaje = await PatrullajeProgramado.findByPk(patrullaje_id);
 
-    if (!usuario) {
+    if (!patrullaje) {
       return res.status(404).json({
-        message: "Usuario no encontrado"
+        message: "Patrullaje no encontrado"
       });
     }
 
-
-    // CREAR REGISTRO GPS
-    const gps = await Gps.create({
-      usuario_id,
+    // =========================
+    // CREAR REGISTRO
+    // =========================
+    const gps = await PatrullajeGps.create({
+      patrullaje_id,
       latitud,
       longitud,
       velocidad,
@@ -51,34 +50,34 @@ const registrarGps = async (req, res) => {
     });
 
     res.status(201).json({
-      message: "Coordenada registrada",
+      message: "Ubicación de patrulla registrada",
       gps
     });
 
   } catch (error) {
     res.status(500).json({
-      message: "Error al registrar GPS",
+      message: "Error al registrar GPS de patrulla",
       error: error.message
     });
   }
 };
 
 // ======================================================
-// 2. OBTENER ÚLTIMA UBICACIÓN DE UN USUARIO
+// 2. OBTENER ÚLTIMA UBICACIÓN DE UN PATRULLAJE
 // ======================================================
-const getUltimaUbicacion = async (req, res) => {
+const getUltimaUbicacionPatrulla = async (req, res) => {
   try {
 
-    const { usuario_id } = req.params;
+    const { patrullaje_id } = req.params;
 
-    const gps = await Gps.findOne({
-      where: { usuario_id },
+    const gps = await PatrullajeGps.findOne({
+      where: { patrullaje_id },
       order: [["fecha_hora", "DESC"]]
     });
 
     if (!gps) {
       return res.status(404).json({
-        message: "No hay registros GPS"
+        message: "No hay registros GPS para esta patrulla"
       });
     }
 
@@ -92,16 +91,17 @@ const getUltimaUbicacion = async (req, res) => {
   }
 };
 
+
 // ======================================================
-// 3. HISTORIAL GPS POR USUARIO
+// 3. HISTORIAL GPS POR PATRULLA
 // ======================================================
-const getHistorialGps = async (req, res) => {
+const getHistorialPatrulla = async (req, res) => {
   try {
 
-    const { usuario_id } = req.params;
+    const { patrullaje_id } = req.params;
     const { fecha_inicio, fecha_fin } = req.query;
 
-    let where = { usuario_id };
+    let where = { patrullaje_id };
 
     if (fecha_inicio && fecha_fin) {
       where.fecha_hora = {
@@ -109,7 +109,7 @@ const getHistorialGps = async (req, res) => {
       };
     }
 
-    const registros = await Gps.findAll({
+    const registros = await PatrullajeGps.findAll({
       where,
       order: [["fecha_hora", "ASC"]]
     });
@@ -125,23 +125,34 @@ const getHistorialGps = async (req, res) => {
 };
 
 // ======================================================
-// 4. ULTIMA UBICACION DE TODOS
+// 4. ULTIMA UBICACION DE TODAS LAS PATRULLAS
 // ======================================================
-const getUltimasUbicaciones = async (req, res) => {
+const getUltimasUbicacionesPatrullas = async (req, res) => {
   try {
 
-    const usuarios = await Usuario.findAll({
+    const patrullajes = await PatrullajeProgramado.findAll({
       include: [
         {
-          model: Gps,
-          as: "gps_registros",
+          model: PatrullajeGps,
+          as: "gps",
           limit: 1,
           order: [["fecha_hora", "DESC"]]
         }
       ]
     });
 
-    res.json(usuarios);
+    const data = patrullajes.map(p => {
+      const patrullaje = p.toJSON();
+
+      return {
+        id: patrullaje.id,
+        fecha: patrullaje.fecha,
+        estado: patrullaje.estado,
+        ubicacion_actual: patrullaje.gps[0] || null
+      };
+    });
+
+    res.json(data);
 
   } catch (error) {
     res.status(500).json({
@@ -151,9 +162,10 @@ const getUltimasUbicaciones = async (req, res) => {
   }
 };
 
+
 module.exports = {
-  registrarGps,
-  getUltimaUbicacion,
-  getHistorialGps,
-  getUltimasUbicaciones
+  registrarGpsPatrulla,
+  getUltimaUbicacionPatrulla,
+  getHistorialPatrulla,
+  getUltimasUbicacionesPatrullas
 };
