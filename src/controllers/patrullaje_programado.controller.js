@@ -593,7 +593,6 @@ const deletePatrullaje = async (req, res) => {
 
 };
 
-
 module.exports = {
   newPatrullajeProgramado,
   getPatrullajesProgramadosPaginated,

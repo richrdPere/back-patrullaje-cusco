@@ -13,6 +13,7 @@ const unidadSerenoRoutes = require("./unidad_sereno.route");
 const policiasRoutes = require("./policia.routes");
 const gpsPatrullajeRoutes = require("./gps_patrullaje.routes");
 const incidenciasRoutes = require("./incidencia.routes");
+const movilesRoutes = require("./moviles.routes");
 
 // usar rutas
 router.use("/auth", authRoutes);
@@ -26,6 +27,7 @@ router.use("/unidad-sereno", unidadSerenoRoutes);
 router.use("/policias", policiasRoutes);
 router.use("/patrullaje-gps", gpsPatrullajeRoutes);
 router.use("/incidencias", incidenciasRoutes);
+router.use("/moviles", movilesRoutes);
 
 // exportar router
 module.exports = router;

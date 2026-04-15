@@ -115,7 +115,8 @@ db.UnidadPatrullaje.belongsToMany(db.Usuario, {
 // ================================
 
 db.PatrullajeProgramado.belongsTo(db.UnidadPatrullaje, {
-  foreignKey: "unidad_id"
+  foreignKey: "unidad_id",
+  as: "unidad"
 });
 
 db.UnidadPatrullaje.hasMany(db.PatrullajeProgramado, {
@@ -127,7 +128,8 @@ db.UnidadPatrullaje.hasMany(db.PatrullajeProgramado, {
 // ================================
 
 db.PatrullajeProgramado.belongsTo(db.Zonas, {
-  foreignKey: "zona_id"
+  foreignKey: "zona_id",
+  as: "zona"
 });
 
 db.Zonas.hasMany(db.PatrullajeProgramado, {
