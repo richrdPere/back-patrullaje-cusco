@@ -1,72 +1,76 @@
 const app = require("./src/app.js");
 require("dotenv").config();
 const http = require("http");
-const socketIO = require("socket.io");
-const jwt = require("jsonwebtoken");
+// const socketIO = require("socket.io");
+const { initSocket } = require("./src/socket");
 
+// const jwt = require("jsonwebtoken");
 const PORT = process.env.PORT || 3000;
 
 // Crear servidor HTTP encima del express
 const server = http.createServer(app);
 
 // Inicializar Socket.IO
-const io = socketIO(server, {
-  cors: {
-    origin: "*",
-    methods: ["GET", "POST"]
-  }
-});
+initSocket(server);
 
 
-// Guardamos sockets conectados por usuario
-const usuariosConectados = new Map();
+// const io = socketIO(server, {
+//   cors: {
+//     origin: "*",
+//     methods: ["GET", "POST"]
+//   }
+// });
 
-/**
- * Middleware del token para sockets
- */
-io.use((socket, next) => {
-  const token = socket.handshake.auth.token;
 
-  if (!token) return next(new Error("No token"));
+// // Guardamos sockets conectados por usuario
+// const usuariosConectados = new Map();
 
-  try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    socket.usuario = decoded;
-    next();
-  } catch (error) {
-    next(new Error("Token inválido"));
-  }
-});
+// /**
+//  * Middleware del token para sockets
+//  */
+// io.use((socket, next) => {
+//   const token = socket.handshake.auth.token;
 
-/**
- * Evento principal de conexión
- */
-io.on("connection", (socket) => {
-  const userId = socket.usuario.id;
+//   if (!token) return next(new Error("No token"));
 
-  console.log("Usuario conectado vía WebSocket:", userId);
+//   try {
+//     const decoded = jwt.verify(token, process.env.JWT_SECRET);
+//     socket.usuario = decoded;
+//     next();
+//   } catch (error) {
+//     next(new Error("Token inválido"));
+//   }
+// });
 
-  // Guardamos relación usuario → socket
-  usuariosConectados.set(userId, socket.id);
+// /**
+//  * Evento principal de conexión
+//  */
+// io.on("connection", (socket) => {
+//   const userId = socket.usuario.id;
 
-  socket.on("disconnect", () => {
-    console.log("Usuario desconectado:", userId);
-    usuariosConectados.delete(userId);
-  });
-});
+//   console.log("Usuario conectado vía WebSocket:", userId);
 
-/**
- * Función global para enviar notificaciones
- */
-const sendNotification = (userId, data) => {
-  const socketId = usuariosConectados.get(userId);
-  if (socketId) {
-    io.to(socketId).emit("notificacion", data);
-  }
-};
+//   // Guardamos relación usuario → socket
+//   usuariosConectados.set(userId, socket.id);
 
-// La hacemos global para usarla desde controladores
-global.sendNotification = sendNotification;
+//   socket.on("disconnect", () => {
+//     console.log("Usuario desconectado:", userId);
+//     usuariosConectados.delete(userId);
+//   });
+// });
+
+// /**
+//  * Función global para enviar notificaciones
+//  */
+// const sendNotification = (userId, data) => {
+//   const socketId = usuariosConectados.get(userId);
+//   if (socketId) {
+//     io.to(socketId).emit("notificacion", data);
+//   }
+// };
+
+// // La hacemos global para usarla desde controladores
+// global.sendNotification = sendNotification;
 
 server.listen(PORT, () => {
   console.log(`🚀 Servidor backend corriendo con WebSockets en el puerto ${PORT}`);
