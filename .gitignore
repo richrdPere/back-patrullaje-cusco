@@ -1,4 +1,51 @@
+# =========================
 # Node
+# =========================
 /node_modules
-npm-debug.log
-yarn-error.log
+npm-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# =========================
+# ENV (CRÍTICO)
+# =========================
+.env
+.env.*
+!.env.example
+
+# =========================
+# AWS / CREDENCIALES
+# =========================
+aws-config.js
+config/aws.js
+config/aws-s3.js
+
+# =========================
+# Logs
+# =========================
+logs
+*.log
+
+# =========================
+# Archivos temporales
+# =========================
+tmp/
+temp/
+
+# =========================
+# Sistema operativo
+# =========================
+.DS_Store
+Thumbs.db
+
+# =========================
+# IDE / Editor
+# =========================
+.vscode/
+.idea/
+
+# =========================
+# Build / dist
+# =========================
+dist/
+build/
