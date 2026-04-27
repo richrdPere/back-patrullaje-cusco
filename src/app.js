@@ -26,16 +26,15 @@ db.sequelize
   .then(async () => {
     console.log("✅ Conexión a MySQL establecida");
 
-
-     // 🔥 1. Sincronizar modelos (crea tablas si no existen)
+    // 1. Sincronizar modelos (crea tablas si no existen)
     await db.sequelize.sync({ alter: false }); // force ó alter: true
 
     console.log("📦 Modelos sincronizados");
 
-    // 🔥 2. CREAR ROLES
+    // 2. CREAR ROLES
     await crearRolesPorDefecto();
 
-    // 🔥 3. CREAR USUARIO
+    // 3. CREAR USUARIO
     await crearGerenteSerenazgoPorDefecto();
 
   })

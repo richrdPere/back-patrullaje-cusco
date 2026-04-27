@@ -1,5 +1,6 @@
 const { Op } = require("sequelize");
-
+const { guardarArchivoLocal } = require("../services/storage.service");
+const { uploadFileToS3, deleteFileFromS3 } = require("../services/aws-s3.service");
 const db = require('../models');
 
 const Incidencia = db.Incidencia;
@@ -24,6 +25,9 @@ const registrarIncidencia = async (req, res) => {
       latitud,
       longitud
     } = req.body;
+
+    console.log("📥 BODY:", req.body);
+    console.log("📎 FILES:", req.files);
 
     // VALIDACIONES
     if (!usuario_id || !descripcion || !latitud || !longitud) {
@@ -56,34 +60,75 @@ const registrarIncidencia = async (req, res) => {
       longitud
     }, { transaction: t });
 
-    // GUARDAR ARCHIVOS
-    if (req.files && req.files.length > 0) {
+    // VALIDAR ARCHIVOS
+    const archivos = req.files || [];
 
-      const archivosData = req.files.map(file => {
+    if (archivos.length > 5) {
+      return res.status(400).json({
+        message: "Máximo 5 archivos permitidos"
+      });
+    }
 
-        const tipo_archivo = file.mimetype.startsWith("image")
-          ? "IMAGEN"
-          : "VIDEO";
+    // SUBIR ARCHIVOS A S3
+    let archivosData = [];
+
+    if (archivos.length > 0) {
+
+      const uploadPromises = archivos.map(file =>
+        uploadFileToS3({
+          file,
+          categoria: "incidencias",
+          entidadId: incidencia.id,
+          serenoId: usuario_id // aquí usas el usuario como sereno
+        })
+      );
+
+      const resultados = await Promise.all(uploadPromises);
+
+      archivosData = resultados.map((result, index) => {
+
+        const file = archivos[index];
+
+        console.log("Subido a S3:", result.url);
 
         return {
           incidencia_id: incidencia.id,
-          url_archivo: file.path,
-          tipo_archivo
+          url_archivo: result.url,
+          key_s3: result.key,
+          tipo_archivo: file.mimetype.startsWith("image")
+            ? "IMAGEN"
+            : file.mimetype.startsWith("video")
+              ? "VIDEO"
+              : file.mimetype === "application/pdf"
+                ? "PDF"
+                : "OTRO",
+          mime_type: file.mimetype,
+          peso: file.size,
+          sereno_id: usuario_id
         };
       });
 
+      console.log("ARCHIVOS A BD:", archivosData);
+
       await IncidenciaArchivo.bulkCreate(archivosData, { transaction: t });
+
+      await Incidencia.update(
+        { total_evidencias: archivos.length },
+        { where: { id: incidencia.id }, transaction: t }
+      );
     }
 
+    // COMMIT
     await t.commit();
 
     res.status(201).json({
       message: "Incidencia registrada correctamente",
-      incidencia
+      incidencia,
+      archivos: archivosData
     });
 
   } catch (error) {
-
+    console.error("ERROR DETALLADO:", error);
     await t.rollback();
 
     res.status(500).json({
@@ -232,6 +277,9 @@ const updateEstadoIncidencia = async (req, res) => {
 // 5. ELIMINAR INCIDENCIA (CON ARCHIVOS)
 // ======================================================
 const deleteIncidencia = async (req, res) => {
+
+  const t = await Incidencia.sequelize.transaction();
+
   try {
 
     const { id } = req.params;
@@ -244,13 +292,42 @@ const deleteIncidencia = async (req, res) => {
       });
     }
 
-    await incidencia.destroy();
+    // 1. OBTENER ARCHIVOS
+    const archivos = await IncidenciaArchivo.findAll({
+      where: { incidencia_id: id },
+      transaction: t
+    });
+
+    console.log("Archivos encontrados:", archivos.length);
+
+    // 2. ELIMINAR EN S3
+    const deletePromises = archivos.map(file =>
+      deleteFileFromS3(file.key_s3)
+    );
+
+    await Promise.all(deletePromises);
+
+    // 3. ELIMINAR EN BD
+    await IncidenciaArchivo.destroy({
+      where: { incidencia_id: id },
+      transaction: t
+    });
+
+    // 4. ELIMINAR INCIDENCIA
+    await incidencia.destroy({ transaction: t });
+
+    await t.commit();
 
     res.json({
-      message: "Incidencia eliminada"
+      message: "Incidencia y evidencias eliminadas correctamente"
     });
 
   } catch (error) {
+
+    await t.rollback();
+
+    console.error("ERROR ELIMINANDO:", error);
+
     res.status(500).json({
       message: "Error al eliminar incidencia",
       error: error.message

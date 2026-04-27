@@ -93,6 +93,26 @@ const newPatrullajeProgramado = async (req, res) => {
     // =========================
     await t.commit();
 
+    // =========================
+    // - EMITIR SOCKET
+    // =========================
+
+    const io = req.app.get("io"); // <- IMPORTANTE
+
+    serenos.forEach((serenoId) => {
+      io.to(`user_${serenoId}`).emit("nuevo_patrullaje", {
+        id: patrullaje.id,
+        zona_id: patrullaje.zona_id,
+        fecha: patrullaje.fecha,
+        hora_inicio: patrullaje.hora_inicio,
+        hora_fin: patrullaje.hora_fin,
+        descripcion: patrullaje.descripcion
+      });
+    });
+
+    // =========================
+    // RESPUESTA
+    // =========================
     res.status(201).json({
       message: "Patrullaje programado correctamente",
       patrullaje

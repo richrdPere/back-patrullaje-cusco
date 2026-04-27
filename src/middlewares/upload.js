@@ -23,17 +23,43 @@ const storage = multer.diskStorage({
 // =========================
 const fileFilter = (req, file, cb) => {
 
+  // 🔍 DEBUG COMPLETO
+  console.log("📂 Archivo recibido:");
+  console.log("👉 Nombre:", file.originalname);
+  console.log("👉 MIME:", file.mimetype);
+  console.log("👉 EXT:", path.extname(file.originalname));
+
   const tiposPermitidos = [
     "image/jpeg",
     "image/png",
     "image/jpg",
+    "image/heic",       // agregado
+    "image/heif",       // agregado
     "video/mp4",
-    "video/quicktime"
+    "video/quicktime",
+    "video/x-matroska"  // opcional (algunos Android)
   ];
 
-  if (tiposPermitidos.includes(file.mimetype)) {
+  const extensionesPermitidas = [
+    ".jpg",
+    ".jpeg",
+    ".png",
+    ".heic",
+    ".heif",
+    ".mp4",
+    ".mov"
+  ];
+
+  const mimeValido = tiposPermitidos.includes(file.mimetype);
+  const extValida = extensionesPermitidas.includes(
+    path.extname(file.originalname).toLowerCase()
+  );
+
+  if (mimeValido || extValida) {
+    console.log("✅ Archivo permitido");
     cb(null, true);
   } else {
+    console.log("❌ Archivo rechazado");
     cb(new Error("Tipo de archivo no permitido"), false);
   }
 };

@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 
-// Middleware multer
+// Middleware multer S3
 const upload = require("../middlewares/upload");
 
 // Controller

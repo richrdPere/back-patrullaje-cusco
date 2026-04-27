@@ -59,8 +59,22 @@ const Incidencia = sequelize.define("Incidencia", {
             "CERRADO"
         ),
         defaultValue: "REPORTADO"
-    }
+    },
 
+    total_evidencias: {
+        type: DataTypes.INTEGER,
+        defaultValue: 0
+    },
+
+    // trazabilidad
+    origen: {
+        type: DataTypes.ENUM(
+            "APP_MOVIL",
+            "CENTRAL",
+            "SISTEMA"
+        ),
+        defaultValue: "APP_MOVIL"
+    }
 }, {
     tableName: "incidencias",
     timestamps: true,
