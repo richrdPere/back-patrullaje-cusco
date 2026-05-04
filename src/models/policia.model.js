@@ -8,10 +8,10 @@ const Policia = sequelize.define("Policia", {
     autoIncrement: true,
   },
 
-  usuario_id: {
+  persona_id: {
     type: DataTypes.INTEGER,
     allowNull: false,
-    unique: true, // 1 a 1
+    unique: true // 1 a 1 con persona
   },
 
   grado: {

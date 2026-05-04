@@ -7,13 +7,10 @@ const Usuario = sequelize.define("Usuario", {
     autoIncrement: true,
     primaryKey: true,
   },
-  nombre: {
-    type: DataTypes.STRING(100),
+  persona_id: {
+    type: DataTypes.INTEGER,
     allowNull: false,
-  },
-  apellidos: {
-    type: DataTypes.STRING(100),
-    allowNull: false,
+    unique: true // 1 a 1
   },
   username: {
     type: DataTypes.STRING(100),
@@ -29,43 +26,10 @@ const Usuario = sequelize.define("Usuario", {
     allowNull: true,
     unique: true,
   },
-  telefono: {
-    type: DataTypes.STRING(20),
-    allowNull: true,
-  },
-  documento_identidad: {
-    type: DataTypes.STRING(20),
-    allowNull: false,
-    // unique: true,
-  },
-  direccion: {
-    type: DataTypes.STRING(100),
-    allowNull: true,
-  },
-  departamento: {
-    type: DataTypes.STRING(100),
-    allowNull: true,
-  },
-  provincia: {
-    type: DataTypes.STRING(100),
-    allowNull: true,
-  },
-  distrito: {
-    type: DataTypes.STRING(100),
-    allowNull: true,
-  },
   estado: {
     type: DataTypes.BOOLEAN,
     defaultValue: true,
   },
-  foto_perfil: {
-    type: DataTypes.STRING(255),
-    allowNull: true,
-  },
-  online: {
-    type: DataTypes.BOOLEAN,
-    defaultValue: false,
-  }
 }, {
   tableName: "usuarios",
   timestamps: true,

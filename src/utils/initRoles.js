@@ -10,7 +10,8 @@ async function crearRolesPorDefecto() {
       "GERENTE_SERENAZGO",
       "OPERADOR",
       "CONDUCTOR",
-      "POLICIA"
+      "POLICIA",
+      "ADMIN"
     ];
 
     for (const nombre of rolesSistema) {

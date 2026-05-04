@@ -2,7 +2,7 @@ const express = require("express");
 const cors = require("cors");
 require("dotenv").config();
 const path = require("path");
-const crearGerenteSerenazgoPorDefecto = require("./utils/initAdmin");
+const initUsuariosSistema = require("./utils/initAdmin");
 const crearRolesPorDefecto = require("./utils/initRoles");
 // const crearUsuariosPorDefecto = require("./utils/initUsuariosPorDefecto");
 
@@ -35,7 +35,7 @@ db.sequelize
     await crearRolesPorDefecto();
 
     // 3. CREAR USUARIO
-    await crearGerenteSerenazgoPorDefecto();
+    await initUsuariosSistema();
 
   })
   .catch((err) => console.error("❌ Error al conectar con MySQL:", err.message));

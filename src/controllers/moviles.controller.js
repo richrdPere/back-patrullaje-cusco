@@ -49,23 +49,26 @@ const getPatrullajeActivoMobile = async (req, res) => {
 
     if (!pertenece) return res.json(null);
 
-    return res.json({
-      id: patrullaje.id,
-      fecha: patrullaje.fecha,
-      hora_inicio: patrullaje.hora_inicio,
-      hora_fin: patrullaje.hora_fin,
-      estado: patrullaje.estado,
-      zona: {
-        nombre: patrullaje.zona?.nombre,
-        descripcion: patrullaje.zona?.descripcion,
-        riesgo: patrullaje.zona?.riesgo,
-        coordenadas: patrullaje.zona?.coordenadas
+    return res.status(200).json({
+      data: {
+        id: patrullaje.id,
+        fecha: patrullaje.fecha,
+        hora_inicio: patrullaje.hora_inicio,
+        hora_fin: patrullaje.hora_fin,
+        estado: patrullaje.estado,
+        zona: {
+          nombre: patrullaje.zona?.nombre,
+          descripcion: patrullaje.zona?.descripcion,
+          riesgo: patrullaje.zona?.riesgo,
+          coordenadas: patrullaje.zona?.coordenadas
+        },
+        unidad: {
+          codigo: patrullaje.unidad?.codigo,
+          tipo: patrullaje.unidad?.tipo,
+          placa: patrullaje.unidad?.placa,
+        }
       },
-      unidad: {
-        codigo: patrullaje.unidad?.codigo,
-        tipo: patrullaje.unidad?.tipo,
-        placa: patrullaje.unidad?.placa,
-      }
+      message: "OK"
     });
 
   } catch (error) {

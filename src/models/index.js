@@ -14,6 +14,7 @@ const PatrullajePersonal = require("./patrullaje_personal.model");
 const PatrullajeGps = require("./patrullaje_gps.model");
 const Incidencia = require("./incidencia.model");
 const IncidenciaArchivo = require('./incidencia_archivo.model');
+const Persona = require("./persona.model");
 
 // Creamos un objeto db para centralizar todos los modelos y la instancia de Sequelize
 const db = {};
@@ -37,10 +38,17 @@ db.PatrullajePersonal = PatrullajePersonal;
 db.PatrullajeGps = PatrullajeGps;
 db.Incidencia = Incidencia;
 db.IncidenciaArchivo = IncidenciaArchivo;
+db.Persona = Persona;
 
 // =========================================
 // ASOCIACIONES ENTRE MODELOS
 // =========================================
+
+// =============================
+// PERSONA - USUARIO (1:1)
+// =============================
+db.Persona.hasOne(db.Usuario, { foreignKey: "persona_id" });
+db.Usuario.belongsTo(db.Persona, { foreignKey: "persona_id" });
 
 // ================================
 // USUARIO - GPS (1 a N)
@@ -180,15 +188,17 @@ db.Roles.belongsToMany(db.Usuario, {
 // ================================
 // USUARIO - POLICIA
 // ================================
-db.Usuario.hasOne(db.Policia, {
-  foreignKey: "usuario_id",
-  as: "policia"
-});
+// db.Usuario.hasOne(db.Policia, {
+//   foreignKey: "usuario_id",
+//   as: "policia"
+// });
 
-db.Policia.belongsTo(db.Usuario, {
-  foreignKey: "usuario_id",
-  as: "usuario"
-});
+// db.Policia.belongsTo(db.Usuario, {
+//   foreignKey: "usuario_id",
+//   as: "usuario"
+// });
+db.Persona.hasOne(db.Policia, { foreignKey: "persona_id" });
+db.Policia.belongsTo(db.Persona, { foreignKey: "persona_id" });
 
 
 

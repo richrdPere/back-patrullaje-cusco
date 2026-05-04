@@ -1,80 +1,130 @@
 const bcrypt = require("bcryptjs");
-const Usuario = require("../models/usuario.model");
-const Roles = require("../models/roles.model");
-const UsuarioRol = require("../models/usuario_role.model");
 
-async function crearGerenteSerenazgoPorDefecto() {
+const db = require('../models');
+
+const Persona = db.Persona;
+const Usuario = db.Usuario;
+const Roles = db.Roles;
+const UsuarioRol = db.UsuarioRol;
+const Policia = db.Policia;
+
+
+async function initUsuariosSistema() {
   try {
-    console.log("🔍 Verificando usuario por defecto con roles...");
+    console.log("🔍 Inicializando usuarios del sistema...");
 
     // --------------------------------------------------
-    // 1. Verificar si el usuario ya existe
+    // 1. Verificar si ya existen usuarios
     // --------------------------------------------------
-    const usuarioExistente = await Usuario.findOne({
-      where: { username: "73081247" },
-    });
-
-    if (usuarioExistente) {
-      console.log("✅ Usuario ya existe. No se crea otro.");
+    const countUsuarios = await Usuario.count();
+    if (countUsuarios > 0) {
+      console.log("⚠️ Ya existen usuarios, se omite inicialización");
       return;
     }
 
     // --------------------------------------------------
-    // 2. Buscar roles
+    // 2. Obtener roles
     // --------------------------------------------------
-    const roles = await Roles.findAll({
-      where: {
-        nombre: ["SERENO", "CONDUCTOR"],
-      },
-    });
+    const roles = await Roles.findAll();
+    const mapRoles = {};
+    roles.forEach(r => mapRoles[r.nombre] = r);
 
-    if (roles.length === 0) {
-      console.log("❌ No existen roles en la BD");
-      return;
+    // console.log("ROLES EN BD:", roles.map(r => r.nombre));
+
+    const hashPassword = async (pass = "123456") =>
+      await bcrypt.hash(pass, 10);
+
+    // ==================================================
+    // 🔹 3. CREAR SERENOS
+    // ==================================================
+    for (let i = 1; i <= 3; i++) {
+      const persona = await Persona.create({
+        nombres: `Sereno${i}`,
+        apellidos: "Cusco",
+        documento_identidad: `7308125${i}`,
+        telefono: `90000000${i}`
+      });
+
+      const usuario = await Usuario.create({
+        persona_id: persona.id,
+        username: `7308125${i}`,
+        password: await hashPassword(`7308125${i}`, 12),
+        correo: `sereno${i}@test.com`
+      });
+
+      await UsuarioRol.create({
+        usuario_id: usuario.id,
+        rol_id: mapRoles["SERENO"].id
+      });
     }
 
-    // --------------------------------------------------
-    // 3. Encriptar contraseña
-    // --------------------------------------------------
-    const passwordHashed = await bcrypt.hash("73081247", 12);
+    // ==================================================
+    // 🔹 4. CREAR POLICIAS (SIN USUARIO)
+    // ==================================================
+    for (let i = 1; i <= 3; i++) {
+      const persona = await Persona.create({
+        nombres: `Policia${i}`,
+        apellidos: "Peru",
+        documento_identidad: `8000000${i}`
+      });
 
-    // --------------------------------------------------
-    // 4. Crear usuario
-    // --------------------------------------------------
-    const usuario = await Usuario.create({
-      nombre: "Gerente",
-      apellidos: "Serenazgo Cusco",
+      await Policia.create({
+        persona_id: persona.id,
+        grado: "Suboficial",
+        comisaria: "Cusco Centro",
+        codigo_institucional: `POL-${i}`
+      });
+    }
+
+    // ==================================================
+    // 🔹 5. CREAR OPERADOR
+    // ==================================================
+    const personaOperador = await Persona.create({
+      nombres: "Operador",
+      apellidos: "Central",
+      documento_identidad: "73081240"
+    });
+
+    const usuarioOperador = await Usuario.create({
+      persona_id: personaOperador.id,
+      username: "73081240",
+      password: await hashPassword("73081240", 12),
+      correo: "operador@test.com"
+    });
+
+    await UsuarioRol.create({
+      usuario_id: usuarioOperador.id,
+      rol_id: mapRoles["OPERADOR"].id
+    });
+
+    // ==================================================
+    // 🔹 6. CREAR ADMIN
+    // ==================================================
+    const personaAdmin = await Persona.create({
+      nombres: "Admin",
+      apellidos: "Sistema",
+      documento_identidad: "73081247"
+    });
+
+    const usuarioAdmin = await Usuario.create({
+      persona_id: personaAdmin.id,
       username: "73081247",
-      password: passwordHashed,
-      correo: "admin@sistema.com",
-      telefono: "999999999",
-      documento_identidad: "00000000",
-      direccion: "Municipalidad del Cusco",
-      departamento: "Cusco",
-      provincia: "Cusco",
-      distrito: "Cusco",
-      estado: true,
-      foto_perfil: null,
+      password: await hashPassword("73081247", 12),
+      correo: "admin@test.com"
     });
 
-    // --------------------------------------------------
-    // 5. INSERTAR EN TABLA INTERMEDIA (🔥 SIN addRols)
-    // --------------------------------------------------
-    const relaciones = roles.map((rol) => ({
-      usuario_id: usuario.id,
-      rol_id: rol.id,
-    }));
+    await UsuarioRol.create({
+      usuario_id: usuarioAdmin.id,
+      rol_id: mapRoles["ADMIN"].id
+    });
 
-    await UsuarioRol.bulkCreate(relaciones);
+    console.log("🚀 Usuarios iniciales creados correctamente");
 
-    console.log("🚀 Usuario con roles SERENO y CONDUCTOR creado correctamente.");
   } catch (error) {
-    console.error("❌ Error creando usuario por defecto:", error.message);
+    console.error("❌ Error inicializando usuarios:", error.message);
   }
 }
 
+module.exports = initUsuariosSistema;
 
-
-
-module.exports = crearGerenteSerenazgoPorDefecto
 

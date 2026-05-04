@@ -27,12 +27,12 @@ const UnidadPatrullaje = sequelize.define('UnidadPatrullaje', {
 
   estado: {
     type: DataTypes.ENUM(
-      'Disponible',
-      'En patrullaje',
-      'Mantenimiento',
-      'Inactiva'
+      'DISPONIBLE',
+      'EN_PATRULLAJE',
+      'MANTENIMIENTO',
+      'FUERA_DE_SERVICIO'
     ),
-    defaultValue: 'Disponible'
+    defaultValue: 'DISPONIBLE'
   },
 
   descripcion: {

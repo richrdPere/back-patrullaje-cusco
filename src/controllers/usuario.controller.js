@@ -4,6 +4,7 @@ const { Op, fn, col, where: whereFn } = require("sequelize");
 const db = require('../models');
 
 const Usuario = db.Usuario;
+const Persona = db.Persona;
 const Roles = db.Roles;
 const UsuarioRol = db.UsuarioRol;
 
@@ -12,7 +13,7 @@ const UsuarioRol = db.UsuarioRol;
 // ======================================================
 // 1. LISTAR USUARIOS (con filtros básicos)
 // ======================================================
-const listarUsuarios = async (req, res) => {
+const getUsuariosPaginated = async (req, res) => {
   try {
     const {
       page = 1,
@@ -24,17 +25,15 @@ const listarUsuarios = async (req, res) => {
 
     const offset = (page - 1) * limit;
 
-    const where = {};
+    // FILTROS PERSONA
+    const wherePersona = {};
+    const filtrosPersona = [];
 
-    // ==========================
-    // BUSCADOR - Nombres
-    // ==========================
-    const filtros = [];
-
+    // - BUSCAR POR NOMBRES (en Persona)
     if (nombres) {
-      filtros.push(
+      filtrosPersona.push(
         whereFn(
-          fn("concat", col("Usuario.nombre"), " ", col("Usuario.apellidos")),
+          fn("concat", col("Persona.nombres"), " ", col("Persona.apellidos")),
           {
             [Op.like]: `%${nombres.trim()}%`
           }
@@ -42,30 +41,48 @@ const listarUsuarios = async (req, res) => {
       );
     }
 
-    // ==========================
-    // BUSCADOR - DNI
-    // ==========================
+    // - BUSCAR POR DNI (en Persona)
     if (dni) {
-      filtros.push({
+      filtrosPersona.push({
         documento_identidad: {
           [Op.like]: `%${dni.trim()}%`
         }
       });
     }
 
-    // Agregar filtros al where
-    if (filtros.length > 0) {
-      where[Op.and] = filtros;
+    // - Agregar filtros al where
+    if (filtrosPersona.length > 0) {
+      wherePersona[Op.and] = filtrosPersona;
     }
 
-    // ==========================
+    // INCLUDE PERSONA
+    const includePersona = {
+      model: Persona,
+      attributes: [
+        "id",
+        "nombres",
+        "apellidos",
+        "documento_identidad",
+        "telefono",
+        "direccion",
+        "departamento",
+        "provincia",
+        "distrito",
+        "foto_perfil",
+        "updatedAt"
+      ],
+      required: true,
+      where: wherePersona
+    };
+
+
     // INCLUDE ROLES
-    // ==========================
     const includeRoles = {
       model: Roles,
       attributes: ["nombre"],
       as: 'roles',
       through: { attributes: [] }, // Oculta tabla intermedia
+      required: true
     };
 
     // Filtro por rol
@@ -84,14 +101,12 @@ const listarUsuarios = async (req, res) => {
       includeRoles.required = true;
     }
 
-    // ==========================
+
     // CONSULTA
-    // ==========================
     const { count, rows } = await Usuario.findAndCountAll({
-      where,
       limit: parseInt(limit),
       offset: parseInt(offset),
-      include: [includeRoles],
+      include: [includePersona, includeRoles],
       attributes: { exclude: ["password"] },
       order: [["createdAt", "DESC"]],
       distinct: true, // IMPORTANTE para evitar duplicados
@@ -110,7 +125,15 @@ const listarUsuarios = async (req, res) => {
         const user = usuario.toJSON();
 
         return {
-          ...user,
+          id: user.id,
+          username: user.username,
+          correo: user.correo,
+          estado: user.estado,
+          createdAt: user.createdAt,
+          updatedAt: user.updatedAt,
+
+          persona: user.Persona,
+
           roles: user.roles?.map(r => r.nombre) || []
         };
 
@@ -128,7 +151,7 @@ const listarUsuarios = async (req, res) => {
 // ======================================================
 // 2. OBTENER USUARIO POR ID
 // ======================================================
-const obtenerUsuarioPorId = async (req, res) => {
+const getUsuarioById = async (req, res) => {
   try {
     const { id } = req.params;
 
@@ -136,10 +159,27 @@ const obtenerUsuarioPorId = async (req, res) => {
       attributes: { exclude: ["password"] },
       include: [
         {
+          model: Persona,
+          attributes: [
+            "id",
+            "nombres",
+            "apellidos",
+            "documento_identidad",
+            "telefono",
+            "direccion",
+            "departamento",
+            "provincia",
+            "distrito",
+            "foto_perfil",
+            "updatedAt"
+          ],
+          required: true
+        },
+        {
           model: Roles,
           as: 'roles',
           attributes: ['nombre'],
-          through: { attributes: [] } // oculta tabla intermedia
+          through: { attributes: [] }
         }
       ]
     });
@@ -148,11 +188,18 @@ const obtenerUsuarioPorId = async (req, res) => {
       return res.status(404).json({ message: "Usuario no encontrado" });
     }
 
-    // Convertir a JSON y mapear roles
     const user = usuario.toJSON();
 
     const usuarioFormateado = {
-      ...user,
+      id: user.id,
+      username: user.username,
+      correo: user.correo,
+      estado: user.estado,
+      createdAt: user.createdAt,
+      updatedAt: user.updatedAt,
+
+      persona: user.Persona,
+
       roles: user.roles?.map(r => r.nombre) || []
     };
 
@@ -169,33 +216,45 @@ const obtenerUsuarioPorId = async (req, res) => {
 // ======================================================
 // 3. CREAR USUARIO
 // ======================================================
-const crearUsuario = async (req, res) => {
+const newUsuario = async (req, res) => {
+  const t = await db.sequelize.transaction();
+
   try {
     const {
+      nombres,
       apellidos,
       correo,
       departamento,
       direccion,
       distrito,
       documento_identidad,
-      nombre,
       provincia,
       roles,
       telefono,
     } = req.body;
 
-    // Generar username automáticamente
+    // 1. VALIDACIONES
+    // - Generar username automáticamente
     const username = documento_identidad;
 
-    // Password inicial = DNI
+    // - Password inicial = DNI
     const password = documento_identidad;
 
-    // Validar usuario existente
+    // - Validar persona existente
+    const personaExistente = await Persona.findOne({
+      where: { documento_identidad }
+    });
+
+    if (personaExistente) {
+      return res.status(400).json({
+        message: "El DNI ya está registrado"
+      });
+    }
+    // - Validar USUARIO
     const usuarioExistente = await Usuario.findOne({
       where: {
         [Op.or]: [
           { username },
-          { documento_identidad },
           { correo }
         ]
       }
@@ -209,12 +268,6 @@ const crearUsuario = async (req, res) => {
         });
       }
 
-      if (usuarioExistente.documento_identidad === documento_identidad) {
-        return res.status(400).json({
-          message: "El DNI ya está registrado"
-        });
-      }
-
       if (usuarioExistente.correo === correo) {
         return res.status(400).json({
           message: "El correo ya está registrado"
@@ -223,63 +276,79 @@ const crearUsuario = async (req, res) => {
 
     }
 
-    // Encriptar contraseña
-    const passwordHash = await bcrypt.hash(password, 12);
-
-    // Crear usuario
-    const usuario = await Usuario.create({
-      nombre,
+    // 2. CREAR PERSONA
+    const persona = await Persona.create({
+      nombres,
       apellidos,
-      username,
-      password: passwordHash,
-      correo,
-      telefono,
       documento_identidad,
+      telefono,
       direccion,
       departamento,
       provincia,
-      distrito,
-      estado: true
-    });
+      distrito
+    }, { transaction: t });
 
-    // Asignar roles
-    // Soporta uno o varios roles
-    const rolesArray = roles;
+    // 3. CREAR USUARIO
+    // - Encriptar contraseña
+    const passwordHash = await bcrypt.hash(password, 12);
+
+    // - Crear usuario
+    const usuario = await Usuario.create({
+      persona_id: persona.id,
+      username,
+      password: passwordHash,
+      correo,
+      estado: true
+    }, { transaction: t });
+
+    // 4. VALIDAR ROLES
 
     // Buscar roles en BD
     const rolesDB = await Roles.findAll({
       where: {
-        nombre: rolesArray
+        nombre: roles
       }
     });
 
     if (!rolesDB || rolesDB.length === 0) {
+      await t.rollback();
       return res.status(400).json({
         message: "Rol(es) no válido(s)"
       });
     }
 
-    // Asociar roles al usuario
+    // 5. ASIGNAR ROLES
     const relaciones = rolesDB.map((rol) => ({
       usuario_id: usuario.id,
       rol_id: rol.id,
     }));
-    await UsuarioRol.bulkCreate(relaciones);
+    await UsuarioRol.bulkCreate(relaciones, { transaction: t });
 
+    // 6. COMMIT
+    await t.commit();
 
+    // 7. RESPUESTA
     res.status(201).json({
       message: "Usuario creado correctamente",
       usuario: {
         id: usuario.id,
-        nombre: usuario.nombre,
-        apellidos: usuario.apellidos,
         username: usuario.username,
+        correo: usuario.correo,
         estado: usuario.estado,
+
+        persona: {
+          id: persona.id,
+          nombres: persona.nombres,
+          apellidos: persona.apellidos,
+          documento_identidad: persona.documento_identidad
+        },
+
         roles: rolesDB.map(r => r.nombre)
       }
     });
 
   } catch (error) {
+    await t.rollback();
     res.status(500).json({
       message: "Error al crear usuario",
       error: error.message,
@@ -290,27 +359,83 @@ const crearUsuario = async (req, res) => {
 // ======================================================
 // 4. ACTUALIZAR USUARIO
 // ======================================================
-const actualizarUsuario = async (req, res) => {
-  const t = await sequelize.transaction();
+const updateUsuario = async (req, res) => {
+  const t = await db.sequelize.transaction();
 
   try {
     const { id } = req.params;
-    const { roles, ...data } = req.body;
 
-    const usuario = await Usuario.findByPk(id, { transaction: t });
+    const {
+      roles,
+      password,
+      // datos de usuario
+      correo,
+      estado,
+      // datos de persona
+      nombres,
+      apellidos,
+      telefono,
+      direccion,
+      departamento,
+      provincia,
+      distrito,
+      documento_identidad
+    } = req.body;
+
+    // 1. BUSCAR USUARIO + PERSONA
+    const usuario = await Usuario.findByPk(id, {
+      include: [{ model: Persona }],
+      transaction: t
+    });
 
     if (!usuario) {
       await t.rollback();
       return res.status(404).json({ message: "Usuario no encontrado" });
     }
 
-    // Password
-    if (data.password) {
-      data.password = await bcrypt.hash(data.password, 12);
+    const persona = usuario.Persona;
+
+    // 2. VALIDACIONES
+    // Validar DNI único (si se está cambiando)
+    if (documento_identidad && documento_identidad !== persona.documento_identidad) {
+      const existeDNI = await Persona.findOne({
+        where: { documento_identidad },
+        transaction: t
+      });
+
+      if (existeDNI) {
+        await t.rollback();
+        return res.status(400).json({
+          message: "El DNI ya está registrado"
+        });
+      }
     }
 
-    // Actualizar usuario
-    await usuario.update(data, { transaction: t });
+    // 3. ACTUALIZAR PERSONA
+    await persona.update({
+      nombres,
+      apellidos,
+      telefono,
+      direccion,
+      departamento,
+      provincia,
+      distrito,
+      documento_identidad
+    }, { transaction: t });
+
+    // 4. ACTUALIZAR USUARIO
+    const dataUsuario = {
+      correo,
+      estado
+    };
+
+    if (password) {
+      dataUsuario.password = await bcrypt.hash(password, 12);
+    }
+
+    await usuario.update(dataUsuario, { transaction: t });
+
+    // 5. ACTUALIZAR ROLES
 
     // Actualizar roles
     if (roles && Array.isArray(roles)) {
@@ -325,13 +450,21 @@ const actualizarUsuario = async (req, res) => {
         transaction: t
       });
 
-      // 2. Eliminar roles actuales
+      // 2. Validar que todos existan
+      if (rolesDB.length !== roles.length) {
+        await t.rollback();
+        return res.status(400).json({
+          message: "Uno o más roles no existen"
+        });
+      }
+
+      // 3. Eliminar actuales
       await UsuarioRol.destroy({
         where: { usuario_id: id },
         transaction: t
       });
 
-      // 3. Insertar nuevos roles
+      // 4. Insertar nuevos
       const nuevosRoles = rolesDB.map(r => ({
         usuario_id: id,
         rol_id: r.id
@@ -340,6 +473,7 @@ const actualizarUsuario = async (req, res) => {
       await UsuarioRol.bulkCreate(nuevosRoles, { transaction: t });
     }
 
+    // 6. COMMIT
     await t.commit();
 
     res.json({ message: "Usuario actualizado correctamente" });
@@ -355,77 +489,138 @@ const actualizarUsuario = async (req, res) => {
 };
 
 // ======================================================
-// 5. DESACTIVAR USUARIO (SOFT DELETE)
+// 5. CAMBIAR ESTADO DEL USUARIO (SOFT DELETE)
 // ======================================================
-const desactivarUsuario = async (req, res) => {
+const changeEstadoUsuario = async (req, res) => {
   try {
     const { id } = req.params;
+    const { estado } = req.body; // true | false
 
-    const usuario = await Usuario.findByPk(id);
-
-    if (!usuario) {
-      return res.status(404).json({ message: "Usuario no encontrado" });
+    // ==========================
+    // 1. VALIDAR INPUT
+    // ==========================
+    if (typeof estado !== "boolean") {
+      return res.status(400).json({
+        message: "El estado debe ser booleano (true o false)"
+      });
     }
 
-    usuario.estado = false;
+    // ==========================
+    // 2. BUSCAR USUARIO + PERSONA
+    // ==========================
+    const usuario = await Usuario.findByPk(id, {
+      include: [
+        {
+          model: Persona,
+          attributes: ["id", "nombres", "apellidos", "documento_identidad"]
+        }
+      ]
+    });
+
+    if (!usuario) {
+      return res.status(404).json({
+        message: "Usuario no encontrado"
+      });
+    }
+
+    // ==========================
+    // 3. VALIDAR SI YA ESTÁ EN ESE ESTADO
+    // ==========================
+    if (usuario.estado === estado) {
+      return res.status(400).json({
+        message: estado
+          ? "El usuario ya está activo"
+          : "El usuario ya está desactivado"
+      });
+    }
+
+    // ==========================
+    // 4. ACTUALIZAR ESTADO
+    // ==========================
+    usuario.estado = estado;
     await usuario.save();
 
-    res.json({ message: "Usuario desactivado correctamente" });
+    // ==========================
+    // 5. RESPUESTA
+    // ==========================
+    res.json({
+      message: estado
+        ? "Acceso activado correctamente"
+        : "Acceso desactivado correctamente",
+
+      usuario: {
+        id: usuario.id,
+        username: usuario.username,
+        estado: usuario.estado,
+        persona: usuario.Persona
+      }
+    });
+
   } catch (error) {
     res.status(500).json({
-      message: "Error al desactivar usuario",
+      message: "Error al actualizar estado del usuario",
       error: error.message,
     });
   }
 };
 
 // ======================================================
-// 6. ACTIVAR USUARIO (SOFT DELETE)
+// 6. ELIMINAR USUARIO
 // ======================================================
-const activarUsuario = async (req, res) => {
+const deleteUsuario = async (req, res) => {
+  const t = await db.sequelize.transaction();
+
   try {
     const { id } = req.params;
 
-    const usuario = await Usuario.findByPk(id);
-
-    if (!usuario) {
-      return res.status(404).json({ message: "Usuario no encontrado" });
-    }
-
-    usuario.estado = true;
-    await usuario.save();
-
-    res.json({ message: "Usuario activado correctamente" });
-  } catch (error) {
-    res.status(500).json({
-      message: "Error al desactivar usuario",
-      error: error.message,
+    // 1. BUSCAR USUARIO + PERSONA
+    const usuario = await Usuario.findByPk(id, {
+      include: [{ model: Persona }],
+      transaction: t
     });
-  }
-};
 
-// ======================================================
-// 7. ELIMINAR USUARIO
-// ======================================================
-const eliminarUsuario = async (req, res) => {
-  try {
-    const { id } = req.params;
-
-    const usuario = await Usuario.findByPk(id);
     if (!usuario) {
-      return res.status(404).json({ message: "Usuario no encontrado" });
+      await t.rollback();
+      return res.status(404).json({
+        message: "Usuario no encontrado"
+      });
     }
 
-    // Eliminar usuario principal
-    await usuario.destroy();
+    const personaId = usuario.persona_id;
 
-    res.json({ message: "Usuario eliminado correctamente" });
+    // 2. ELIMINAR ROLES
+    await UsuarioRol.destroy({
+      where: { usuario_id: id },
+      transaction: t
+    });
+
+    // 3. ELIMINAR USUARIO
+    await usuario.destroy({ transaction: t });
+
+    // 4. ELIMINAR PERSONA
+    await Persona.destroy({
+      where: { id: personaId },
+      transaction: t
+    });
+
+    // 5. COMMIT
+    await t.commit();
+
+    res.json({
+      message: "Usuario y persona eliminados correctamente"
+    });
+
   } catch (error) {
+    await t.rollback();
+
     console.error("Error al eliminar usuario:", error);
-    res.status(500).json({ message: "Error al eliminar usuario" });
+
+    res.status(500).json({
+      message: "Error al eliminar usuario",
+      error: error.message
+    });
   }
 };
-
 
 // ======================================================
 // 7. LISTAR TODOS LOS SERENOS
@@ -434,53 +629,73 @@ const getSerenosAndConductores = async (req, res) => {
   try {
 
     const usuarios = await Usuario.findAll({
+      where: {
+        estado: true // SOLO SERENOS ACTIVOS
+      },
       include: [
         {
+          model: Persona,
+          attributes: [
+            "id",
+            "nombres",
+            "apellidos",
+            "documento_identidad",
+            "telefono"
+          ],
+          required: true
+        },
+        {
           model: Roles,
-          attributes: ["nombre"],
           as: 'roles',
+          attributes: ["nombre"],
           where: {
             nombre: {
               [Op.in]: ["SERENO", "CONDUCTOR"]
-            },
-
+            }
           },
-          through: { attributes: [] }
+          through: { attributes: [] },
+          required: true
         }
       ],
       distinct: true
     });
 
+    // ==========================
     // TRANSFORMACIÓN
-    const serenos = usuarios.map(u => {
-      const usuario = u.toJSON();
+    // ==========================
+    const resultado = usuarios.map(u => {
+      const user = u.toJSON();
 
       return {
-        ...usuario,
-        roles: usuario.roles.map(r => r.nombre) // 👈 aquí está la magia
+        id: user.id,
+        username: user.username,
+        estado: user.estado,
+
+        persona: user.Persona,
+
+        roles: user.roles.map(r => r.nombre)
       };
     });
 
     res.json({
-      total: usuarios.length,
-      serenos
+      total: resultado.length,
+      data: resultado
     });
 
   } catch (error) {
     res.status(500).json({
-      message: "Error al listar usuarios",
+      message: "Error al listar serenos y conductores",
       error: error.message
     });
   }
 };
 
 module.exports = {
-  listarUsuarios,
-  obtenerUsuarioPorId,
-  crearUsuario,
-  actualizarUsuario,
-  desactivarUsuario,
-  activarUsuario,
-  eliminarUsuario,
+  getUsuariosPaginated,
+  getUsuarioById,
+  newUsuario,
+  updateUsuario,
+  changeEstadoUsuario,
+  deleteUsuario,
   getSerenosAndConductores
 };

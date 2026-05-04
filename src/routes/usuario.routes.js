@@ -5,28 +5,25 @@ const verificarToken = require("../middlewares/auth.middleware");
 const verificarRol = require("../middlewares/rol.middleware");
 
 const {
-  listarUsuarios,
-  obtenerUsuarioPorId,
-  crearUsuario,
-  actualizarUsuario,
-  desactivarUsuario,
-  activarUsuario,
-  eliminarUsuario,
+  getUsuariosPaginated,
+  getUsuarioById,
+  newUsuario,
+  updateUsuario,
+  changeEstadoUsuario,
+  deleteUsuario,
   getSerenosAndConductores
 } = require("../controllers/usuario.controller");
 
 // ==========================
 // RUTAS USUARIOS
 // ==========================
-
-router.get("/", verificarToken, listarUsuarios);
+router.get("/paginado", verificarToken, getUsuariosPaginated);
 router.get("/serenos", verificarToken, getSerenosAndConductores);
-router.get("/:id", verificarToken, obtenerUsuarioPorId);
-router.post("/", verificarToken, crearUsuario);
-router.put("/editar/:id", verificarToken, actualizarUsuario);
-router.patch("/deshabilitar/:id", verificarToken, desactivarUsuario);
-router.patch("/habilitar/:id", verificarToken, activarUsuario);
-router.delete("/:id", verificarToken, eliminarUsuario);
+router.get("/detalle/:id", verificarToken, getUsuarioById);
+router.post("/crear", verificarToken, newUsuario);
+router.put("/editar/:id", verificarToken, updateUsuario);
+router.patch("/estado/:id", verificarToken, changeEstadoUsuario);
+router.delete("/eliminar/:id", verificarToken, deleteUsuario);
 
 
 module.exports = router;

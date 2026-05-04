@@ -5,6 +5,7 @@ const { generarToken } = require("../utils/jwt");
 
 const Usuario = db.Usuario;
 const Roles = db.Roles;
+const Persona = db.Persona;
 
 
 // *************************************************
@@ -14,17 +15,32 @@ const login = async (req, res) => {
   try {
     const { username, password } = req.body;
 
-    // 1. Validar entrada
+    // 1. VALIDACIÓN
     if (!username || !password) {
       return res.status(400).json({
         message: "Debe ingresar username y contraseña",
       });
     }
 
-    // 2. Buscar usuario con roles
+    // 2. BUSCAR USUARIO + PERSONA + ROLES
     const usuario = await Usuario.findOne({
       where: { username },
       include: [
+        {
+          model: Persona,
+          attributes: [
+            "id",
+            "nombres",
+            "apellidos",
+            "documento_identidad",
+            "telefono",
+            "direccion",
+            "departamento",
+            "provincia",
+            "distrito",
+            "foto_perfil"
+          ]
+        },
         {
           model: Roles,
           as: "roles",
@@ -40,14 +56,14 @@ const login = async (req, res) => {
       });
     }
 
-    // 3. Verificar estado
+    // 3. VALIDAR ESTADO
     if (!usuario.estado) {
       return res.status(403).json({
         message: "Usuario deshabilitado",
       });
     }
 
-    // 4. Comparar password
+    // 4. VALIDAR PASSWORD
     const passwordValido = await bcrypt.compare(password, usuario.password);
 
     if (!passwordValido) {
@@ -55,32 +71,30 @@ const login = async (req, res) => {
         message: "Contraseña incorrecta",
       });
     }
-    // EXTRAER ROLES COMO ARRAY
-    const roles = usuario.roles.map((r) => r.nombre) || [];
 
-    // 5. Generar JWT
+
+    // 5. ROLES
+    const roles = usuario.roles?.map((r) => r.nombre) || [];
+
+
+    // 6. TOKEN
     const token = await generarToken(usuario.id);
 
-    // 6. Respuesta
+  
+    // 7. RESPUESTA (ALINEADA CON FRONT)
     res.json({
       message: "Login exitoso",
       token,
       roles,
       usuario: {
         id: usuario.id,
-        nombre: usuario.nombre,
-        apellidos: usuario.apellidos,
         username: usuario.username,
         correo: usuario.correo,
-        telefono: usuario.telefono,
-        direccion: usuario.direccion,
-        distrito: usuario.distrito,
-        provincia: usuario.provincia,
-        departamento: usuario.departamento,
-        online: usuario.online,
-        foto_perfil: usuario.foto_perfil
+        estado: usuario.estado,
+        persona: usuario.Persona, // Aquí se incluye la información de la persona asociada al usuario
       },
     });
+
   } catch (error) {
     res.status(500).json({
       message: "Error en login",

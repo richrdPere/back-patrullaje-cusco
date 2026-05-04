@@ -1,5 +1,6 @@
 const db = require('../models');
 const { Op } = require("sequelize");
+const { getIO } = require("../socket"); // ajusta ruta
 
 const PatrullajeProgramado = db.PatrullajeProgramado;
 const PatrullajePersonal = db.PatrullajePersonal;
@@ -31,6 +32,7 @@ const newPatrullajeProgramado = async (req, res) => {
     const unidad = await UnidadPatrullaje.findByPk(unidad_id);
 
     if (!unidad) {
+      await t.rollback();
       return res.status(404).json({
         message: "Unidad no encontrada"
       });
@@ -42,6 +44,7 @@ const newPatrullajeProgramado = async (req, res) => {
     });
 
     if (serenosDB.length !== serenos.length) {
+      await t.rollback();
       return res.status(400).json({
         message: "Uno o más serenos no existen"
       });
@@ -53,6 +56,7 @@ const newPatrullajeProgramado = async (req, res) => {
     });
 
     if (policiasDB.length !== policias.length) {
+      await t.rollback();
       return res.status(400).json({
         message: "Uno o más policías no existen"
       });
@@ -68,7 +72,7 @@ const newPatrullajeProgramado = async (req, res) => {
       hora_inicio,
       hora_fin,
       descripcion
-    });
+    }, { transaction: t });
 
     // =========================
     // - INSERTAR PERSONAL
@@ -97,18 +101,54 @@ const newPatrullajeProgramado = async (req, res) => {
     // - EMITIR SOCKET
     // =========================
 
-    const io = req.app.get("io"); // <- IMPORTANTE
+    try {
+      const io = getIO();
 
-    serenos.forEach((serenoId) => {
-      io.to(`user_${serenoId}`).emit("nuevo_patrullaje", {
-        id: patrullaje.id,
-        zona_id: patrullaje.zona_id,
-        fecha: patrullaje.fecha,
-        hora_inicio: patrullaje.hora_inicio,
-        hora_fin: patrullaje.hora_fin,
-        descripcion: patrullaje.descripcion
+      // VOLVER A CONSULTAR CON RELACIONES
+      const patrullajeCompleto = await PatrullajeProgramado.findByPk(patrullaje.id, {
+        include: [
+          {
+            model: Zonas,
+            as: "zona",
+            attributes: ['nombre', 'riesgo', 'coordenadas', 'descripcion']
+          },
+          {
+            model: UnidadPatrullaje,
+            as: "unidad",
+            attributes: ['codigo', 'tipo', 'placa']
+          }
+        ]
       });
-    });
+
+      // MAPEAR IGUAL QUE EN MOBILE
+      const payload = {
+        id: patrullajeCompleto.id,
+        fecha: patrullajeCompleto.fecha,
+        hora_inicio: patrullajeCompleto.hora_inicio,
+        hora_fin: patrullajeCompleto.hora_fin,
+        estado: patrullajeCompleto.estado,
+        zona: {
+          nombre: patrullajeCompleto.zona?.nombre,
+          descripcion: patrullajeCompleto.zona?.descripcion,
+          riesgo: patrullajeCompleto.zona?.riesgo,
+          coordenadas: patrullajeCompleto.zona?.coordenadas ?? []
+        },
+        unidad: {
+          codigo: patrullajeCompleto.unidad?.codigo,
+          tipo: patrullajeCompleto.unidad?.tipo,
+          placa: patrullajeCompleto.unidad?.placa
+        }
+      };
+
+      // EMITIR A TODOS LOS SERENOS
+      serenos.forEach((serenoId) => {
+        io.to(`user_${serenoId}`).emit("nuevo_patrullaje", payload);
+      });
+
+    } catch (socketError) {
+      console.error("⚠️ Error en socket:", socketError);
+      // NO rollback aquí
+    }
 
     // =========================
     // RESPUESTA
@@ -119,7 +159,10 @@ const newPatrullajeProgramado = async (req, res) => {
     });
 
   } catch (error) {
-    await t.rollback();
+    // SOLO rollback si NO se hizo commit
+    if (!t.finished) {
+      await t.rollback();
+    }
 
     res.status(500).json({
       message: "Error al crear patrullaje",
@@ -165,10 +208,12 @@ const getPatrullajesProgramadosPaginated = async (req, res) => {
       include: [
         {
           model: UnidadPatrullaje,
+          as: "unidad",
           attributes: ["id", "codigo", "tipo", "placa", "estado"]
         },
         {
           model: Zonas,
+          as: "zona",
           attributes: ["id", "nombre", "descripcion", "riesgo"]
         },
         {
