@@ -28,6 +28,7 @@ const login = async (req, res) => {
       include: [
         {
           model: Persona,
+          as: "persona",
           attributes: [
             "id",
             "nombres",
@@ -91,7 +92,7 @@ const login = async (req, res) => {
         username: usuario.username,
         correo: usuario.correo,
         estado: usuario.estado,
-        persona: usuario.Persona, // Aquí se incluye la información de la persona asociada al usuario
+        persona: usuario.persona, // Aquí se incluye la información de la persona asociada al usuario
       },
     });
 

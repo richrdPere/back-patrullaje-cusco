@@ -47,8 +47,8 @@ db.Persona = Persona;
 // =============================
 // PERSONA - USUARIO (1:1)
 // =============================
-db.Persona.hasOne(db.Usuario, { foreignKey: "persona_id" });
-db.Usuario.belongsTo(db.Persona, { foreignKey: "persona_id" });
+db.Persona.hasOne(db.Usuario, { foreignKey: "persona_id", as: "usuario" });
+db.Usuario.belongsTo(db.Persona, { foreignKey: "persona_id", as: "persona" });
 
 // ================================
 // USUARIO - GPS (1 a N)
@@ -188,17 +188,11 @@ db.Roles.belongsToMany(db.Usuario, {
 // ================================
 // USUARIO - POLICIA
 // ================================
-// db.Usuario.hasOne(db.Policia, {
-//   foreignKey: "usuario_id",
-//   as: "policia"
-// });
+// db.Usuario.hasOne(db.Policia, { foreignKey: "usuario_id", as: "policia" });
+// db.Policia.belongsTo(db.Usuario, { foreignKey: "usuario_id", as: "usuario" });
 
-// db.Policia.belongsTo(db.Usuario, {
-//   foreignKey: "usuario_id",
-//   as: "usuario"
-// });
-db.Persona.hasOne(db.Policia, { foreignKey: "persona_id" });
-db.Policia.belongsTo(db.Persona, { foreignKey: "persona_id" });
+db.Persona.hasOne(db.Policia, { foreignKey: "persona_id", as: "policia" });
+db.Policia.belongsTo(db.Persona, { foreignKey: "persona_id", as: "persona" });
 
 
 

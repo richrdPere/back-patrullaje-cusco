@@ -7,6 +7,7 @@ const Usuario = db.Usuario;
 const Roles = db.Roles;
 const UsuarioRol = db.UsuarioRol;
 const Policia = db.Policia;
+const Persona = db.Persona;
 
 // ======================================================
 // 1. CREAR POLICIA
@@ -16,7 +17,7 @@ const newPolicia = async (req, res) => {
 
   try {
     const {
-      nombre,
+      nombres,
       apellidos,
       documento_identidad,
       telefono,
@@ -30,15 +31,13 @@ const newPolicia = async (req, res) => {
     } = req.body;
 
     // ==========================
-    // VALIDAR EXISTENCIA
+    // VALIDAR SI YA EXISTE PERSONA
     // ==========================
-    const existe = await Usuario.findOne({
-      where: {
-        documento_identidad
-      }
+    const existePersona = await Persona.findOne({
+      where: { documento_identidad }
     });
 
-    if (existe) {
+    if (existePersona) {
       await t.rollback();
       return res.status(400).json({
         message: "El DNI ya está registrado"
@@ -46,15 +45,11 @@ const newPolicia = async (req, res) => {
     }
 
     // ==========================
-    // CREAR USUARIO BASE
+    // CREAR PERSONA
     // ==========================
-    const passwordHash = await bcrypt.hash(documento_identidad, 10);
-
-    const usuario = await Usuario.create({
-      nombre,
+    const persona = await Persona.create({
+      nombres,
       apellidos,
-      username: documento_identidad,
-      password: passwordHash,
       documento_identidad,
       telefono,
       direccion,
@@ -64,33 +59,10 @@ const newPolicia = async (req, res) => {
     }, { transaction: t });
 
     // ==========================
-    // ASIGNAR ROL POLICIA
-    // ==========================
-    // const rolPolicia = await Roles.findOne({
-    //   where: { nombre: 'POLICIA' }
-    // });
-
-    // if (!rolPolicia) {
-    //   await t.rollback();
-    //   return res.status(500).json({
-    //     message: "El rol POLICIA no existe en la base de datos"
-    //   });
-    // }
-
-    // // Asociar roles al usuario
-    // const relaciones = rolPolicia.map((rol) => ({
-    //   usuario_id: usuario.id,
-    //   rol_id: rol.id,
-    // }));
-    // await UsuarioRol.bulkCreate(relaciones);
-
-    // await usuario.addRole(rolPolicia, { transaction: t });
-
-    // ==========================
     // CREAR POLICIA
     // ==========================
     const policia = await Policia.create({
-      usuario_id: usuario.id,
+      persona_id: persona.id,
       grado,
       comisaria,
       codigo_institucional
@@ -98,11 +70,12 @@ const newPolicia = async (req, res) => {
 
     await t.commit();
 
+
     res.status(201).json({
       message: "Policía creado correctamente",
       data: {
         id: policia.id,
-        usuario
+        persona
       }
     });
 
@@ -129,20 +102,18 @@ const getPoliciasPaginated = async (req, res) => {
 
     const offset = (page - 1) * limit;
 
-    const whereUsuario = {};
+    const wherePersona = {};
     const filtros = [];
 
-    // ==========================
     // BUSCAR POR NOMBRE COMPLETO
-    // ==========================
     if (nombres) {
       filtros.push(
-        whereFn(
+        where(
           fn(
             "concat",
-            col("usuario.nombre"),
+            col("persona.nombres"),
             " ",
-            col("usuario.apellidos")
+            col("persona.apellidos")
           ),
           {
             [Op.like]: `%${nombres.trim()}%`
@@ -151,57 +122,41 @@ const getPoliciasPaginated = async (req, res) => {
       );
     }
 
-    // ==========================
     // BUSCAR POR DNI
-    // ==========================
     if (dni) {
       filtros.push({
-        "$usuario.documento_identidad$": {
+        documento_identidad: {
           [Op.like]: `%${dni.trim()}%`
         }
       });
     }
 
     if (filtros.length > 0) {
-      whereUsuario[Op.and] = filtros;
+      wherePersona[Op.and] = filtros;
     }
 
-    // ==========================
     // CONSULTA
-    // ==========================
     const { count, rows } = await Policia.findAndCountAll({
       include: [
         {
-          model: Usuario,
-          as: "usuario",
-          attributes: { exclude: ["password"] },
-          where: whereUsuario
+          model: Persona,
+          as: "persona",
+          where: wherePersona
         }
       ],
       limit: parseInt(limit),
       offset: parseInt(offset),
-      order: [[{ model: Usuario, as: "usuario" }, "createdAt", "DESC"]],
-      distinct: true // evita duplicados
+      order: [["id", "DESC"]],
+      distinct: true
     });
 
-    // ==========================
     // RESPUESTA
-    // ==========================
     res.json({
       total: count,
       page: parseInt(page),
       limit: parseInt(limit),
       totalPages: Math.ceil(count / limit),
-      data: rows.map(usuario => {
-
-        const user = usuario.toJSON();
-
-        return {
-          ...user,
-          roles: user.roles?.map(r => r.nombre) || []
-        };
-
-      }),
+      data: rows
     });
 
   } catch (error) {
@@ -222,9 +177,8 @@ const getPoliciaById = async (req, res) => {
     const policia = await Policia.findByPk(id, {
       include: [
         {
-          model: Usuario,
-          as: "usuario",
-          attributes: { exclude: ["password"] }
+          model: Persona,
+          as: "persona"
         }
       ]
     });
@@ -235,7 +189,13 @@ const getPoliciaById = async (req, res) => {
       });
     }
 
-    res.json(policia);
+    res.json({
+      id: policia.id,
+      grado: policia.grado,
+      comisaria: policia.comisaria,
+      codigo_institucional: policia.codigo_institucional,
+      persona: policia.persona
+    });
 
   } catch (error) {
     res.status(500).json({
@@ -254,6 +214,8 @@ const updatePolicia = async (req, res) => {
   try {
     const { id } = req.params;
 
+
+    // BUSCAR POLICIA
     const policia = await Policia.findByPk(id);
 
     if (!policia) {
@@ -263,13 +225,19 @@ const updatePolicia = async (req, res) => {
       });
     }
 
-    const usuario = await Usuario.findByPk(policia.usuario_id);
+    // BUSCAR PERSONA RELACIONADA
+    const persona = await Persona.findByPk(policia.persona_id);
 
-    // ==========================
+    if (!persona) {
+      await t.rollback();
+      return res.status(404).json({
+        message: "Persona asociada no encontrada"
+      });
+    }
+
     // ACTUALIZAR USUARIO
-    // ==========================
-    await usuario.update({
-      nombre: req.body.nombre,
+    await persona.update({
+      nombres: req.body.nombre,
       apellidos: req.body.apellidos,
       telefono: req.body.telefono,
       direccion: req.body.direccion,
@@ -278,9 +246,7 @@ const updatePolicia = async (req, res) => {
       distrito: req.body.distrito
     }, { transaction: t });
 
-    // ==========================
     // ACTUALIZAR POLICIA
-    // ==========================
     await policia.update({
       grado: req.body.grado,
       comisaria: req.body.comisaria,
@@ -312,6 +278,7 @@ const deletePolicia = async (req, res) => {
   try {
     const { id } = req.params;
 
+    // BUSCAR POLICIA
     const policia = await Policia.findByPk(id);
 
     if (!policia) {
@@ -321,14 +288,17 @@ const deletePolicia = async (req, res) => {
       });
     }
 
-    // eliminar usuario relacionado
-    await Usuario.destroy({
-      where: { id: policia.usuario_id },
-      transaction: t
-    });
+    // BUSCAR PERSONA
+    const persona = await Persona.findByPk(policia.persona_id);
 
-    // eliminar policia
+    // ELIMINAR POLICIA
     await policia.destroy({ transaction: t });
+
+
+    // ELIMINAR PERSONA
+    if (persona) {
+      await persona.destroy({ transaction: t });
+    }
 
     await t.commit();
 
@@ -351,19 +321,39 @@ const deletePolicia = async (req, res) => {
 // ======================================================
 const getAllPolicias = async (req, res) => {
   try {
+
     const policias = await Policia.findAll({
+      attributes: ['id', 'grado', 'comisaria'],
       include: [
         {
-          model: Usuario,
-          as: "usuario",
-          attributes: { exclude: ["password"] }
+          model: Persona,
+          as: "persona",
+          attributes: ['nombres', 'apellidos', 'documento_identidad']
         }
+      ],
+      order: [
+        [{ model: Persona, as: 'persona' }, 'nombres', 'ASC']
       ]
     });
 
+    // FORMATEAR PARA SELECT
+    const data = policias.map(p => {
+      const persona = p.persona;
+
+      return {
+        id: p.id,
+        label: `${persona.nombres} ${persona.apellidos}`,
+        dni: persona.documento_identidad,
+        grado: p.grado,
+        comisaria: p.comisaria,
+        // opcional: devolver objeto completo si lo necesitas
+        persona
+      };
+    });
+
     res.json({
-      total: policias.length,
-      policias
+      total: data.length,
+      data
     });
 
   } catch (error) {

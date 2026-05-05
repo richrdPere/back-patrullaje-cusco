@@ -58,6 +58,7 @@ const getUsuariosPaginated = async (req, res) => {
     // INCLUDE PERSONA
     const includePersona = {
       model: Persona,
+      as: "persona",
       attributes: [
         "id",
         "nombres",
@@ -132,7 +133,7 @@ const getUsuariosPaginated = async (req, res) => {
           createdAt: user.createdAt,
           updatedAt: user.updatedAt,
 
-          persona: user.Persona,
+          persona: user.persona,
 
           roles: user.roles?.map(r => r.nombre) || []
         };
@@ -160,6 +161,7 @@ const getUsuarioById = async (req, res) => {
       include: [
         {
           model: Persona,
+          as: "persona",
           attributes: [
             "id",
             "nombres",
@@ -384,7 +386,7 @@ const updateUsuario = async (req, res) => {
 
     // 1. BUSCAR USUARIO + PERSONA
     const usuario = await Usuario.findByPk(id, {
-      include: [{ model: Persona }],
+      include: [{ model: Persona, as: "persona" }],
       transaction: t
     });
 
@@ -512,6 +514,7 @@ const changeEstadoUsuario = async (req, res) => {
       include: [
         {
           model: Persona,
+          as: "persona",
           attributes: ["id", "nombres", "apellidos", "documento_identidad"]
         }
       ]
@@ -552,7 +555,7 @@ const changeEstadoUsuario = async (req, res) => {
         id: usuario.id,
         username: usuario.username,
         estado: usuario.estado,
-        persona: usuario.Persona
+        persona: usuario.persona
       }
     });
 
@@ -575,7 +578,7 @@ const deleteUsuario = async (req, res) => {
 
     // 1. BUSCAR USUARIO + PERSONA
     const usuario = await Usuario.findByPk(id, {
-      include: [{ model: Persona }],
+      include: [{ model: Persona, as: "persona" }],
       transaction: t
     });
 
@@ -635,6 +638,7 @@ const getSerenosAndConductores = async (req, res) => {
       include: [
         {
           model: Persona,
+          as: "persona",
           attributes: [
             "id",
             "nombres",
@@ -671,7 +675,7 @@ const getSerenosAndConductores = async (req, res) => {
         username: user.username,
         estado: user.estado,
 
-        persona: user.Persona,
+        persona: user.persona,
 
         roles: user.roles.map(r => r.nombre)
       };

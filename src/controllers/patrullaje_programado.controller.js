@@ -6,6 +6,7 @@ const PatrullajeProgramado = db.PatrullajeProgramado;
 const PatrullajePersonal = db.PatrullajePersonal;
 const UnidadPatrullaje = db.UnidadPatrullaje;
 const Usuario = db.Usuario;
+const Persona = db.Persona;
 const Roles = db.Roles;
 const Policia = db.Policia;
 const Zonas = db.Zonas;
@@ -126,6 +127,7 @@ const newPatrullajeProgramado = async (req, res) => {
         fecha: patrullajeCompleto.fecha,
         hora_inicio: patrullajeCompleto.hora_inicio,
         hora_fin: patrullajeCompleto.hora_fin,
+        descripcion: patrullajeCompleto.descripcion,
         estado: patrullajeCompleto.estado,
         zona: {
           nombre: patrullajeCompleto.zona?.nombre,
@@ -223,12 +225,18 @@ const getPatrullajesProgramadosPaginated = async (req, res) => {
             {
               model: Usuario,
               as: "usuario",
-              attributes: ["id", "nombre", "apellidos"],
+              required: false,
+              attributes: ["id"],
               include: [
                 {
+                  model: Persona,
+                  as: "persona",
+                  attributes: ["nombres", "apellidos"]
+                },
+                {
                   model: Roles,
+                  as: "roles",
                   attributes: ["nombre"],
-                  as: 'roles',
                   through: { attributes: [] }
                 }
               ]
@@ -236,12 +244,13 @@ const getPatrullajesProgramadosPaginated = async (req, res) => {
             {
               model: Policia,
               as: "policia",
+              required: false,
               attributes: ["id", "grado", "comisaria"],
               include: [
                 {
-                  model: Usuario,
-                  as: "usuario",
-                  attributes: ["id", "nombre", "apellidos"]
+                  model: Persona,
+                  as: "persona",
+                  attributes: ["nombres", "apellidos"]
                 }
               ]
             }
@@ -268,8 +277,8 @@ const getPatrullajesProgramadosPaginated = async (req, res) => {
         if (item.tipo_personal === "SERENO" && item.usuario) {
           serenos.push({
             id: item.usuario.id,
-            nombre: item.usuario.nombre,
-            apellidos: item.usuario.apellidos,
+            nombres: item.usuario.persona?.nombres || '',
+            apellidos: item.usuario.persona?.apellidos || '',
             roles: item.usuario.roles?.map(r => r.nombre) || []
           });
         }
@@ -282,7 +291,8 @@ const getPatrullajesProgramadosPaginated = async (req, res) => {
             id: item.policia.id,
             grado: item.policia.grado,
             comisaria: item.policia.comisaria,
-            usuario: item.policia.usuario
+            nombres: item.policia.persona?.nombres || '',
+            apellidos: item.policia.persona?.apellidos || ''
           });
         }
 
@@ -294,8 +304,8 @@ const getPatrullajesProgramadosPaginated = async (req, res) => {
         hora_inicio: patrullaje.hora_inicio,
         hora_fin: patrullaje.hora_fin,
         descripcion: patrullaje.descripcion,
-        unidad: patrullaje.UnidadPatrullaje || null,
-        zona: patrullaje.Zona || patrullaje.Zonas || null,
+        unidad: patrullaje.unidad || null, 
+        zona: patrullaje.zona || null,    
         estado: patrullaje.estado,
         createdAt: patrullaje.createdAt,
         updatedAt: patrullaje.updatedAt,
@@ -413,7 +423,7 @@ const getPatrullajeById = async (req, res) => {
           id: item.policia.id,
           grado: item.policia.grado,
           comisaria: item.policia.comisaria,
-          usuario: item.policia.usuario
+          persona: item.policia.persona
         });
       }
 
