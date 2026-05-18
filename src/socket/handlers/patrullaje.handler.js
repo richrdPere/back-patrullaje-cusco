@@ -5,21 +5,22 @@ const PatrullajePersonal = db.PatrullajePersonal;
 
 const mapPatrullaje = (p) => ({
   id: p.id,
+  estado: p.estado,
   fecha: p.fecha,
   hora_inicio: p.hora_inicio,
   hora_fin: p.hora_fin,
-  estado: p.estado,
+  descripcion: p.descripcion,
   zona: {
     nombre: p.zona?.nombre,
     descripcion: p.zona?.descripcion,
     riesgo: p.zona?.riesgo,
-    coordenadas: p.zona?.coordenadas ?? [],
+    coordenadas: p.zona?.coordenadas ?? []
   },
   unidad: {
     codigo: p.unidad?.codigo,
     tipo: p.unidad?.tipo,
-    placa: p.unidad?.placa,
-  },
+    placa: p.unidad?.placa
+  }
 });
 
 module.exports = (io, socket) => {
@@ -45,11 +46,13 @@ module.exports = (io, socket) => {
   socket.on("iniciar_patrullaje", async ({ patrullajeId }) => {
     try {
 
+      const userId = socket.usuario.id;
+
       // 1. VALIDAR QUE EL USUARIO PERTENECE AL PATRULLAJE
       const asignado = await PatrullajePersonal.findOne({
         where: {
           patrullaje_id: patrullajeId,
-          personal_id: socket.usuario.id,
+          personal_id: userId,
           tipo_personal: "SERENO"
         }
       });
@@ -62,19 +65,29 @@ module.exports = (io, socket) => {
 
       // 2. ACTUALIZAR ESTADO EN BD
       await PatrullajeProgramado.update(
-        { estado: "EN_PROCESO" },
+        { estado: "EN_CURSO" },
         { where: { id: patrullajeId } }
       );
 
-      // 3. UNIR AL ROOM
-      socket.join(`patrullaje_${patrullajeId}`);
-
-      // 4. EMITIR A TODOS LOS PARTICIPANTES
-      io.to(`patrullaje_${patrullajeId}`).emit("patrullaje_iniciado", {
-        patrullajeId,
-        iniciadoPor: socket.usuario.id,
-        fecha: new Date()
+      // - CONSULTAR COMPLETO
+      const patrullaje = await PatrullajeProgramado.findByPk(patrullajeId, {
+        include: ["zona", "unidad"]
       });
+
+      const payload = mapPatrullaje(patrullaje);
+
+      // 3. EVENTO ÚNICO
+      io.to(`patrullaje_${patrullajeId}`).emit("patrullaje_actualizado", payload);
+
+      // // 3. UNIR AL ROOM
+      // socket.join(`patrullaje_${patrullajeId}`);
+
+      // // 4. EMITIR A TODOS LOS PARTICIPANTES
+      // io.to(`patrullaje_${patrullajeId}`).emit("patrullaje_iniciado", {
+      //   patrullajeId,
+      //   iniciadoPor: socket.usuario.id,
+      //   fecha: new Date()
+      // });
 
     } catch (error) {
       console.error(error);
@@ -86,11 +99,13 @@ module.exports = (io, socket) => {
   // - Finalizar patrullaje (desde app)
   socket.on("finalizar_patrullaje", async ({ patrullajeId }) => {
     try {
+      const userId = socket.usuario.id;
+
       // validar
       const asignado = await PatrullajePersonal.findOne({
         where: {
           patrullaje_id: patrullajeId,
-          personal_id: socket.usuario.id,
+          personal_id: userId,
           tipo_personal: "SERENO"
         }
       });
@@ -105,12 +120,20 @@ module.exports = (io, socket) => {
         { where: { id: patrullajeId } }
       );
 
-      // emitir
-      io.to(`patrullaje_${patrullajeId}`).emit("patrullaje_finalizado", {
-        patrullajeId,
-        finalizadoPor: socket.usuario.id,
-        fecha: new Date()
+      const patrullaje = await PatrullajeProgramado.findByPk(patrullajeId, {
+        include: ["zona", "unidad"]
       });
+
+      const payload = mapPatrullaje(patrullaje);
+
+      io.to(`patrullaje_${patrullajeId}`).emit("patrullaje_actualizado", payload);
+
+      // // emitir
+      // io.to(`patrullaje_${patrullajeId}`).emit("patrullaje_finalizado", {
+      //   patrullajeId,
+      //   finalizadoPor: socket.usuario.id,
+      //   fecha: new Date()
+      // });
 
     } catch (error) {
       console.error(error);

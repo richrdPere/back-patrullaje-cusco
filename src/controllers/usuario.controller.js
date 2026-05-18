@@ -8,8 +8,6 @@ const Persona = db.Persona;
 const Roles = db.Roles;
 const UsuarioRol = db.UsuarioRol;
 
-
-
 // ======================================================
 // 1. LISTAR USUARIOS (con filtros básicos)
 // ======================================================

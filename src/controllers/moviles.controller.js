@@ -14,40 +14,57 @@ const Zonas = db.Zonas;
 // 1. OBTENER PATRULLAJE ACTIVO
 // ======================================================
 const getPatrullajeActivoMobile = async (req, res) => {
+
   try {
+
     const serenoId = req.usuario.id;
 
-    const patrullaje = await PatrullajeProgramado.findOne({
-      include: [
-        {
-          model: Zonas,
-          as: "zona",
-          attributes: ['nombre', 'riesgo', 'coordenadas', 'descripcion']
-        },
-        {
-          model: UnidadPatrullaje,
-          as: "unidad",
-          attributes: ['codigo', 'tipo', 'placa']
-        }
-      ],
+    // Buscar relación del sereno con patrullaje activo
+    const relacion = await PatrullajePersonal.findOne({
       where: {
-        estado: {
-          [Op.in]: ['PROGRAMADO', 'EN_CURSO']
-        }
-      }
-    });
-
-    if (!patrullaje) return res.json(null);
-
-    const pertenece = await PatrullajePersonal.findOne({
-      where: {
-        patrullaje_id: patrullaje.id,
         personal_id: serenoId,
         tipo_personal: 'SERENO'
-      }
+      },
+      include: [
+        {
+          model: PatrullajeProgramado,
+          as: 'patrullaje',
+          where: {
+            estado: {
+              [Op.in]: ['ASIGNADO', 'EN_CURSO']
+            }
+          },
+          include: [
+            {
+              model: Zonas,
+              as: "zona",
+              attributes: [
+                'nombre',
+                'riesgo',
+                'coordenadas',
+                'descripcion'
+              ]
+            },
+            {
+              model: UnidadPatrullaje,
+              as: "unidad",
+              attributes: [
+                'codigo',
+                'tipo',
+                'placa'
+              ]
+            }
+          ],
+          order: [['createdAt', 'DESC']]
+        }
+      ]
     });
 
-    if (!pertenece) return res.json(null);
+    if (!relacion || !relacion.patrullaje) {
+      return res.json(null);
+    }
+
+    const patrullaje = relacion.patrullaje;
 
     return res.status(200).json({
       data: {
@@ -56,23 +73,29 @@ const getPatrullajeActivoMobile = async (req, res) => {
         hora_inicio: patrullaje.hora_inicio,
         hora_fin: patrullaje.hora_fin,
         estado: patrullaje.estado,
+        descripcion: patrullaje.descripcion,
+
         zona: {
           nombre: patrullaje.zona?.nombre,
           descripcion: patrullaje.zona?.descripcion,
           riesgo: patrullaje.zona?.riesgo,
           coordenadas: patrullaje.zona?.coordenadas
         },
+
         unidad: {
           codigo: patrullaje.unidad?.codigo,
           tipo: patrullaje.unidad?.tipo,
           placa: patrullaje.unidad?.placa,
         }
       },
+
       message: "OK"
     });
 
   } catch (error) {
+
     console.error(error);
+
     res.status(500).json({
       message: "Error al obtener el patrullaje activo",
       error: error.message

@@ -79,9 +79,13 @@ const login = async (req, res) => {
 
 
     // 6. TOKEN
-    const token = await generarToken(usuario.id);
+    const token = await generarToken({
+      id: usuario.id,
+      username: usuario.username,
+      correo: usuario.correo,
+      roles
+    });
 
-  
     // 7. RESPUESTA (ALINEADA CON FRONT)
     res.json({
       message: "Login exitoso",

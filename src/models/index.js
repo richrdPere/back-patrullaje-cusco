@@ -1,4 +1,5 @@
 const sequelize = require("../config/database");
+
 const Usuario = require("./usuario.model");
 const Zonas = require("./zonas.model");
 const Gps = require("./gps.model");
@@ -15,6 +16,7 @@ const PatrullajeGps = require("./patrullaje_gps.model");
 const Incidencia = require("./incidencia.model");
 const IncidenciaArchivo = require('./incidencia_archivo.model');
 const Persona = require("./persona.model");
+const HistorialPatrullaje = require("./historial_patrullaje.model");
 
 // Creamos un objeto db para centralizar todos los modelos y la instancia de Sequelize
 const db = {};
@@ -39,6 +41,7 @@ db.PatrullajeGps = PatrullajeGps;
 db.Incidencia = Incidencia;
 db.IncidenciaArchivo = IncidenciaArchivo;
 db.Persona = Persona;
+db.HistorialPatrullaje = HistorialPatrullaje;
 
 // =========================================
 // ASOCIACIONES ENTRE MODELOS
@@ -121,7 +124,6 @@ db.UnidadPatrullaje.belongsToMany(db.Usuario, {
 // ================================
 // PATRULLAJE PROGRAMADO - UNIDAD
 // ================================
-
 db.PatrullajeProgramado.belongsTo(db.UnidadPatrullaje, {
   foreignKey: "unidad_id",
   as: "unidad"
@@ -167,6 +169,45 @@ db.PatrullajePersonal.belongsTo(db.Policia, {
   foreignKey: "personal_id",
   as: "policia",
   constraints: false
+});
+
+// ================================
+// PATRULLAJE PROGRAMADO - HISTORIAL
+// ================================
+db.PatrullajeProgramado.hasMany(db.HistorialPatrullaje, {
+  foreignKey: "patrullaje_id",
+  as: "historial"
+});
+
+db.HistorialPatrullaje.belongsTo(db.PatrullajeProgramado, {
+  foreignKey: "patrullaje_id",
+  as: "patrullaje"
+});
+
+// ================================
+// HISTORIAL - USUARIO
+// ================================
+db.HistorialPatrullaje.belongsTo(db.Usuario, {
+  foreignKey: "usuario_id",
+  as: "usuario"
+});
+
+db.Usuario.hasMany(db.HistorialPatrullaje, {
+  foreignKey: "patrullaje_id",
+  as: "historiales"
+});
+
+// ================================
+// HISTORIAL - ZONAS
+// ================================
+db.HistorialPatrullaje.belongsTo(db.Zonas, {
+  foreignKey: "zona_id",
+  as: "zona"
+});
+
+db.Zonas.hasMany(db.HistorialPatrullaje, {
+  foreignKey: "zona_id",
+  as: "historiales"
 });
 
 // ================================
@@ -249,5 +290,16 @@ db.Incidencia.belongsTo(db.Usuario, {
   as: "usuario"
 });
 
+// ================================
+// INCIDENCIA - ZONAS
+// ================================
+db.Incidencia.hasMany(db.Zonas, {
+  foreignKey: "zona_id",
+  as: "zona"
+});
+
+db.Zonas.belongsTo(db.Incidencia, {
+  foreignKey: "incidentes"
+});
 
 module.exports = db;

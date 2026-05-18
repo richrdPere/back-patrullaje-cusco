@@ -1,10 +1,8 @@
 const app = require("./src/app.js");
 require("dotenv").config();
 const http = require("http");
-// const socketIO = require("socket.io");
 const { initSocket } = require("./src/socket");
 
-// const jwt = require("jsonwebtoken");
 const PORT = process.env.PORT || 3000;
 
 // Crear servidor HTTP encima del express

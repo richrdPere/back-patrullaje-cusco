@@ -38,8 +38,13 @@ const Persona = sequelize.define("Persona", {
   },
 
   foto_perfil: {
-    type: DataTypes.STRING(255)
-  }
+    type: DataTypes.STRING(500)
+  },
+
+  foto_perfil_key: {
+    type: DataTypes.STRING(500)
+  },
+
 }, {
   tableName: "personas",
   timestamps: true

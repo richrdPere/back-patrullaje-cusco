@@ -18,12 +18,24 @@ const initSocket = (server) => {
 
   io.on("connection", (socket) => {
     const userId = socket.usuario.id;
+    const roles = socket.usuario?.roles || [];
     console.log(`🟢 Usuario conectado: ${userId} | Socket: ${socket.id}`);
+    console.log("USUARIO SOCKET:", socket.usuario);
 
+    // ROOM OPERADORES
+    if (roles.includes("ADMIN") || roles.includes("OPERADOR")) {
+      socket.join("operadores");
+      console.log(`👮 Operador unido a room operadores`);
+    }
+
+    // ROOM SERENOS
+    if (roles.includes("SERENO") || roles.includes("CONDUCTOR")) {
+      socket.join("serenos");
+      console.log("🚓 Sereno unido");
+    }
 
     // Asociar socket al usuario
     addUser(userId, socket.id);
-
     socket.join(`user_${userId}`); // OPCIONAL
 
     //Registrar handlers (alertas, tracking, etc.)

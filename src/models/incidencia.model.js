@@ -19,6 +19,11 @@ const Incidencia = sequelize.define("Incidencia", {
         allowNull: true,
     },
 
+    zona_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+    },
+
     tipo: {
         type: DataTypes.ENUM(
             "ROBO",

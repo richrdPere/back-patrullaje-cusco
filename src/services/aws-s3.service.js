@@ -11,6 +11,7 @@ const uploadFileToS3 = async ({
   categoria,
   entidadId,
   serenoId,
+  customKey
 }) => {
   const extension = file.originalname.split(".").pop().toLowerCase();
 
@@ -24,10 +25,23 @@ const uploadFileToS3 = async ({
     tipoArchivo = "PDF";
   }
 
-  const key = `patrullaje-system/${categoria}/${entidadId}/evidencias/${serenoId}/${tipoArchivo}/${Date.now()}.${extension}`;
+  // GENERAR KEY
+  let key = "";
 
+  // CASO PERSONALIZADO
+  if (customKey) {
+    key = customKey;
+  }
+
+  // CASO GENERAL
+  else {
+    key = `patrullaje-system/${categoria}/${entidadId}/evidencias/${serenoId}/${tipoArchivo}/${Date.now()}.${extension}`;
+  }
+
+  // CONTENT TYPE
   const contentType = mime.lookup(file.originalname) || file.mimetype;
 
+  // PARAMS AWS
   const params = {
     Bucket: process.env.AWS_BUCKET_NAME,
     Key: key,
@@ -38,6 +52,7 @@ const uploadFileToS3 = async ({
 
   await s3.send(new PutObjectCommand(params));
 
+  // RESPUESTA
   return {
     url: `https://${process.env.AWS_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${key}`,
     key,

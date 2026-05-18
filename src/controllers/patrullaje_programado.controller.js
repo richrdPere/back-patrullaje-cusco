@@ -26,29 +26,24 @@ const newPatrullajeProgramado = async (req, res) => {
       hora_inicio,
       hora_fin,
       descripcion,
-      serenos,
-      policias
+      serenos = [],
+      policias = []
     } = req.body;
 
+    // VALIDACIONES
     const unidad = await UnidadPatrullaje.findByPk(unidad_id);
 
     if (!unidad) {
       await t.rollback();
-      return res.status(404).json({
-        message: "Unidad no encontrada"
-      });
+      return res.status(404).json({ message: "Unidad no encontrada" });
     }
 
     // Validar existencia de serenos
-    const serenosDB = await Usuario.findAll({
-      where: { id: serenos }
-    });
+    const serenosDB = await Usuario.findAll({ where: { id: serenos } });
 
     if (serenosDB.length !== serenos.length) {
       await t.rollback();
-      return res.status(400).json({
-        message: "Uno o más serenos no existen"
-      });
+      return res.status(400).json({ message: "Uno o más serenos no existen" });
     }
 
     // Validar existencia de policías
@@ -72,7 +67,8 @@ const newPatrullajeProgramado = async (req, res) => {
       fecha,
       hora_inicio,
       hora_fin,
-      descripcion
+      descripcion,
+      estado: "ASIGNADO"
     }, { transaction: t });
 
     // =========================
@@ -99,57 +95,61 @@ const newPatrullajeProgramado = async (req, res) => {
     await t.commit();
 
     // =========================
+    // CONSULTA COMPLETA
+    // =========================
+    const patrullajeCompleto = await PatrullajeProgramado.findByPk(patrullaje.id, {
+      include: [
+        {
+          model: Zonas,
+          as: "zona",
+          attributes: ['nombre', 'riesgo', 'coordenadas', 'descripcion']
+        },
+        {
+          model: UnidadPatrullaje,
+          as: "unidad",
+          attributes: ['codigo', 'tipo', 'placa']
+        }
+      ]
+    });
+
+    // =========================
+    // MAPPER CENTRALIZADO
+    // =========================
+    const mapPatrullaje = (p) => ({
+      id: p.id,
+      estado: p.estado,
+      fecha: p.fecha,
+      hora_inicio: p.hora_inicio,
+      hora_fin: p.hora_fin,
+      descripcion: p.descripcion,
+      zona: {
+        nombre: p.zona?.nombre,
+        descripcion: p.zona?.descripcion,
+        riesgo: p.zona?.riesgo,
+        coordenadas: p.zona?.coordenadas ?? []
+      },
+      unidad: {
+        codigo: p.unidad?.codigo,
+        tipo: p.unidad?.tipo,
+        placa: p.unidad?.placa
+      }
+    });
+
+    const payload = mapPatrullaje(patrullajeCompleto);
+
+
+    // =========================
     // - EMITIR SOCKET
     // =========================
-
     try {
       const io = getIO();
 
-      // VOLVER A CONSULTAR CON RELACIONES
-      const patrullajeCompleto = await PatrullajeProgramado.findByPk(patrullaje.id, {
-        include: [
-          {
-            model: Zonas,
-            as: "zona",
-            attributes: ['nombre', 'riesgo', 'coordenadas', 'descripcion']
-          },
-          {
-            model: UnidadPatrullaje,
-            as: "unidad",
-            attributes: ['codigo', 'tipo', 'placa']
-          }
-        ]
-      });
-
-      // MAPEAR IGUAL QUE EN MOBILE
-      const payload = {
-        id: patrullajeCompleto.id,
-        fecha: patrullajeCompleto.fecha,
-        hora_inicio: patrullajeCompleto.hora_inicio,
-        hora_fin: patrullajeCompleto.hora_fin,
-        descripcion: patrullajeCompleto.descripcion,
-        estado: patrullajeCompleto.estado,
-        zona: {
-          nombre: patrullajeCompleto.zona?.nombre,
-          descripcion: patrullajeCompleto.zona?.descripcion,
-          riesgo: patrullajeCompleto.zona?.riesgo,
-          coordenadas: patrullajeCompleto.zona?.coordenadas ?? []
-        },
-        unidad: {
-          codigo: patrullajeCompleto.unidad?.codigo,
-          tipo: patrullajeCompleto.unidad?.tipo,
-          placa: patrullajeCompleto.unidad?.placa
-        }
-      };
-
-      // EMITIR A TODOS LOS SERENOS
       serenos.forEach((serenoId) => {
         io.to(`user_${serenoId}`).emit("nuevo_patrullaje", payload);
       });
 
     } catch (socketError) {
       console.error("⚠️ Error en socket:", socketError);
-      // NO rollback aquí
     }
 
     // =========================
@@ -157,7 +157,7 @@ const newPatrullajeProgramado = async (req, res) => {
     // =========================
     res.status(201).json({
       message: "Patrullaje programado correctamente",
-      patrullaje
+      patrullaje: payload
     });
 
   } catch (error) {
@@ -304,8 +304,8 @@ const getPatrullajesProgramadosPaginated = async (req, res) => {
         hora_inicio: patrullaje.hora_inicio,
         hora_fin: patrullaje.hora_fin,
         descripcion: patrullaje.descripcion,
-        unidad: patrullaje.unidad || null, 
-        zona: patrullaje.zona || null,    
+        unidad: patrullaje.unidad || null,
+        zona: patrullaje.zona || null,
         estado: patrullaje.estado,
         createdAt: patrullaje.createdAt,
         updatedAt: patrullaje.updatedAt,

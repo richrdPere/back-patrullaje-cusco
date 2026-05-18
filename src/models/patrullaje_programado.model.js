@@ -36,6 +36,8 @@ const PatrullajeProgramado = sequelize.define("PatrullajeProgramado", {
   estado: {
     type: DataTypes.ENUM(
       "PROGRAMADO",
+      "ASIGNADO",
+      "ACEPTADO",
       "EN_CURSO",
       "FINALIZADO"
     ),
