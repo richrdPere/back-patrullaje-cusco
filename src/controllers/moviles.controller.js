@@ -39,6 +39,7 @@ const getPatrullajeActivoMobile = async (req, res) => {
               model: Zonas,
               as: "zona",
               attributes: [
+                'id',
                 'nombre',
                 'riesgo',
                 'coordenadas',
@@ -76,6 +77,7 @@ const getPatrullajeActivoMobile = async (req, res) => {
         descripcion: patrullaje.descripcion,
 
         zona: {
+          id: patrullaje.zona?.id,
           nombre: patrullaje.zona?.nombre,
           descripcion: patrullaje.zona?.descripcion,
           riesgo: patrullaje.zona?.riesgo,

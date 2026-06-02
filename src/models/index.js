@@ -18,6 +18,11 @@ const IncidenciaArchivo = require('./incidencia_archivo.model');
 const Persona = require("./persona.model");
 const HistorialPatrullaje = require("./historial_patrullaje.model");
 
+const Conversacion = require("./conversacion.model");
+const ConversacionParticipante = require("./conversacion_participantes.model");
+const Mensaje = require("./mensaje.model");
+const MensajeLectura = require("./mensaje_lectura.model");
+
 // Creamos un objeto db para centralizar todos los modelos y la instancia de Sequelize
 const db = {};
 
@@ -42,6 +47,10 @@ db.Incidencia = Incidencia;
 db.IncidenciaArchivo = IncidenciaArchivo;
 db.Persona = Persona;
 db.HistorialPatrullaje = HistorialPatrullaje;
+db.Conversacion = Conversacion;
+db.ConversacionParticipante = ConversacionParticipante;
+db.Mensaje = Mensaje;
+db.MensajeLectura = MensajeLectura;
 
 // =========================================
 // ASOCIACIONES ENTRE MODELOS
@@ -301,5 +310,85 @@ db.Incidencia.hasMany(db.Zonas, {
 db.Zonas.belongsTo(db.Incidencia, {
   foreignKey: "incidentes"
 });
+
+// =========================
+// CONVERSACIONES
+// =========================
+db.Conversacion.hasMany(db.ConversacionParticipante, {
+  foreignKey: "conversacion_id",
+  as: "participantes",
+});
+
+db.ConversacionParticipante.belongsTo(db.Conversacion, {
+  foreignKey: "conversacion_id",
+  as: "conversacion",
+});
+
+
+// =========================
+// USUARIOS
+// =========================
+db.Usuario.hasMany(db.ConversacionParticipante, {
+  foreignKey: "usuario_id",
+  as: "conversaciones",
+});
+
+db.ConversacionParticipante.belongsTo(db.Usuario, {
+  foreignKey: "usuario_id",
+  as: "usuario",
+});
+
+
+// =========================
+// MENSAJES
+// =========================
+db.Conversacion.hasMany(db.Mensaje, {
+  foreignKey: "conversacion_id",
+  as: "mensajes",
+});
+
+db.Mensaje.belongsTo(db.Conversacion, {
+  foreignKey: "conversacion_id",
+  as: "conversacion",
+});
+
+
+// =========================
+// USUARIO MENSAJE
+// =========================
+db.Usuario.hasMany(db.Mensaje, {
+  foreignKey: "usuario_id",
+  as: "mensajes",
+});
+
+db.Mensaje.belongsTo(db.Usuario, {
+  foreignKey: "usuario_id",
+  as: "usuario",
+});
+
+
+// =========================
+// LECTURAS
+// =========================
+db.Mensaje.hasMany(db.MensajeLectura, {
+  foreignKey: "mensaje_id",
+  as: "lecturas",
+});
+
+db.MensajeLectura.belongsTo(db.Mensaje, {
+  foreignKey: "mensaje_id",
+  as: "mensaje",
+});
+
+db.Usuario.hasMany(db.MensajeLectura, {
+  foreignKey: "usuario_id",
+  as: "mensajesLeidos",
+});
+
+db.MensajeLectura.belongsTo(db.Usuario, {
+  foreignKey: "usuario_id",
+  as: "usuario",
+});
+
 
 module.exports = db;

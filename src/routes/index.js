@@ -15,6 +15,7 @@ const gpsPatrullajeRoutes = require("./gps_patrullaje.routes");
 const incidenciasRoutes = require("./incidencia.routes");
 const movilesRoutes = require("./moviles.routes");
 const profileRoutes = require("./profile.routes");
+const historialRoutes = require("./historial_patrullaje.routes");
 
 // usar rutas
 router.use("/auth", authRoutes);
@@ -30,6 +31,7 @@ router.use("/patrullaje-gps", gpsPatrullajeRoutes);
 router.use("/incidencias", incidenciasRoutes);
 router.use("/moviles", movilesRoutes);
 router.use("/profile", profileRoutes);
+router.use("/historial", historialRoutes);
 
 // exportar router
 module.exports = router;

@@ -61,7 +61,8 @@ const Incidencia = sequelize.define("Incidencia", {
             "REPORTADO",
             "EN_PROCESO",
             "ATENDIDO",
-            "CERRADO"
+            "CERRADO",
+            "ELIMINADO"
         ),
         defaultValue: "REPORTADO"
     },
