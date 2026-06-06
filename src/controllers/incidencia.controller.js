@@ -33,6 +33,10 @@ const registrarIncidencia = async (req, res) => {
     console.log("📥 BODY:", req.body);
     console.log("📎 FILES:", req.files);
 
+
+    console.log("patrullaje_id:", patrullaje_id);
+    console.log("tipo:", typeof patrullaje_id);
+
     // VALIDACIONES
     if (!descripcion || !latitud || !longitud) {
       await t.rollback();
@@ -56,10 +60,27 @@ const registrarIncidencia = async (req, res) => {
     }
 
     // Validar patrullaje 
+    let zona_id = null;
+
     if (patrullaje_id) {
 
-      const patrullaje = await PatrullajeProgramado.findByPk(
-        patrullaje_id
+      const patrullaje = await PatrullajeProgramado.findOne({
+        where: {
+          id: patrullaje_id,
+          estado: {
+            [Op.in]: ['ASIGNADO', 'EN_CURSO']
+          }
+        }
+      });
+
+      console.log(
+        "PATRULLAJE JSON:",
+        patrullaje ? patrullaje.toJSON() : null
+      );
+
+      console.log(
+        "PATRULLAJE ZONA_ID:",
+        patrullaje?.zona_id
       );
 
       if (!patrullaje) {

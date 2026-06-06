@@ -2,7 +2,8 @@ const express = require("express");
 const router = express.Router();
 
 // importar rutas
-const authRoutes = require("./auth.routes");
+// const authRoutes = require("./auth.routes");
+const { authRoutes } = require("../modules/auth");
 const usuarioRoutes = require("./usuario.routes");
 const zonasRoutes = require("./zonas.routes");
 const gpsRoutes = require("./gps.routes");

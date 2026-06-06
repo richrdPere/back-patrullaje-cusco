@@ -19,7 +19,6 @@ const registerHistorial = async (req, res) => {
 
     const {
       patrullaje_id,
-      zona_id,
       tipo,
       titulo,
       descripcion,
@@ -29,7 +28,6 @@ const registerHistorial = async (req, res) => {
       visible_para_siguiente_turno
     } = req.body;
 
-    // Validaciones básicas
     if (!patrullaje_id) {
       return res.status(400).json({
         ok: false,
@@ -37,10 +35,25 @@ const registerHistorial = async (req, res) => {
       });
     }
 
-    if (!zona_id) {
-      return res.status(400).json({
+    const patrullaje = await PatrullajeProgramado.findByPk(
+      patrullaje_id
+    );
+
+    if (!patrullaje) {
+      return res.status(404).json({
         ok: false,
-        msg: "La zona es obligatoria"
+        msg: "Patrullaje no encontrado"
+      });
+    }
+
+    const zona_id = patrullaje.zona_id;
+
+    const zona = await Zonas.findByPk(zona_id);
+
+    if (!zona) {
+      return res.status(404).json({
+        ok: false,
+        msg: "Zona no encontrada"
       });
     }
 
@@ -51,11 +64,10 @@ const registerHistorial = async (req, res) => {
       });
     }
 
-    // Crear historial
     const historial = await HistorialPatrullaje.create({
       patrullaje_id,
       zona_id,
-      usuario_id,
+      sereno_id: usuario_id,
       tipo,
       titulo,
       descripcion,
@@ -72,7 +84,9 @@ const registerHistorial = async (req, res) => {
     });
 
   } catch (error) {
+
     console.error("Error registrarHistorial:", error);
+
     return res.status(500).json({
       message: "Error al registrar historial",
       error: error.message
