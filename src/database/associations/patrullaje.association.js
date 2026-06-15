@@ -1,0 +1,11 @@
+PatrullajeProgramado.hasMany(PatrullajePersonal)
+
+PatrullajePersonal.belongsTo(PatrullajeProgramado)
+
+PatrullajeProgramado.hasMany(HistorialPatrullaje)
+
+HistorialPatrullaje.belongsTo(PatrullajeProgramado)
+
+PatrullajeProgramado.hasMany(PatrullajeGps)
+
+PatrullajeGps.belongsTo(PatrullajeProgramado)

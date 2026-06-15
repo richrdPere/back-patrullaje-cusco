@@ -1,6 +1,6 @@
 // models/persona.model.js
 const { DataTypes } = require("sequelize");
-const sequelize = require("../config/database");
+const sequelize = require("../../config/database");
 
 const Persona = sequelize.define("Persona", {
   id: {

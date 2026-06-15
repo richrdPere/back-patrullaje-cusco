@@ -1,4 +1,4 @@
-const Roles = require("../models/roles.model");
+const Roles = require("../database/models/auth/roles.model");
 
 async function crearRolesPorDefecto() {
   try {

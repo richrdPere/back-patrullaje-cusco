@@ -7,7 +7,7 @@ const crearRolesPorDefecto = require("./utils/initRoles");
 // const crearUsuariosPorDefecto = require("./utils/initUsuariosPorDefecto");
 
 const router = require("./routes/index");
-const db = require("./models");
+const db = require("./database/models");
 
 const app = express();
 
