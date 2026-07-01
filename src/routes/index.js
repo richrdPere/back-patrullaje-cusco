@@ -3,9 +3,12 @@ const router = express.Router();
 
 // importar rutas
 
+
+const authRoutes = require("../modules/auth/routes/auth.routes");
+const usuarioRoutes = require("../modules/usuarios/routes/usuarios.route");
+
 // const authRoutes = require("./auth.routes");
-const authRoutes = require("../modules/auth/routes/auth.routes")
-const usuarioRoutes = require("./usuario.routes");
+// const usuarioRoutes = require("./usuario.routes");
 const zonasRoutes = require("./zonas.routes");
 const gpsRoutes = require("./gps.routes");
 const patrullajeProgramadoRoutes = require("./patrullaje_programado.routes");
