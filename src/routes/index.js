@@ -7,21 +7,23 @@ const router = express.Router();
 const authRoutes = require("../modules/auth/routes/auth.routes");
 const usuarioRoutes = require("../modules/usuarios/routes/usuarios.route");
 const zonasRoutes = require("../modules/zonas/routes/zonas.route");
+const policiasRoutes = require("../modules/patrullajes/routes/policia.routes");
 
 // const authRoutes = require("./auth.routes");
 // const usuarioRoutes = require("./usuario.routes");
 // const zonasRoutes = require("./zonas.routes");
-const gpsRoutes = require("./gps.routes");
+// const policiasRoutes = require("./policia.routes");
+
 const patrullajeProgramadoRoutes = require("./patrullaje_programado.routes");
-const alertaRoutes = require("./alerta.routes");
 const unidadPatrullajeRoutes = require("./unidad_patrullaje.routes");
 const unidadSerenoRoutes = require("./unidad_sereno.route");
-const policiasRoutes = require("./policia.routes");
 const gpsPatrullajeRoutes = require("./gps_patrullaje.routes");
 const incidenciasRoutes = require("./incidencia.routes");
 const movilesRoutes = require("./moviles.routes");
 const profileRoutes = require("./profile.routes");
 const historialRoutes = require("./historial_patrullaje.routes");
+const gpsRoutes = require("./gps.routes");
+const alertaRoutes = require("./alerta.routes");
 
 // usar rutas
 router.use("/auth", authRoutes);
