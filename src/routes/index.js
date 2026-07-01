@@ -6,10 +6,11 @@ const router = express.Router();
 
 const authRoutes = require("../modules/auth/routes/auth.routes");
 const usuarioRoutes = require("../modules/usuarios/routes/usuarios.route");
+const zonasRoutes = require("../modules/zonas/routes/zonas.route");
 
 // const authRoutes = require("./auth.routes");
 // const usuarioRoutes = require("./usuario.routes");
-const zonasRoutes = require("./zonas.routes");
+// const zonasRoutes = require("./zonas.routes");
 const gpsRoutes = require("./gps.routes");
 const patrullajeProgramadoRoutes = require("./patrullaje_programado.routes");
 const alertaRoutes = require("./alerta.routes");

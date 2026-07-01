@@ -12,6 +12,7 @@ const Zonas = sequelize.define(
     nombre: {
       type: DataTypes.STRING(100),
       allowNull: false,
+      unique: true
     },
     descripcion: {
       type: DataTypes.STRING(255),
