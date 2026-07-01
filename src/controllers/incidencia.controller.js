@@ -1,7 +1,8 @@
 const { Op, fn, col } = require("sequelize");
 const { guardarArchivoLocal } = require("../services/storage.service");
 const { uploadFileToS3, deleteFileFromS3 } = require("../services/aws-s3.service");
-const db = require('../models');
+
+const db = require("../database/models");
 
 const Incidencia = db.Incidencia;
 const IncidenciaArchivo = db.IncidenciaArchivo;

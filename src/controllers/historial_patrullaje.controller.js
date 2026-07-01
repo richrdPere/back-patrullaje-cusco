@@ -1,5 +1,4 @@
-// controllers/historialPatrullaje.controller.js
-const db = require('../models');
+const db = require("../database/models");
 
 const HistorialPatrullaje = db.HistorialPatrullaje;
 const PatrullajeProgramado = db.PatrullajeProgramado;

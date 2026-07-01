@@ -1,4 +1,4 @@
-const db = require('../../models');
+const db = require('../../database/models');
 
 const PatrullajeProgramado = db.PatrullajeProgramado;
 const PatrullajePersonal = db.PatrullajePersonal;

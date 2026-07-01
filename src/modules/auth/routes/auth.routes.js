@@ -10,7 +10,7 @@ const {
   renewTokenController,
   confirmAccountController,
   recoverAccountController,
-  resetPasswordController, } = require("../controllers");
+  resetPasswordController, } = require("../controllers/auth.controller");
 
 // Validations
 const loginValidation = require("../validations/login.validation");
@@ -20,16 +20,10 @@ const registerValidation = require("../validations/register.validation");
 // RUTAS AUTH
 // ========================
 router.post("/login", loginValidation, loginController);
-
 router.post("/register", registerValidation, registerController);
-
 router.get("/renew-token", verificarToken, renewTokenController);
-
 router.put("/reset-password/:token", resetPasswordController);
-
 router.get("/confirmar/:token", confirmAccountController);
-
 router.post("/recuperar", recoverAccountController);
-
 
 module.exports = router;

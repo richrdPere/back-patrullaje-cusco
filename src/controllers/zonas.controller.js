@@ -1,4 +1,6 @@
-const Zonas = require("../models/zonas.model");
+const db = require("../database/models");
+
+const Zonas = db.Zonas
 
 // ======================================================
 // CREAR ZONA

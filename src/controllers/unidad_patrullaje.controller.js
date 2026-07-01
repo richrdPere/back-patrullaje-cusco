@@ -1,4 +1,6 @@
-const UnidadPatrullaje = require("../models/unidad_patrullaje.model");
+const db = require("../database/models");
+
+const UnidadPatrullaje = db.UnidadPatrullaje;
 
 
 // ======================================================

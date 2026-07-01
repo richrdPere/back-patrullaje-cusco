@@ -1,5 +1,6 @@
 const bcrypt = require("bcryptjs");
-const db = require('../models');
+const db = require("../database/models");
+
 const { uploadFileToS3, deleteFileFromS3 } = require("../services/aws-s3.service");
 
 const Usuario = db.Usuario;

@@ -1,37 +1,40 @@
 const bcrypt = require("bcryptjs");
-const authRepository = require("../repositories/auth.repository");
 const { generarToken } = require("../../../utils/jwt");
+
+const db = require("../../../database/models");
+
+// Modelos
+const { Usuario, Persona, Roles } = db;
 
 // Login service
 const loginService = async ({ username, password }) => {
 
-  const usuario = await authRepository.findByUsername(username);
+  const usuario = await Usuario.findOne({
+    where: { username },
+    include: [
+      {
+        model: Persona, as: "persona", attributes: {
+          exclude: ["createdAt", "updatedAt"]
+        }
+      },
+      {
+        model: Roles, as: "roles", attributes: ["id", "nombre"], through: { attributes: [] }
+      }
+    ]
+  });
 
   if (!usuario) {
-    throw {
-      status: 404,
-      message: "Usuario no encontrado"
-    };
+    throw new Error("Usuario o contraseña incorrectos.");
   }
 
   if (!usuario.estado) {
-    throw {
-      status: 403,
-      message: "Usuario deshabilitado"
-    };
+    throw new Error("El usuario se encuentra inactivo.");
   }
 
-  const passwordValido =
-    await bcrypt.compare(
-      password,
-      usuario.password
-    );
+  const coincide = await bcrypt.compare(password, usuario.password);
 
-  if (!passwordValido) {
-    throw {
-      status: 401,
-      message: "Contraseña incorrecta"
-    };
+  if (!coincide) {
+    throw new Error("Usuario o contraseña incorrectos.");
   }
 
   const roles =
@@ -45,7 +48,6 @@ const loginService = async ({ username, password }) => {
   });
 
   return {
-    message: "Login exitoso",
     token,
     roles,
     usuario: {

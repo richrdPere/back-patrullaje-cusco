@@ -1,7 +1,7 @@
 const bcrypt = require("bcryptjs");
 const { Op, fn, col, where: whereFn } = require("sequelize");
 
-const db = require('../models');
+const db = require("../database/models");
 
 const Usuario = db.Usuario;
 const Roles = db.Roles;

@@ -1,18 +1,31 @@
-Incidencia.hasMany(IncidenciaArchivo)
+module.exports = (db) => {
 
-IncidenciaArchivo.belongsTo(Incidencia)
+  db.Usuario.hasMany(db.Incidencia, {
+    foreignKey: "usuario_id"
+  });
 
-Usuario.hasMany(Incidencia)
+  db.Incidencia.belongsTo(db.Usuario, {
+    foreignKey: "usuario_id",
+    as: "usuario"
+  });
 
-Incidencia.belongsTo(Usuario)
+  db.Zonas.hasMany(db.Incidencia, {
+    foreignKey: "zona_id",
+    as: "incidencias"
+  });
 
+  db.Incidencia.belongsTo(db.Zonas, {
+    foreignKey: "zona_id",
+    as: "zona"
+  });
 
-Incidencia.belongsTo(Zonas, {
-  foreignKey: "zona_id",
-  as: "zona"
-});
+  db.Incidencia.hasMany(db.IncidenciaArchivo, {
+    foreignKey: "incidencia_id",
+    as: "archivos"
+  });
 
-Zonas.hasMany(Incidencia, {
-  foreignKey: "zona_id",
-  as: "incidencias"
-});
+  db.IncidenciaArchivo.belongsTo(db.Incidencia, {
+    foreignKey: "incidencia_id"
+  });
+
+};

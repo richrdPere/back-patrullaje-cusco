@@ -1,28 +1,30 @@
 const jwt = require("jsonwebtoken");
-const authRepository = require("../repositories/auth.repository");
+const db = require("../../../database/models");
 
+// Models
+const { Usuario } = db;
+
+// Confirm Account Service
 const confirmAccountService = async (token) => {
 
-  const decoded =
-    jwt.verify(token, process.env.JWT_SECRET);
+  const decoded = jwt.verify(
+    token,
+    process.env.JWT_SECRET
+  );
 
-  const usuario =
-    await authRepository.findById(decoded.id);
+  const usuario = await Usuario.findByPk(decoded.id);
 
   if (!usuario) {
-    throw {
-      status: 404,
-      message: "Usuario no encontrado"
-    };
+    throw new Error("El usuario no existe.");
   }
 
+  if (usuario.estado) {
+    throw new Error("La cuenta ya se encuentra activa.");
+  }
+  
   usuario.estado = true;
-
   await usuario.save();
-
-  return {
-    message: "Cuenta confirmada correctamente"
-  };
+  return true;
 };
 
 module.exports = confirmAccountService;

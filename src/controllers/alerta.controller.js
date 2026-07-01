@@ -1,7 +1,14 @@
-const Alerta = require("../models/alerta.model");
-const Usuario = require("../models/usuario.model");
-const Zonas = require("../models/zonas.model");
-const Patrullaje = require("../models/patrullaje_programado.model");
+// const Alerta = require("../models/alerta.model");
+// const Usuario = require("../models/usuario.model");
+// const Zonas = require("../models/zonas.model");
+// const Patrullaje = require("../models/patrullaje_programado.model");
+
+const db = require("../database/models");
+
+const Alerta = db.Alerta;
+const Usuario = db.Usuario;
+const Zonas = db.Zonas;
+const Patrullaje = db.Patrullaje;
 
 // ======================================================
 // CREAR ALERTA

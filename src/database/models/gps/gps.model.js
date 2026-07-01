@@ -1,5 +1,5 @@
 const { DataTypes } = require("sequelize");
-const sequelize = require("../../config/database");
+const sequelize = require("../../../config/database");
 const Usuario = require("../auth/usuario.model");
 
 const Gps = sequelize.define("Gps", {

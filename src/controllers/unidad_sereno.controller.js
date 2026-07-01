@@ -1,4 +1,8 @@
-const { Usuario, UnidadPatrullaje, UnidadSereno } = require("../models");
+const db = require("../database/models");
+
+const Usuario = db.Usuario;
+const UnidadPatrullaje = db.UnidadPatrullaje;
+const UnidadSereno = db.UnidadSereno;
 
 
 // ======================================================
