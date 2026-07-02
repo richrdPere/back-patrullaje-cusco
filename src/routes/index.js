@@ -8,13 +8,14 @@ const authRoutes = require("../modules/auth/routes/auth.routes");
 const usuarioRoutes = require("../modules/usuarios/routes/usuarios.route");
 const zonasRoutes = require("../modules/zonas/routes/zonas.route");
 const policiasRoutes = require("../modules/patrullajes/routes/policia.routes");
+const patrullajeProgramadoRoutes = require("../modules/patrullajes/routes/patrullaje_programado.routes");
 
 // const authRoutes = require("./auth.routes");
 // const usuarioRoutes = require("./usuario.routes");
 // const zonasRoutes = require("./zonas.routes");
 // const policiasRoutes = require("./policia.routes");
+//const patrullajeProgramadoRoutes = require("./patrullaje_programado.routes");
 
-const patrullajeProgramadoRoutes = require("./patrullaje_programado.routes");
 const unidadPatrullajeRoutes = require("./unidad_patrullaje.routes");
 const unidadSerenoRoutes = require("./unidad_sereno.route");
 const gpsPatrullajeRoutes = require("./gps_patrullaje.routes");

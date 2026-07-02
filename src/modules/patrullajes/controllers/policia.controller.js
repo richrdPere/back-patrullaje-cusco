@@ -32,8 +32,6 @@ const createPoliciaController = async (req, res) => {
 
   } catch (error) {
 
-    console.error("❌ Error al crear policía:", error);
-
     return res.status(500).json({
       success: false,
       message: "Error al crear policía",
@@ -54,7 +52,8 @@ const getPoliciasController = async (req, res) => {
 
     return res.status(200).json({
       success: true,
-      ...result
+      message: "Policias obtenidos correctamente.",
+      data: result
     });
 
   } catch (error) {
