@@ -5,7 +5,7 @@ const {
   confirmAccountService,
   recoverAccountService,
   resetPasswordService,
-} = require("../services");
+} = require("../services/auth");
 
 /*
 |--------------------------------------------------------------------------

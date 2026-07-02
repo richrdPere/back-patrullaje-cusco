@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
 
-const db = require("../../../database/models");
+const db = require("../../../../database/models");
 
 // Models
 const { Usuario } = db;

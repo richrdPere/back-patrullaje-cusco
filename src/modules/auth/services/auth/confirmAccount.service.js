@@ -1,5 +1,5 @@
 const jwt = require("jsonwebtoken");
-const db = require("../../../database/models");
+const db = require("../../../../database/models");
 
 // Models
 const { Usuario } = db;
@@ -21,7 +21,7 @@ const confirmAccountService = async (token) => {
   if (usuario.estado) {
     throw new Error("La cuenta ya se encuentra activa.");
   }
-  
+
   usuario.estado = true;
   await usuario.save();
   return true;

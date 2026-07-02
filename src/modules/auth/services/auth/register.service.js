@@ -1,6 +1,6 @@
 const bcrypt = require("bcryptjs");
-const { generarToken } = require("../../../utils/jwt");
-const db = require("../../../database/models");
+const { generarToken } = require("../../../../utils/jwt");
+const db = require("../../../../database/models");
 
 const {
   sequelize,

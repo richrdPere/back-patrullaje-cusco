@@ -1,7 +1,7 @@
 const bcrypt = require("bcryptjs");
-const { generarToken } = require("../../../utils/jwt");
+const { generarToken } = require("../../../../utils/jwt");
 
-const db = require("../../../database/models");
+const db = require("../../../../database/models");
 
 // Modelos
 const { Usuario, Persona, Roles } = db;
