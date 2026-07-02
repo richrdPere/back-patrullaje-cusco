@@ -9,20 +9,22 @@ const usuarioRoutes = require("../modules/usuarios/routes/usuarios.route");
 const zonasRoutes = require("../modules/zonas/routes/zonas.route");
 const policiasRoutes = require("../modules/patrullajes/routes/policia.routes");
 const patrullajeProgramadoRoutes = require("../modules/patrullajes/routes/patrullaje_programado.routes");
+const unidadPatrullajeRoutes = require("../modules/patrullajes/routes/unidad_patrullaje.routes");
+const unidadSerenoRoutes = require("../modules/patrullajes/routes/unidad_sereno.routes");
 
 // const authRoutes = require("./auth.routes");
 // const usuarioRoutes = require("./usuario.routes");
 // const zonasRoutes = require("./zonas.routes");
 // const policiasRoutes = require("./policia.routes");
 //const patrullajeProgramadoRoutes = require("./patrullaje_programado.routes");
-
-const unidadPatrullajeRoutes = require("./unidad_patrullaje.routes");
-const unidadSerenoRoutes = require("./unidad_sereno.route");
-const gpsPatrullajeRoutes = require("./gps_patrullaje.routes");
+//const unidadPatrullajeRoutes = require("./unidad_patrullaje.routes");
+// const unidadSerenoRoutes = require("./unidad_sereno.route");
 const incidenciasRoutes = require("./incidencia.routes");
 const movilesRoutes = require("./moviles.routes");
 const profileRoutes = require("./profile.routes");
 const historialRoutes = require("./historial_patrullaje.routes");
+
+const gpsPatrullajeRoutes = require("./gps_patrullaje.routes");
 const gpsRoutes = require("./gps.routes");
 const alertaRoutes = require("./alerta.routes");
 
