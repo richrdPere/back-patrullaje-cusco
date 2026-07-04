@@ -96,4 +96,16 @@ module.exports = (db) => {
     as: "patrullaje"
   });
 
+  // ======================================================
+  // POLICÍA - ASIGNACIONES
+  // ======================================================
+  db.Policia.hasMany(db.PatrullajePersonal, {
+    foreignKey: "policia_id",
+    as: "asignaciones"
+  });
+
+  db.PatrullajePersonal.belongsTo(db.Policia, {
+    foreignKey: "policia_id",
+    as: "policia"
+  });
 };

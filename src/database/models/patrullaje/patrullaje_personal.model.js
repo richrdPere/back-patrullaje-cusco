@@ -15,8 +15,14 @@ const PatrullajePersonal = sequelize.define("PatrullajePersonal", {
 
     usuario_id: {
         type: DataTypes.INTEGER,
-        allowNull: false,
+        allowNull: true,
         comment: "Usuario asignado al patrullaje (sereno o policía)"
+    },
+
+    policia_id: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+        comment: "Policía asignado cuando el personal es un policía."
     },
 
     tipo_personal: {
