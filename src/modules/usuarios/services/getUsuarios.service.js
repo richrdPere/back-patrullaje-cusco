@@ -159,7 +159,7 @@ const getUsuariosService = async (query) => {
     page: Number(page),
     limit: Number(limit),
     totalPages: Math.ceil(count / limit),
-    data: rows.map(usuario => {
+    rows: rows.map(usuario => {
 
       const user = usuario.toJSON();
 

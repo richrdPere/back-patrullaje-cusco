@@ -70,8 +70,10 @@ const getZonasController = async (req, res) => {
     return res.status(200).json({
       success: true,
       message: "Zonas obtenidas correctamente.",
-      total: zonas.length,
-      data: zonas
+      data: {
+        total: zonas.length,
+        rows: zonas
+      }
     });
 
   } catch (error) {

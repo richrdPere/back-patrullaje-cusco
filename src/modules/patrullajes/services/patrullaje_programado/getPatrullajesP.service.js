@@ -200,7 +200,7 @@ const listarPatrullajesProgramadosService = async (query) => {
     page,
     limit,
     totalPages: Math.ceil(count / limit),
-    data
+    rows: data
   };
 };
 

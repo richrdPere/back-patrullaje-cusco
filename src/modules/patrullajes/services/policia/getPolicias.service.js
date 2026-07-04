@@ -76,7 +76,7 @@ const getPoliciasService = async (query) => {
     page: parseInt(page),
     limit: parseInt(limit),
     totalPages: Math.ceil(count / limit),
-    data: rows
+    rows
   };
 
 };

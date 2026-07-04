@@ -87,6 +87,7 @@ const getPoliciaByIdController = async (req, res) => {
 
     return res.status(200).json({
       success: true,
+      message: "Policias obtenidos correctamente.",
       data: {
         id: policia.id,
         grado: policia.grado,
