@@ -10,10 +10,19 @@ const {
 
 const getPatrullajeActivoService = async (usuarioId) => {
 
+  console.log("ID SERENO PATRULLAJE: ", usuarioId);
+
   const relacion = await PatrullajePersonal.findOne({
     where: {
       usuario_id: usuarioId,
       tipo_personal: "SERENO",
+      estado: {
+        [Op.in]: [
+          "ASIGNADO",
+          "ACEPTADO",
+          "EN_SERVICIO"
+        ]
+      }
     },
     include: [
       {
@@ -48,6 +57,9 @@ const getPatrullajeActivoService = async (usuarioId) => {
         ],
       },
     ],
+    order: [
+      ["fecha_asignacion", "DESC"]
+    ]
   });
 
   if (!relacion || !relacion.patrullaje) {
