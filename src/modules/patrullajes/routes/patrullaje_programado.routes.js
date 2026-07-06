@@ -1,6 +1,10 @@
 const express = require("express");
 const router = express.Router();
 
+// Middleware
+const verificarToken = require("../../../middlewares/auth.middleware");
+
+// Controllers
 const {
     createPatrullajePController,
     getPatrullajesPController,
@@ -10,9 +14,6 @@ const {
     updatePatrullajePController,
     deletePatrullajePController
 } = require("../controllers/patrullaje_programado.controller");
-
-// Middleware
-const verificarToken = require("../../../middlewares/auth.middleware");
 
 // ============================
 // RUTAS PATRULLAJES PROGRAMADOS

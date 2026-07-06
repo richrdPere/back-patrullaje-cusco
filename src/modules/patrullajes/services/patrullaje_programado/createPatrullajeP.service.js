@@ -93,12 +93,12 @@ const crearPatrullajeProgramadoService = async (data) => {
       ...serenos.map(id => ({
         patrullaje_id: patrullaje.id,
         tipo_personal: "SERENO",
-        personal_id: id
+        usuario_id: id
       })),
       ...policias.map(id => ({
         patrullaje_id: patrullaje.id,
         tipo_personal: "POLICIA",
-        personal_id: id
+        policia_id: id
       }))
     ];
 

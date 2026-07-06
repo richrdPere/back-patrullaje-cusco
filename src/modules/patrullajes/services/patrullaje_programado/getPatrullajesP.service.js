@@ -144,6 +144,9 @@ const listarPatrullajesProgramadosService = async (query) => {
         }
       ]
     });
+
+  console.log(JSON.stringify(rows, null, 2));
+
   const data = rows.map(item => {
 
     const patrullaje = item.toJSON();

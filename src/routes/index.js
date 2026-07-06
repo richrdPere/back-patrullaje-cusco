@@ -12,6 +12,7 @@ const patrullajeProgramadoRoutes = require("../modules/patrullajes/routes/patrul
 const unidadPatrullajeRoutes = require("../modules/patrullajes/routes/unidad_patrullaje.routes");
 const unidadSerenoRoutes = require("../modules/patrullajes/routes/unidad_sereno.routes");
 const profileRoutes = require("../modules/auth/routes/profile.routes");
+const movilesRoutes = require("../modules/patrullajes/routes/patrullaje_movil.routes");
 
 // const authRoutes = require("./auth.routes");
 // const usuarioRoutes = require("./usuario.routes");
@@ -21,9 +22,9 @@ const profileRoutes = require("../modules/auth/routes/profile.routes");
 // const unidadPatrullajeRoutes = require("./unidad_patrullaje.routes");
 // const unidadSerenoRoutes = require("./unidad_sereno.route");
 // const profileRoutes = require("./profile.routes");
+// const movilesRoutes = require("./moviles.routes");
 
 const incidenciasRoutes = require("./incidencia.routes");
-const movilesRoutes = require("./moviles.routes");
 const historialRoutes = require("./historial_patrullaje.routes");
 
 const gpsPatrullajeRoutes = require("./gps_patrullaje.routes");

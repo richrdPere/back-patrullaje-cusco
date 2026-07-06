@@ -23,7 +23,7 @@ const getPatrullajeActivoMobile = async (req, res) => {
     // Buscar relación del sereno con patrullaje activo
     const relacion = await PatrullajePersonal.findOne({
       where: {
-        personal_id: serenoId,
+        usuario_id: serenoId,
         tipo_personal: 'SERENO'
       },
       include: [
