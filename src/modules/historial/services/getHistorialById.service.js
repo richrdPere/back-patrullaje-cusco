@@ -15,7 +15,7 @@ const getHistorialByIdService = async (historialId) => {
 
       {
         model: Usuario,
-        as: "sereno",
+        as: "usuario",
 
         attributes: ["id"],
 
@@ -26,8 +26,7 @@ const getHistorialByIdService = async (historialId) => {
 
             attributes: [
               "nombres",
-              "apellido_paterno",
-              "apellido_materno"
+              "apellidos",
             ]
           }
         ]
@@ -69,8 +68,7 @@ const getHistorialByIdService = async (historialId) => {
     sereno: {
       id: historial.sereno?.id,
       nombres: historial.sereno?.persona?.nombres,
-      apellido_paterno: historial.sereno?.persona?.apellido_paterno,
-      apellido_materno: historial.sereno?.persona?.apellido_materno
+      apellidos: historial.sereno?.persona?.apellidos,
     },
     zona: {
       id: historial.zona?.id,

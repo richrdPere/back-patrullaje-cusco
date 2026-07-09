@@ -1,5 +1,8 @@
 module.exports = (db) => {
 
+  // ==========================
+  // USUARIO -> INCIDENCIA
+  // ==========================
   db.Usuario.hasMany(db.Incidencia, {
     foreignKey: "usuario_id"
   });
@@ -9,6 +12,9 @@ module.exports = (db) => {
     as: "usuario"
   });
 
+  // ==========================
+  // ZONA -> INCIDENCIA
+  // ==========================
   db.Zonas.hasMany(db.Incidencia, {
     foreignKey: "zona_id",
     as: "incidencias"
@@ -19,6 +25,9 @@ module.exports = (db) => {
     as: "zona"
   });
 
+  // ==========================
+  // INCIDENCIA -> ARCHIVOS
+  // ==========================
   db.Incidencia.hasMany(db.IncidenciaArchivo, {
     foreignKey: "incidencia_id",
     as: "archivos"
@@ -26,6 +35,19 @@ module.exports = (db) => {
 
   db.IncidenciaArchivo.belongsTo(db.Incidencia, {
     foreignKey: "incidencia_id"
+  });
+
+  // ==========================
+  // INCIDENCIA -> HISTORIAL
+  // ==========================
+  db.Incidencia.hasMany(db.HistorialPatrullaje, {
+    foreignKey: "incidencia_id",
+    as: "historial"
+  });
+
+  db.HistorialPatrullaje.belongsTo(db.Incidencia, {
+    foreignKey: "incidencia_id",
+    as: "incidencia"
   });
 
 };

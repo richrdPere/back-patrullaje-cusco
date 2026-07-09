@@ -1,9 +1,11 @@
 const db = require("../../../../database/models");
 
+// Models
 const {
   sequelize,
   PatrullajeProgramado,
-  PatrullajePersonal
+  PatrullajePersonal,
+  HistorialPatrullaje
 } = db;
 
 const startPatrullajeService = async (patrullajeId, usuarioId) => {
@@ -45,12 +47,14 @@ const startPatrullajeService = async (patrullajeId, usuarioId) => {
       throw error;
     }
 
+    // ACTUALIZAR PATRULLAJE
     patrullaje.estado = "EN_CURSO";
 
     await patrullaje.save({
       transaction: t
     });
 
+    // ACTUALIZAR ASIGNACIÓN
     await PatrullajePersonal.update(
       {
         estado: "EN_SERVICIO"
@@ -64,7 +68,26 @@ const startPatrullajeService = async (patrullajeId, usuarioId) => {
         transaction: t
       }
     );
+
+    // REGISTRAR HISTORIAL
+    await HistorialPatrullaje.create(
+      {
+        patrullaje_id: patrullaje.id,
+        sereno_id: usuarioId,
+        zona_id: patrullaje.zona_id,
+        tipo: "OBSERVACION",
+        titulo: "Inicio del patrullaje",
+        descripcion: "El sereno inició el patrullaje programado.",
+        prioridad: "BAJA",
+        visible_para_siguiente_turno: true
+      },
+      {
+        transaction: t
+      }
+    );
+
     return patrullaje;
+
   });
 };
 

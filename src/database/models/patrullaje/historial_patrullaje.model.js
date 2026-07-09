@@ -24,6 +24,11 @@ const HistorialPatrullaje = sequelize.define("HistorialPatrullaje", {
     allowNull: false,
   },
 
+  incidencia_id: {
+    type: DataTypes.INTEGER,
+    allowNull: true
+  },
+
   tipo: {
     type: DataTypes.ENUM(
       "OBSERVACION",

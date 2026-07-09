@@ -1,202 +1,183 @@
 const { Op } = require("sequelize");
-
-const {
-    Incidencia,
-    IncidenciaArchivo,
-    PatrullajeProgramado,
-    Usuario,
-    Zonas
-} = require("../../../database/models");
-
-// const uploadFileToS3 = require("../../../utils/uploadFileToS3");
 const { uploadFileToS3, deleteFileFromS3 } = require("../../../services/aws-s3.service")
 
-class IncidenciaService {
-    async registrarIncidencia({ usuarioId, body, files }) {
-        const t = await Incidencia.sequelize.transaction();
+// Modelos
+const db = require("../../../database/models");
 
-        try {
+const { sequelize, Incidencia, IncidenciaArchivo, PatrullajeProgramado, Usuario, Zonas } = db;
 
-            const {
-                patrullaje_id,
-                tipo,
-                descripcion,
-                latitud,
-                longitud,
-                origen = "APP_MOVIL"
-            } = body;
+// Helpers
+const tiposValidos = [
+  "ROBO",
+  "ACCIDENTE",
+  "INCENDIO",
+  "VIOLENCIA",
+  "SOSPECHOSO",
+  "OTRO",
+];
 
-            // VALIDACIONES
-            if (!descripcion || !latitud || !longitud) {
-                throw {
-                    status: 400,
-                    message: "Campos obligatorios faltantes."
-                };
-            }
+const getTipoArchivo = (mime) => {
+  if (!mime) return "OTRO";
+  if (mime.startsWith("image/")) return "IMAGEN";
+  if (mime.startsWith("video/")) return "VIDEO";
+  if (mime === "application/pdf") return "PDF";
+  return "OTRO";
+};
 
-            const lat = parseFloat(latitud);
-            const lng = parseFloat(longitud);
+const normalizarArchivos = (files) => {
+  if (Array.isArray(files)) return files;
+  if (files) return Object.values(files).flat();
+  return [];
+};
 
-            if (isNaN(lat) || isNaN(lng)) {
-                throw {
-                    status: 400,
-                    message: "Coordenadas inválidas."
-                };
-            }
 
-            let zona_id = null;
+// SERVICE
+const registrarIncidenciaService = async ({ usuario_id, body, files }) => {
+  const t = await sequelize.transaction();
 
-            if (patrullaje_id) {
+  try {
+    const {
+      patrullaje_id,
+      tipo,
+      descripcion,
+      latitud,
+      longitud,
+      origen = "APP_MOVIL",
+    } = body;
 
-                const patrullaje = await PatrullajeProgramado.findOne({
-                    where: {
-                        id: patrullaje_id,
-                        estado: {
-                            [Op.in]: ["ASIGNADO", "EN_CURSO"]
-                        }
-                    }
-                });
+    if (!descripcion || !latitud || !longitud) {
+      const error = new Error(
+        "Campos obligatorios faltantes (descripción, latitud, longitud)"
+      );
+      error.statusCode = 400;
+      throw error;
+    }
 
-                if (!patrullaje) {
-                    throw {
-                        status: 404,
-                        message: "La incidencia debe pertenecer a un patrullaje activo."
-                    };
-                }
+    const lat = parseFloat(latitud);
+    const lng = parseFloat(longitud);
 
-                zona_id = patrullaje.zona_id;
-            }
+    if (isNaN(lat) || isNaN(lng)) {
+      const error = new Error("Coordenadas inválidas");
+      error.statusCode = 400;
+      throw error;
+    }
 
-            const zona = await Zonas.findByPk(zona_id);
+    let zona_id = null;
+    let patrullajeIdFinal = patrullaje_id || null;
 
-            if (!zona) {
-                throw {
-                    status: 404,
-                    message: "Zona no encontrada."
-                };
-            }
+    if (patrullajeIdFinal) {
+      const patrullaje = await PatrullajeProgramado.findOne({
+        where: {
+          id: patrullajeIdFinal,
+          estado: {
+            [Op.in]: ["ASIGNADO", "EN_CURSO"],
+          },
+        },
+      });
 
-            const usuario = await Usuario.findByPk(usuarioId);
+      if (!patrullaje) {
+        const error = new Error(
+          "La incidencia debe estar asociada a un patrullaje activo"
+        );
+        error.statusCode = 404;
+        throw error;
+      }
 
-            if (!usuario) {
-                throw {
-                    status: 404,
-                    message: "Usuario no encontrado."
-                };
-            }
+      zona_id = patrullaje.zona_id;
+    }
 
-            const tiposValidos = [
-                "ROBO",
-                "ACCIDENTE",
-                "INCENDIO",
-                "VIOLENCIA",
-                "SOSPECHOSO",
-                "OTRO"
-            ];
+    const zona = await Zonas.findByPk(zona_id);
 
-            const incidencia = await Incidencia.create({
-                usuario_id: usuarioId,
-                patrullaje_id: patrullaje_id || null,
-                zona_id,
-                tipo: tiposValidos.includes(tipo) ? tipo : "OTRO",
-                descripcion,
-                latitud: lat,
-                longitud: lng,
-                origen
-            }, {
-                transaction: t
-            });
+    if (!zona) {
+      const error = new Error("Zona no existe");
+      error.statusCode = 404;
+      throw error;
+    }
 
-            const archivos = Array.isArray(files)
-                ? files
-                : files
-                    ? Object.values(files).flat()
-                    : [];
+    const usuario = await Usuario.findByPk(usuario_id);
 
-            if (archivos.length > 5) {
-                throw {
-                    status: 400,
-                    message: "Máximo 5 archivos."
-                };
-            }
+    if (!usuario) {
+      const error = new Error("Usuario no existe");
+      error.statusCode = 404;
+      throw error;
+    }
 
-            let archivosData = [];
+    const tipoFinal = tiposValidos.includes(tipo) ? tipo : "OTRO";
 
-            if (archivos.length) {
+    const archivos = normalizarArchivos(files);
 
-                const uploads = await Promise.all(
+    if (archivos.length > 5) {
+      const error = new Error("Máximo 5 archivos permitidos");
+      error.statusCode = 400;
+      throw error;
+    }
 
-                    archivos.map(file =>
-                        uploadFileToS3({
-                            file,
-                            categoria: "incidencias",
-                            entidadId: incidencia.id,
-                            serenoId: usuarioId
-                        })
-                    )
+    const incidencia = await Incidencia.create(
+      {
+        usuario_id,
+        patrullaje_id: patrullajeIdFinal,
+        zona_id,
+        tipo: tipoFinal,
+        descripcion,
+        latitud: lat,
+        longitud: lng,
+        origen,
+      },
+      { transaction: t }
+    );
 
-                );
+    let archivosData = [];
 
-                archivosData = uploads.map((upload, index) => {
+    if (archivos.length > 0) {
+      const uploadPromises = archivos.map((file) =>
+        uploadFileToS3({
+          file,
+          categoria: "incidencias",
+          entidadId: incidencia.id,
+          serenoId: usuario_id,
+        })
+      );
 
-                    const file = archivos[index];
+      const resultados = await Promise.all(uploadPromises);
 
-                    return {
+      archivosData = resultados.map((result, index) => {
+        const file = archivos[index];
 
-                        incidencia_id: incidencia.id,
-                        url_archivo: upload.url,
-                        key_s3: upload.key,
-                        tipo_archivo: this.obtenerTipoArchivo(file.mimetype),
-                        mime_type: file.mimetype,
-                        peso: file.size,
-                        sereno_id: usuarioId
+        return {
+          incidencia_id: incidencia.id,
+          url_archivo: result.url,
+          key_s3: result.key,
+          tipo_archivo: getTipoArchivo(file.mimetype),
+          mime_type: file.mimetype,
+          peso: file.size,
+          sereno_id: usuario_id,
+        };
+      });
 
-                    };
+      await IncidenciaArchivo.bulkCreate(archivosData, { transaction: t });
 
-                });
-
-                await IncidenciaArchivo.bulkCreate(
-                    archivosData,
-                    { transaction: t }
-                );
-
-                await incidencia.update(
-                    {
-                        total_evidencias: archivosData.length
-                    },
-                    {
-                        transaction: t
-                    }
-                );
-            }
-            await t.commit();
-
-            return {
-                incidencia,
-                archivos: archivosData
-            };
-
-        } catch (error) {
-            await t.rollback();
-            throw error;
+      await Incidencia.update(
+        { total_evidencias: archivosData.length },
+        {
+          where: { id: incidencia.id },
+          transaction: t,
         }
+      );
+
+      incidencia.total_evidencias = archivosData.length;
     }
 
-    obtenerTipoArchivo(mime) {
+    await t.commit();
 
-        if (!mime) return "OTRO";
+    return {
+      message: "Incidencia registrada correctamente",
+      incidencia,
+      archivos: archivosData,
+    };
+  } catch (error) {
+    await t.rollback();
+    throw error;
+  }
+};
 
-        if (mime.startsWith("image/"))
-            return "IMAGEN";
-
-        if (mime.startsWith("video/"))
-            return "VIDEO";
-
-        if (mime === "application/pdf")
-            return "PDF";
-
-        return "OTRO";
-    }
-}
-
-module.exports = new IncidenciaService();
+module.exports = registrarIncidenciaService;

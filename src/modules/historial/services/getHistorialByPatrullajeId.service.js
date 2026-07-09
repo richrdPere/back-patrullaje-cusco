@@ -37,7 +37,7 @@ const getHistorialByPatrullajeService = async (patrullajeId) => {
 
       {
         model: Usuario,
-        as: "sereno",
+        as: "usuario",
 
         attributes: ["id"],
 
@@ -48,8 +48,7 @@ const getHistorialByPatrullajeService = async (patrullajeId) => {
 
             attributes: [
               "nombres",
-              "apellido_paterno",
-              "apellido_materno"
+              "apellidos",
             ]
           }
         ]
@@ -64,9 +63,7 @@ const getHistorialByPatrullajeService = async (patrullajeId) => {
           "nombre"
         ]
       }
-
     ],
-
     order: [
       ["fecha_hora", "DESC"]
     ]
@@ -86,8 +83,7 @@ const getHistorialByPatrullajeService = async (patrullajeId) => {
     sereno: {
       id: item.sereno?.id,
       nombres: item.sereno?.persona?.nombres,
-      apellido_paterno: item.sereno?.persona?.apellido_paterno,
-      apellido_materno: item.sereno?.persona?.apellido_materno
+      apellidos: item.sereno?.persona?.apellidos,
     },
     zona: {
       id: item.zona?.id,

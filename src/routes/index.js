@@ -12,6 +12,7 @@ const unidadSerenoRoutes = require("../modules/patrullajes/routes/unidad_sereno.
 const profileRoutes = require("../modules/auth/routes/profile.routes");
 const movilesRoutes = require("../modules/patrullajes/routes/patrullaje_movil.routes");
 const historialRoutes = require("../modules/historial/routes/historial.routes");
+const incidenciasRoutes = require("../modules/incidencias/routes/incidencia.routes");
 
 // const authRoutes = require("./auth.routes");
 // const usuarioRoutes = require("./usuario.routes");
@@ -23,7 +24,7 @@ const historialRoutes = require("../modules/historial/routes/historial.routes");
 // const profileRoutes = require("./profile.routes");
 // const movilesRoutes = require("./moviles.routes");
 // const historialRoutes = require("./historial_patrullaje.routes");
-const incidenciasRoutes = require("./incidencia.routes");
+// const incidenciasRoutes = require("./incidencia.routes");
 
 
 const gpsPatrullajeRoutes = require("./gps_patrullaje.routes");
