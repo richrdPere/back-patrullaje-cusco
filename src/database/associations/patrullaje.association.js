@@ -10,7 +10,7 @@ module.exports = (db) => {
 
   db.Zonas.hasMany(db.PatrullajeProgramado, {
     foreignKey: "zona_id",
-    as: "patrullajes"
+    as: "patrullaje_programado"
   });
 
   // ======================================================
@@ -23,7 +23,7 @@ module.exports = (db) => {
 
   db.UnidadPatrullaje.hasMany(db.PatrullajeProgramado, {
     foreignKey: "unidad_id",
-    as: "patrullajes"
+    as: "patrullaje_programado"
   });
 
   // ======================================================
@@ -60,7 +60,7 @@ module.exports = (db) => {
 
   db.HistorialPatrullaje.belongsTo(db.PatrullajeProgramado, {
     foreignKey: "patrullaje_id",
-    as: "patrullaje"
+    as: "patrullaje_programado"
   });
 
   db.HistorialPatrullaje.belongsTo(db.Usuario, {
@@ -84,17 +84,43 @@ module.exports = (db) => {
   });
 
   // ======================================================
-  // GPS PATRULLAJE
+  // RESUMEN PATRULLAJE
   // ======================================================
-  db.PatrullajeProgramado.hasMany(db.PatrullajeGps, {
+  db.PatrullajeProgramado.hasOne(db.PatrullajeResumen, {
     foreignKey: "patrullaje_id",
-    as: "gps"
+    as: "resumen",
   });
 
-  db.PatrullajeGps.belongsTo(db.PatrullajeProgramado, {
+  db.PatrullajeResumen.belongsTo(db.PatrullajeProgramado, {
     foreignKey: "patrullaje_id",
-    as: "patrullaje"
+    as: "patrullaje",
   });
+
+  db.PatrullajeResumen.belongsTo(db.Usuario, {
+    foreignKey: "usuario_finaliza_id",
+    as: "usuarioFinaliza",
+  });
+
+
+  // ======================================================
+  // GPS PATRULLAJE
+  // ======================================================
+  db.PatrullajeProgramado.hasMany(
+    db.PatrullajeGps,
+    {
+      foreignKey: "patrullaje_id",
+      as: "recorrido",
+      onDelete: "CASCADE",
+    },
+  );
+
+  db.PatrullajeGps.belongsTo(
+    db.PatrullajeProgramado,
+    {
+      foreignKey: "patrullaje_id",
+      as: "patrullaje",
+    },
+  );
 
   // ======================================================
   // POLICÍA - ASIGNACIONES

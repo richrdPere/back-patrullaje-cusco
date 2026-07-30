@@ -4,6 +4,7 @@ const db = require("../../../database/models");
 const {
     Incidencia,
     IncidenciaArchivo,
+    Persona,
     Usuario,
     Zonas
 } = db;
@@ -51,8 +52,27 @@ const getIncidenciasByZonaService = async ({
             as: "usuario",
             attributes:
                 mode === "web"
-                    ? ["id", "nombre", "apellidos", "email", "telefono"]
-                    : ["id", "nombre", "apellidos"],
+                    ? ["id", "username", "correo", "estado"]
+                    : ["id", "username"],
+            include: [
+                {
+                    model: Persona,
+                    as: "persona",
+                    attributes:
+                        mode === "web"
+                            ? [
+                                "id",
+                                "nombres",
+                                "apellidos",
+                                "telefono",
+                            ]
+                            : [
+                                "id",
+                                "nombres",
+                                "apellidos",
+                            ],
+                },
+            ],
         },
         {
             model: Zonas,

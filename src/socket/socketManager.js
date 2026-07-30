@@ -1,4 +1,4 @@
-const alertHandler = require("./handlers/alert.handler");
+const alertHandler = require("./handlers/alerta.handler");
 const trackingHandler = require("./handlers/tracking.handler");
 const patrullajeHandler = require("./handlers/patrullaje.handler");
 const notificationHandler = require("./handlers/notification.handler");

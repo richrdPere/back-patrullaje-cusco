@@ -67,4 +67,5 @@ router.delete(
 router.get("/detalle/:id", verificarToken, getIncidenciaByIdController);
 router.patch("/editar/:id/estado", verificarToken, updateEstadoIncidenciaController);
 router.delete("/eliminar/:id", verificarToken, deleteIncidenciaController);
+
 module.exports = router;

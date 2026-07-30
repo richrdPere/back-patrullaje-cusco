@@ -51,7 +51,7 @@ const listarPatrullajesProgramadosService = async (query) => {
 
         ["fecha", "DESC"],
 
-        ["hora_inicio", "ASC"]
+        // ["hora_inicio", "ASC"]
 
       ],
 
@@ -145,7 +145,7 @@ const listarPatrullajesProgramadosService = async (query) => {
       ]
     });
 
-  console.log(JSON.stringify(rows, null, 2));
+  // console.log(JSON.stringify(rows, null, 2));
 
   const data = rows.map(item => {
 

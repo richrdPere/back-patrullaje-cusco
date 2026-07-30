@@ -16,6 +16,8 @@ const getPatrullajeActivoController = async (req, res) => {
 
     const usuarioId = req.usuario.id;
 
+    console.log("USUARIO ID: ", usuarioId);
+
     const patrullaje = await getPatrullajeActivoService(usuarioId);
 
     if (!patrullaje) {
@@ -79,27 +81,46 @@ const startPatrullajeController = async (req, res) => {
 |--------------------------------------------------------------------------
 */
 const endPatrullajeController = async (req, res) => {
-
   try {
-
-    const { id } = req.params;
+    const patrullajeId = Number(req.params.id);
     const usuarioId = req.usuario.id;
 
-    const patrullaje = await endPatrullajeService(id, usuarioId);
+    const observacionFinal =
+      req.body?.observacion_final?.trim() || null;
+
+    if (
+      !Number.isInteger(patrullajeId) ||
+      patrullajeId <= 0
+    ) {
+      return res.status(400).json({
+        success: false,
+        message:
+          "El identificador del patrullaje no es válido.",
+      });
+    }
+
+    const patrullaje = await endPatrullajeService(
+      patrullajeId,
+      usuarioId,
+      observacionFinal,
+    );
 
     return res.status(200).json({
       success: true,
       message: "Patrullaje finalizado correctamente.",
       data: patrullaje,
     });
-
   } catch (error) {
-
-    console.error(error);
+    console.error(
+      "Error al finalizar patrullaje:",
+      error,
+    );
 
     return res.status(error.statusCode || 500).json({
       success: false,
-      message: error.message || "Error al finalizar el patrullaje.",
+      message:
+        error.message ||
+        "Error al finalizar el patrullaje.",
     });
   }
 };

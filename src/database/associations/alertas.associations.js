@@ -1,27 +1,111 @@
 module.exports = (db) => {
+  // ======================================================
+  // ALERTA - USUARIO EMISOR
+  // ======================================================
 
-    db.Alerta.belongsTo(db.Usuario, {
-        foreignKey: "usuario_id"
-    });
+  db.Alerta.belongsTo(db.Usuario, {
+    foreignKey: "emisor_id",
+    as: "emisor",
+  });
 
-    db.Usuario.hasMany(db.Alerta, {
-        foreignKey: "usuario_id"
-    });
+  db.Usuario.hasMany(db.Alerta, {
+    foreignKey: "emisor_id",
+    as: "alertasEmitidas",
+  });
 
-    db.Alerta.belongsTo(db.Zonas, {
-        foreignKey: "zona_id"
-    });
+  // ======================================================
+  // ALERTA - ZONA
+  // ======================================================
 
-    db.Zonas.hasMany(db.Alerta, {
-        foreignKey: "zona_id"
-    });
+  db.Alerta.belongsTo(db.Zonas, {
+    foreignKey: "zona_id",
+    as: "zona",
+  });
 
-    db.Alerta.belongsTo(db.PatrullajeProgramado, {
-        foreignKey: "patrullaje_id"
-    });
+  db.Zonas.hasMany(db.Alerta, {
+    foreignKey: "zona_id",
+    as: "alertas",
+  });
 
-    db.PatrullajeProgramado.hasMany(db.Alerta, {
-        foreignKey: "patrullaje_id"
-    });
+  // ======================================================
+  // ALERTA - PATRULLAJE
+  // ======================================================
 
+  db.Alerta.belongsTo(db.PatrullajeProgramado, {
+    foreignKey: "patrullaje_id",
+    as: "patrullaje",
+  });
+
+  db.PatrullajeProgramado.hasMany(db.Alerta, {
+    foreignKey: "patrullaje_id",
+    as: "alertas",
+  });
+
+  // ======================================================
+  // ALERTA - INCIDENCIA
+  // ======================================================
+
+  db.Alerta.belongsTo(db.Incidencia, {
+    foreignKey: "incidencia_id",
+    as: "incidencia",
+  });
+
+  db.Incidencia.hasMany(db.Alerta, {
+    foreignKey: "incidencia_id",
+    as: "alertas",
+  });
+
+  // ======================================================
+  // ALERTA - DESTINATARIOS
+  // ======================================================
+
+  db.Alerta.hasMany(db.AlertaDestinatario, {
+    foreignKey: "alerta_id",
+    as: "destinatarios",
+    onUpdate: "CASCADE",
+    onDelete: "CASCADE",
+  });
+
+  db.AlertaDestinatario.belongsTo(db.Alerta, {
+    foreignKey: "alerta_id",
+    as: "alerta",
+    onUpdate: "CASCADE",
+    onDelete: "CASCADE",
+  });
+
+  // ======================================================
+  // USUARIO - ALERTAS RECIBIDAS
+  // ======================================================
+
+  db.Usuario.hasMany(db.AlertaDestinatario, {
+    foreignKey: "usuario_id",
+    as: "alertasRecibidas",
+    onUpdate: "CASCADE",
+    onDelete: "CASCADE",
+  });
+
+  db.AlertaDestinatario.belongsTo(db.Usuario, {
+    foreignKey: "usuario_id",
+    as: "destinatario",
+    onUpdate: "CASCADE",
+    onDelete: "CASCADE",
+  });
+
+  // ======================================================
+  // USUARIO - DISPOSITIVOS
+  // ======================================================
+
+  db.Usuario.hasMany(db.UsuarioDispositivo, {
+    foreignKey: "usuario_id",
+    as: "dispositivos",
+    onUpdate: "CASCADE",
+    onDelete: "CASCADE",
+  });
+
+  db.UsuarioDispositivo.belongsTo(db.Usuario, {
+    foreignKey: "usuario_id",
+    as: "usuario",
+    onUpdate: "CASCADE",
+    onDelete: "CASCADE",
+  });
 };

@@ -1,53 +1,66 @@
 module.exports = (db) => {
-
-  // ==========================
+  // ======================================================
   // USUARIO -> INCIDENCIA
-  // ==========================
+  // ======================================================
   db.Usuario.hasMany(db.Incidencia, {
-    foreignKey: "usuario_id"
+    foreignKey: "usuario_id",
+    as: "incidencias",
   });
 
   db.Incidencia.belongsTo(db.Usuario, {
     foreignKey: "usuario_id",
-    as: "usuario"
+    as: "usuario",
   });
 
-  // ==========================
+  // ======================================================
   // ZONA -> INCIDENCIA
-  // ==========================
+  // ======================================================
   db.Zonas.hasMany(db.Incidencia, {
     foreignKey: "zona_id",
-    as: "incidencias"
+    as: "incidencias",
   });
 
   db.Incidencia.belongsTo(db.Zonas, {
     foreignKey: "zona_id",
-    as: "zona"
+    as: "zona",
   });
 
-  // ==========================
+  // ======================================================
+  // PATRULLAJE PROGRAMADO -> INCIDENCIA
+  // ======================================================
+  db.PatrullajeProgramado.hasMany(db.Incidencia, {
+    foreignKey: "patrullaje_id",
+    as: "incidencias",
+  });
+
+  db.Incidencia.belongsTo(db.PatrullajeProgramado, {
+    foreignKey: "patrullaje_id",
+    as: "patrullaje",
+  });
+
+  // ======================================================
   // INCIDENCIA -> ARCHIVOS
-  // ==========================
+  // ======================================================
   db.Incidencia.hasMany(db.IncidenciaArchivo, {
     foreignKey: "incidencia_id",
-    as: "archivos"
+    as: "archivos",
   });
 
   db.IncidenciaArchivo.belongsTo(db.Incidencia, {
-    foreignKey: "incidencia_id"
+    foreignKey: "incidencia_id",
+    as: "incidencia",
   });
 
-  // ==========================
+  // ======================================================
   // INCIDENCIA -> HISTORIAL
-  // ==========================
+  // ======================================================
   db.Incidencia.hasMany(db.HistorialPatrullaje, {
     foreignKey: "incidencia_id",
-    as: "historial"
+    as: "historial",
   });
 
   db.HistorialPatrullaje.belongsTo(db.Incidencia, {
     foreignKey: "incidencia_id",
-    as: "incidencia"
+    as: "incidencia",
   });
-
 };

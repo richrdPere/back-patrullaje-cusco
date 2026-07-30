@@ -19,24 +19,3 @@ module.exports = (db) => {
   require('./gps.associations')(db);
 
 }
-
-
-// const initAuthAssociations = require('./auth.association');
-// const initPatrullajeAssociations = require('./patrullaje.association');
-// const initIncidenciasAssociations = require('./incidencias.association');
-// const initAlertasAssociations = require('./alertas.associations');
-// const initGpsAssociations = require('./gps.associations');
-// const initChatAssociations = require('./chat.associations');
-
-// const initAssociations = (db) => {
-
-//   initAuthAssociations(db);
-//   initPatrullajeAssociations(db);
-//   initIncidenciasAssociations(db);
-//   initAlertasAssociations(db);
-//   initGpsAssociations(db);
-//   initChatAssociations(db);
-
-// };
-
-// module.exports = initAssociations;

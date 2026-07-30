@@ -45,9 +45,17 @@ const getHistorialByPatrullajeController = async (req, res) => {
 
   try {
 
-    const { id } = req.params;
+    const patrullajeId = Number(req.params.id);
 
-    const historial = await getHistorialByPatrullajeService(id);
+    if (!Number.isInteger(patrullajeId) || patrullajeId <= 0) {
+      return res.status(400).json({
+        success: false,
+        message: "El identificador del patrullaje no es válido.",
+        error: "El parámetro id debe ser un número entero positivo."
+      });
+    }
+
+    const historial = await getHistorialByPatrullajeService(patrullajeId);
 
     return res.status(200).json({
       success: true,
@@ -61,7 +69,8 @@ const getHistorialByPatrullajeController = async (req, res) => {
 
     return res.status(error.statusCode || 500).json({
       success: false,
-      message: error.message
+      message: "No se pudo obtener el historial del patrullaje.",
+      error: error.message
     });
   }
 };

@@ -17,6 +17,10 @@ const Incidencia = sequelize.define("Incidencia", {
     patrullaje_id: {
         type: DataTypes.INTEGER,
         allowNull: true,
+        references: {
+            model: "patrullajes_programados",
+            key: "id",
+        },
     },
 
     zona_id: {

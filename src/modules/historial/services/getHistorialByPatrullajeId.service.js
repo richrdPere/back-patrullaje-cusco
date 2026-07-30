@@ -32,15 +32,11 @@ const getHistorialByPatrullajeService = async (patrullajeId) => {
       patrullaje_id: patrullajeId,
       estado: "ACTIVO"
     },
-
     include: [
-
       {
         model: Usuario,
         as: "usuario",
-
         attributes: ["id"],
-
         include: [
           {
             model: Persona,
@@ -53,11 +49,9 @@ const getHistorialByPatrullajeService = async (patrullajeId) => {
           }
         ]
       },
-
       {
         model: Zonas,
         as: "zona",
-
         attributes: [
           "id",
           "nombre"
@@ -80,15 +74,19 @@ const getHistorialByPatrullajeService = async (patrullajeId) => {
     longitud: item.longitud,
     visible_para_siguiente_turno: item.visible_para_siguiente_turno,
     fecha_hora: item.fecha_hora,
-    sereno: {
-      id: item.sereno?.id,
-      nombres: item.sereno?.persona?.nombres,
-      apellidos: item.sereno?.persona?.apellidos,
-    },
-    zona: {
-      id: item.zona?.id,
-      nombre: item.zona?.nombre
-    }
+    sereno: item.usuario
+      ? {
+        id: item.usuario.id,
+        nombres: item.usuario.persona?.nombres ?? null,
+        apellidos: item.usuario.persona?.apellidos ?? null,
+      }
+      : null,
+    zona: item.zona
+      ? {
+        id: item.zona.id,
+        nombre: item.zona.nombre,
+      }
+      : null
   }));
 };
 

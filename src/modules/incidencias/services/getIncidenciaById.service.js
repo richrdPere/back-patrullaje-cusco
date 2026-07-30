@@ -7,6 +7,7 @@ const {
   IncidenciaArchivo,
   PatrullajeProgramado,
   Usuario,
+  Persona,
   Zonas
 } = db;
 /*
@@ -27,8 +28,27 @@ const getIncidenciaByIdService = async ({ id, mode = "app" }) => {
       as: "usuario",
       attributes:
         mode === "web"
-          ? ["id", "nombre", "apellidos", "email", "telefono"]
-          : ["id", "nombre", "apellidos"],
+          ? ["id", "username", "correo", "estado"]
+          : ["id", "username"],
+      include: [
+        {
+          model: Persona,
+          as: "persona",
+          attributes:
+            mode === "web"
+              ? [
+                "id",
+                "nombres",
+                "apellidos",
+                "telefono",
+              ]
+              : [
+                "id",
+                "nombres",
+                "apellidos",
+              ],
+        },
+      ],
     },
     {
       model: Zonas,
@@ -38,7 +58,7 @@ const getIncidenciaByIdService = async ({ id, mode = "app" }) => {
     {
       model: PatrullajeProgramado,
       as: "patrullaje",
-      attributes: ["id", "fecha_inicio", "fecha_fin", "estado"],
+      attributes: ["id", "fecha", "hora_inicio", "hora_fin", "estado"],
       required: false,
     },
   ];

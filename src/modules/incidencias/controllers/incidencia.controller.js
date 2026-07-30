@@ -41,7 +41,7 @@ const registerIncidenciaController = async (req, res) => {
   } catch (error) {
     console.error("Error registrar Incidencia:", error);
 
-    return res.status(500).json({
+    return res.status(error.statusCode || 500).json({
       success: false,
       message: "Error al registrar Incidencia.",
       error: error.message,
@@ -478,20 +478,20 @@ const updateEstadoMasivoIncidenciasController = async (req, res) => {
   }
 };
 module.exports = {
-  registerIncidenciaController,
-  getIncidenciasPaginatedController,
-  getIncidenciaByIdController,
-  updateEstadoIncidenciaController,
-  deleteIncidenciaController,
-  getIncidenciasByUsuarioController,
-  getMisIncidenciasController,
-  getIncidenciasByPatrullajeController,
-  getIncidenciasByZonaController,
-  getIncidenciasCercanasController,
   addArchivosIncidenciaController,
   deleteArchivoIncidenciaController,
+  deleteIncidenciaController,
   getArchivosByIncidenciaController,
-  getResumenIncidenciasController,
+  getIncidenciaByIdController,
   getIncidenciasByFechaController,
+  getIncidenciasByPatrullajeController,
+  getIncidenciasByUsuarioController,
+  getIncidenciasByZonaController,
+  getIncidenciasCercanasController,
+  getIncidenciasPaginatedController,
+  getMisIncidenciasController,
+  getResumenIncidenciasController,
+  registerIncidenciaController,
+  updateEstadoIncidenciaController,
   updateEstadoMasivoIncidenciasController
 };

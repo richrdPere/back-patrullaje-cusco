@@ -5,6 +5,7 @@ const {
     Incidencia,
     IncidenciaArchivo,
     Usuario,
+    Persona,
     Zonas
 } = db;
 /*
@@ -51,8 +52,27 @@ const getIncidenciasByPatrullajeService = async ({
             as: "usuario",
             attributes:
                 mode === "web"
-                    ? ["id", "nombre", "apellidos", "email", "telefono"]
-                    : ["id", "nombre", "apellidos"],
+                    ? ["id", "username", "correo", "estado"]
+                    : ["id", "username"],
+            include: [
+                {
+                    model: Persona,
+                    as: "persona",
+                    attributes:
+                        mode === "web"
+                            ? [
+                                "id",
+                                "nombres",
+                                "apellidos",
+                                "telefono",
+                            ]
+                            : [
+                                "id",
+                                "nombres",
+                                "apellidos",
+                            ],
+                },
+            ],
         },
         {
             model: Zonas,

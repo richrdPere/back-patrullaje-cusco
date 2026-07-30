@@ -1,128 +1,201 @@
 const db = require('../../database/models');
+const { Op } = require("sequelize");
+
+const { calculateDistanceBetweenPoints } = require("../../utils/distance.helper");
+
 
 const Persona = db.Persona;
 const Usuario = db.Usuario;
+const PatrullajeProgramado = db.PatrullajeProgramado;
+const PatrullajePersonal = db.PatrullajePersonal;
+const PatrullajeGps = db.PatrullajeGps;
 
 module.exports = (io, socket) => {
   socket.on("tracking", async (data, callback) => {
 
+    console.log(
+      "🟢 TRACKING LISTENER NUEVO EJECUTADO",
+      {
+        socketId: socket.id,
+        usuarioId: socket.usuario?.id,
+        data,
+        callbackDisponible:
+          typeof callback === "function",
+      },
+    );
+
     try {
+      const {
+        patrullajeId,
+        latitud,
+        longitud,
+        velocidad,
+        precision,
+        fechaHora,
+        tipo,
+      } = data;
 
-      const userId = socket.usuario.id;
 
-      // VALIDAR DATA
-      if (data?.lat == null || data?.lng == null || data?.patrullaje_id == null) {
-
-        if (callback) {
-          callback({
-            ok: false,
-            error: "Datos incompletos"
-          });
-        }
-
-        return;
+      // - VALIDACIONES BÁSICAS
+      if (!patrullajeId) {
+        throw new Error("El patrullajeId es obligatorio.");
       }
 
-      // OBTENER USUARIO + PERSONA
-      const usuario = await Usuario.findByPk(userId, {
-        include: [
-          {
-            model: Persona,
-            as: "persona"
-          }
-        ]
+      const latitude = Number(latitud);
+      const longitude = Number(longitud);
+
+      if (!Number.isFinite(latitude) || !Number.isFinite(longitude)) {
+        throw new Error("Las coordenadas no son válidas.");
+      }
+
+      if (latitude < -90 || latitude > 90) {
+        throw new Error("La latitud está fuera del rango permitido.");
+      }
+
+      if (longitude < -180 || longitude > 180) {
+        throw new Error("La longitud está fuera del rango permitido.");
+      }
+
+      // - VALIDAR PATRULLAJE ACTIVO
+      const patrullaje = await PatrullajeProgramado.findOne({
+        where: {
+          id: patrullajeId,
+          estado: "EN_CURSO",
+        },
+        attributes: ["id", "estado"],
       });
 
-      // VALIDAR
-      if (!usuario) {
-
-        if (callback) {
-          callback({
-            ok: false,
-            error: "Usuario no encontrado"
-          });
-        }
-        return;
+      if (!patrullaje) {
+        throw new Error(
+          "El patrullaje no existe o no se encuentra en curso.",
+        );
       }
 
-      // PERSONA
-      const persona = usuario.persona;
+      // - VALIDAR QUE EL SERENO ESTÉ ASIGNADO
+      const personal = await PatrullajePersonal.findOne({
+        where: {
+          patrullaje_id: patrullajeId,
+          usuario_id: socket.usuario.id,
+          tipo_personal: "SERENO",
+          estado: {
+            [Op.in]: ["ACEPTADO", "EN_SERVICIO"],
+          },
+        },
+        attributes: ["id"],
+      });
 
-      // PAYLOAD OPERACIONAL
-      const payload = {
-        // - USUARIO
-        userId: usuario.id,
-        username: usuario.username,
-        correo: usuario.correo,
-        roles: socket.usuario.roles || [],
-        // - PERSONA / SERENO
-        sereno: {
-          nombres: persona?.nombres || "",
-          apellidos: persona?.apellidos || "",
-          documento: persona?.documento_identidad || "",
-          telefono: persona?.telefono || "",
-          fotoPerfil: persona?.foto_perfil || null
-        },
+      if (!personal) {
+        throw new Error(
+          "El usuario no está autorizado para registrar ubicaciones en este patrullaje.",
+        );
+      }
 
-        // - PATRULLAJE
-        patrullaje: {
-          id: data.patrullaje_id,
-          estado: "ACTIVO"
+      // - OBTENER EL ULTIMO PUNTO
+      const ultimoPunto = await PatrullajeGps.findOne({
+        where: {
+          patrullaje_id: patrullajeId,
         },
-        // - GPS
-        gps: {
-          lat: Number(data.lat),
-          lng: Number(data.lng),
-          velocidad: Number(data.velocidad || 0),
-          precision: Number(data.precision || 0)
-        },
-        // - REALTIME
-        realtime: {
-          online: true,
-          timestamp: data.timestamp
-            ? new Date(data.timestamp)
-            : new Date()
-        },
-        // - TIPO EVENTO
-        tipo: data.tipo || "TRACKING"
+        order: [["fecha_hora", "DESC"]],
+      });
+
+      if (ultimoPunto) {
+        const distanciaDesdeUltimoPunto =
+          calculateDistanceBetweenPoints(
+            ultimoPunto.latitud,
+            ultimoPunto.longitud,
+            latitude,
+            longitude,
+          );
+
+        const milisegundosTranscurridos =
+          new Date().getTime() -
+          new Date(ultimoPunto.fecha_hora).getTime();
+
+        const segundosTranscurridos =
+          milisegundosTranscurridos / 1000;
+
+        const esPuntoDuplicado =
+          distanciaDesdeUltimoPunto < 3 &&
+          segundosTranscurridos < 10;
+
+        if (esPuntoDuplicado) {
+          if (typeof callback === "function") {
+            callback({
+              success: true,
+              message: "Ubicación omitida por no existir desplazamiento significativo.",
+              data: null,
+            });
+          }
+
+          return;
+        }
+      }
+
+      const tipoGps = [
+        "TRACKING",
+        "EMERGENCIA",
+        "MANUAL",
+      ].includes(tipo)
+        ? tipo
+        : "TRACKING";
+
+      // ==========================================
+      // GUARDAR EL PUNTO GPS
+      // ==========================================
+      const puntoGps = await PatrullajeGps.create({
+        patrullaje_id: patrullajeId,
+        latitud: latitude,
+        longitud: longitude,
+        velocidad:
+          velocidad !== null && velocidad !== undefined
+            ? Number(velocidad)
+            : null,
+        precision:
+          precision !== null && precision !== undefined
+            ? Number(precision)
+            : null,
+        fecha_hora: fechaHora ? new Date(fechaHora) : new Date(),
+        tipo: tipoGps,
+      });
+
+      const trackingPayload = {
+        id: puntoGps.id,
+        patrullajeId: puntoGps.patrullaje_id,
+        usuarioId: socket.usuario.id,
+        latitud: Number(puntoGps.latitud),
+        longitud: Number(puntoGps.longitud),
+        velocidad: puntoGps.velocidad,
+        precision: puntoGps.precision,
+        fechaHora: puntoGps.fecha_hora,
+        tipo: puntoGps.tipo,
       };
 
-      // EMITIR A OPERADORES
-      io.to("operadores")
-        .emit("tracking", payload);
-
-      // ROOM PATRULLAJE
-      socket.to(
-        `patrullaje_${data.patrullaje_id}`
-      ).emit("tracking", payload);
-
-      // LOG
-      console.log(
-        `📍 TRACKING USER ${userId}`,
-        {
-          nombre:
-            `${persona?.nombres} ${persona?.apellidos}`,
-          patrullaje:
-            data.patrullaje_id,
-          lat: data.lat,
-          lng: data.lng
-        }
+      // ==========================================
+      // RETRANSMITIR A LA CENTRAL
+      // ==========================================
+      io.to(`patrullaje_${patrullajeId}`).emit(
+        "tracking_actualizado",
+        trackingPayload,
       );
 
-      // CALLBACK
-      if (callback) {
+      if (typeof callback === "function") {
         callback({
-          ok: true
+          success: true,
+          message: "Ubicación registrada correctamente.",
+          data: trackingPayload,
         });
       }
-
     } catch (error) {
-      console.error("❌ ERROR TRACKING:", error);
+      console.error("Error registrando tracking:", error);
 
-      if (callback) {
+      if (typeof callback === "function") {
         callback({
-          ok: false,
-          error: "Error interno tracking"
+          success: false,
+          message: error.message,
+        });
+      } else {
+        socket.emit("tracking_error", {
+          message: error.message,
         });
       }
     }

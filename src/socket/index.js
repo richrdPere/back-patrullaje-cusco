@@ -9,13 +9,14 @@ const initSocket = (server) => {
   io = new Server(server, {
     cors: {
       origin: "*",
-      methods: ["GET", "POST"],
+      methods: ["GET", "POST", "PATCH"],
     },
   });
 
-  // Middleware JWT
+  // MIDDLEWARE JWT
   io.use(socketAuth);
 
+  // CONEXIÓN
   io.on("connection", (socket) => {
     const userId = socket.usuario.id;
     const roles = socket.usuario?.roles || [];
@@ -36,6 +37,8 @@ const initSocket = (server) => {
 
     // Asociar socket al usuario
     addUser(userId, socket.id);
+    
+    socket.join(`usuario:${userId}`);
     socket.join(`user_${userId}`); // OPCIONAL
 
     //Registrar handlers (alertas, tracking, etc.)

@@ -44,20 +44,32 @@ const PatrullajeGps = sequelize.define("PatrullajeGps", {
   fecha_hora: {
     type: DataTypes.DATE,
     defaultValue: DataTypes.NOW,
+    allowNull: false,
   },
 
   tipo: {
     type: DataTypes.ENUM('TRACKING', 'EMERGENCIA', 'MANUAL'),
-    defaultValue: 'TRACKING'
+    defaultValue: 'TRACKING',
+    allowNull: false,
   }
 
 }, {
   tableName: "patrullaje_gps",
   timestamps: true,
   indexes: [
-    { fields: ['patrullaje_id'] },
-    { fields: ['fecha_hora'] }
-  ]
+    {
+      fields: ["patrullaje_id"],
+    },
+    {
+      fields: ["fecha_hora"],
+    },
+    {
+      fields: ["patrullaje_id", "fecha_hora"],
+    },
+    {
+      fields: ["patrullaje_id", "tipo"],
+    },
+  ],
 });
 
 module.exports = PatrullajeGps;
