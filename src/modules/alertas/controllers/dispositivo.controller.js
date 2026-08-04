@@ -21,15 +21,13 @@ const registerDispositivoController = async (
 
     return res.status(200).json({
       success: true,
-      message:
-        "Dispositivo registrado correctamente",
+      message: "Dispositivo registrado correctamente",
       data: dispositivo,
     });
   } catch (error) {
     return res.status(400).json({
       success: false,
-      message:
-        "No se pudo registrar el dispositivo",
+      message: "No se pudo registrar el dispositivo",
       error: error.message,
     });
   }

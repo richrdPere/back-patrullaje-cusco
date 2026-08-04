@@ -5,12 +5,16 @@ module.exports = (db) => {
   // ======================================================
   db.PatrullajeProgramado.belongsTo(db.Zonas, {
     foreignKey: "zona_id",
-    as: "zona"
+    as: "zona",
+    onUpdate: "CASCADE",
+    onDelete: "RESTRICT"
   });
 
   db.Zonas.hasMany(db.PatrullajeProgramado, {
     foreignKey: "zona_id",
-    as: "patrullaje_programado"
+    as: "patrullaje",
+    onUpdate: "CASCADE",
+    onDelete: "RESTRICT"
   });
 
   // ======================================================
@@ -18,36 +22,67 @@ module.exports = (db) => {
   // ======================================================
   db.PatrullajeProgramado.belongsTo(db.UnidadPatrullaje, {
     foreignKey: "unidad_id",
-    as: "unidad"
+    as: "unidad",
+    onUpdate: "CASCADE",
+    onDelete: "SET NULL"
   });
 
   db.UnidadPatrullaje.hasMany(db.PatrullajeProgramado, {
     foreignKey: "unidad_id",
-    as: "patrullaje_programado"
+    as: "patrullaje",
+    onUpdate: "CASCADE",
+    onDelete: "SET NULL"
   });
 
   // ======================================================
-  // PERSONAL (PATRULLAJE_PERSONAL)
+  // PATRULLAJE - PERSONAL
   // ======================================================
   db.PatrullajeProgramado.hasMany(db.PatrullajePersonal, {
     foreignKey: "patrullaje_id",
-    as: "personal"
+    as: "personal",
+    onUpdate: "CASCADE",
+    onDelete: "CASCADE"
   });
 
   db.PatrullajePersonal.belongsTo(db.PatrullajeProgramado, {
     foreignKey: "patrullaje_id",
-    as: "patrullaje"
+    as: "patrullaje",
+    onUpdate: "CASCADE",
+    onDelete: "CASCADE"
   });
 
-  // USUARIO - ASIGNACIONES
+  // ======================================================
+  // USUARIO - PERSONAL
+  // ======================================================
   db.Usuario.hasMany(db.PatrullajePersonal, {
     foreignKey: "usuario_id",
-    as: "asignaciones"
+    as: "asignaciones",
+    onUpdate: "CASCADE",
+    onDelete: "SET NULL"
   });
 
   db.PatrullajePersonal.belongsTo(db.Usuario, {
     foreignKey: "usuario_id",
-    as: "usuario"
+    as: "usuario",
+    onUpdate: "CASCADE",
+    onDelete: "SET NULL"
+  });
+
+  // ======================================================
+  // POLICÍA - PERSONAL
+  // ======================================================
+  db.Policia.hasMany(db.PatrullajePersonal, {
+    foreignKey: "policia_id",
+    as: "asignaciones",
+    onUpdate: "CASCADE",
+    onDelete: "SET NULL"
+  });
+
+  db.PatrullajePersonal.belongsTo(db.Policia, {
+    foreignKey: "policia_id",
+    as: "policia",
+    onUpdate: "CASCADE",
+    onDelete: "SET NULL"
   });
 
   // ======================================================
@@ -55,32 +90,44 @@ module.exports = (db) => {
   // ======================================================
   db.PatrullajeProgramado.hasMany(db.HistorialPatrullaje, {
     foreignKey: "patrullaje_id",
-    as: "historial"
+    as: "historial",
+    onUpdate: "CASCADE",
+    onDelete: "CASCADE"
   });
 
   db.HistorialPatrullaje.belongsTo(db.PatrullajeProgramado, {
     foreignKey: "patrullaje_id",
-    as: "patrullaje_programado"
+    as: "patrullaje_programado",
+    onUpdate: "CASCADE",
+    onDelete: "CASCADE"
   });
 
   db.HistorialPatrullaje.belongsTo(db.Usuario, {
     foreignKey: "usuario_id",
-    as: "usuario"
+    as: "usuario",
+    onUpdate: "CASCADE",
+    onDelete: "SET NULL"
   });
 
   db.Usuario.hasMany(db.HistorialPatrullaje, {
     foreignKey: "usuario_id",
-    as: "historiales"
+    as: "historiales",
+    onUpdate: "CASCADE",
+    onDelete: "SET NULL"
   });
 
   db.HistorialPatrullaje.belongsTo(db.Zonas, {
     foreignKey: "zona_id",
-    as: "zona"
+    as: "zona",
+    onUpdate: "CASCADE",
+    onDelete: "RESTRICT"
   });
 
   db.Zonas.hasMany(db.HistorialPatrullaje, {
     foreignKey: "zona_id",
-    as: "historiales"
+    as: "historiales",
+    onUpdate: "CASCADE",
+    onDelete: "RESTRICT"
   });
 
   // ======================================================
@@ -89,49 +136,45 @@ module.exports = (db) => {
   db.PatrullajeProgramado.hasOne(db.PatrullajeResumen, {
     foreignKey: "patrullaje_id",
     as: "resumen",
+    onUpdate: "CASCADE",
+    onDelete: "CASCADE"
   });
 
   db.PatrullajeResumen.belongsTo(db.PatrullajeProgramado, {
     foreignKey: "patrullaje_id",
     as: "patrullaje",
+    onUpdate: "CASCADE",
+    onDelete: "CASCADE"
   });
 
   db.PatrullajeResumen.belongsTo(db.Usuario, {
     foreignKey: "usuario_finaliza_id",
     as: "usuarioFinaliza",
+    // onUpdate: "CASCADE",
+    // onDelete: "SET NULL"
   });
 
+  db.Usuario.hasMany(db.PatrullajeResumen, {
+    foreignKey: "usuario_finaliza_id",
+    as: "resumenesFinalizados",
+    onUpdate: "CASCADE",
+    onDelete: "SET NULL"
+  });
 
   // ======================================================
   // GPS PATRULLAJE
   // ======================================================
-  db.PatrullajeProgramado.hasMany(
-    db.PatrullajeGps,
-    {
-      foreignKey: "patrullaje_id",
-      as: "recorrido",
-      onDelete: "CASCADE",
-    },
-  );
-
-  db.PatrullajeGps.belongsTo(
-    db.PatrullajeProgramado,
-    {
-      foreignKey: "patrullaje_id",
-      as: "patrullaje",
-    },
-  );
-
-  // ======================================================
-  // POLICÍA - ASIGNACIONES
-  // ======================================================
-  db.Policia.hasMany(db.PatrullajePersonal, {
-    foreignKey: "policia_id",
-    as: "asignaciones"
+  db.PatrullajeProgramado.hasMany(db.PatrullajeGps, {
+    foreignKey: "patrullaje_id",
+    as: "recorrido",
+    onUpdate: "CASCADE",
+    onDelete: "CASCADE"
   });
 
-  db.PatrullajePersonal.belongsTo(db.Policia, {
-    foreignKey: "policia_id",
-    as: "policia"
+  db.PatrullajeGps.belongsTo(db.PatrullajeProgramado, {
+    foreignKey: "patrullaje_id",
+    as: "patrullaje",
+    onUpdate: "CASCADE",
+    onDelete: "CASCADE"
   });
 };

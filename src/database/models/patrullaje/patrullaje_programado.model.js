@@ -49,7 +49,7 @@ const PatrullajeProgramado = sequelize.define("PatrullajeProgramado", {
     allowNull: true
   }
 }, {
-  tableName: "patrullajes_programados",
+  tableName: "patrullaje_programado",
   timestamps: true,
 });
 

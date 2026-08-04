@@ -21,7 +21,8 @@ const getSerenosAndConductores = async () => {
           "nombres",
           "apellidos",
           "documento_identidad",
-          "telefono"
+          "telefono",
+          "foto_perfil"
         ],
         required: true
       },

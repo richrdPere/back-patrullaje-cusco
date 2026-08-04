@@ -39,7 +39,7 @@ const {
 // ============================
 
 // - DISPOSITIVOS
-router.post("/dispositivos", registerDispositivoController);
+router.post("/dispositivos/register", registerDispositivoController);
 router.patch("/dispositivos/desactivar", desactivarDispositivoController);
 
 // - CENTRAL / SUPERVISOR
@@ -48,7 +48,7 @@ router.get("/emitidas", getAlertasEmitidasController);
 router.get("/:id/destinatarios", getAlertaDestinatariosController);
 router.patch("/:id/cancelar", cancelarAlertaController);
 
-// - SERENO
+// - SERENO 
 router.get("/mis-alertas", getMisAlertasController);
 router.get("/mis-alertas/resumen", getMisAlertasResumenController);
 router.patch("/:id/recibida", marcarRecibidaController);

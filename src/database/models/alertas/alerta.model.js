@@ -15,20 +15,13 @@ const Alerta = sequelize.define(
     emisor_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      // references: {
-      //   model: "usuarios",
-      //   key: "id",
-      // },
+
     },
 
     // Patrullaje relacionado, si corresponde.
     patrullaje_id: {
       type: DataTypes.INTEGER,
       allowNull: true,
-      // references: {
-      //   model: "patrullajes_programados", 
-      //   key: "id",
-      // },
     },
 
     // Zona relacionada con la alerta.

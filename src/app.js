@@ -27,7 +27,7 @@ db.sequelize
     console.log("✅ Conexión a MySQL establecida");
 
     // 1. Sincronizar modelos (crea tablas si no existen)
-    await db.sequelize.sync({ alter: true }); // force ó alter: true
+    await db.sequelize.sync({ alter: false }); // force ó alter: true
 
     console.log("📦 Modelos sincronizados");
 

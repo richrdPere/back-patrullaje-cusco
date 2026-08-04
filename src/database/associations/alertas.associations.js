@@ -2,63 +2,74 @@ module.exports = (db) => {
   // ======================================================
   // ALERTA - USUARIO EMISOR
   // ======================================================
-
   db.Alerta.belongsTo(db.Usuario, {
     foreignKey: "emisor_id",
     as: "emisor",
+    // onUpdate: "CASCADE",
+    // onDelete: "SET NULL",
   });
 
   db.Usuario.hasMany(db.Alerta, {
     foreignKey: "emisor_id",
     as: "alertasEmitidas",
+    // onUpdate: "CASCADE",
+    // onDelete: "SET NULL",
   });
 
   // ======================================================
   // ALERTA - ZONA
   // ======================================================
-
   db.Alerta.belongsTo(db.Zonas, {
     foreignKey: "zona_id",
     as: "zona",
+    onUpdate: "CASCADE",
+    onDelete: "SET NULL",
   });
 
   db.Zonas.hasMany(db.Alerta, {
     foreignKey: "zona_id",
     as: "alertas",
+    onUpdate: "CASCADE",
+    onDelete: "SET NULL",
   });
 
   // ======================================================
   // ALERTA - PATRULLAJE
   // ======================================================
-
   db.Alerta.belongsTo(db.PatrullajeProgramado, {
     foreignKey: "patrullaje_id",
     as: "patrullaje",
+    onUpdate: "CASCADE",
+    onDelete: "SET NULL",
   });
 
   db.PatrullajeProgramado.hasMany(db.Alerta, {
     foreignKey: "patrullaje_id",
     as: "alertas",
+    onUpdate: "CASCADE",
+    onDelete: "SET NULL",
   });
 
   // ======================================================
   // ALERTA - INCIDENCIA
   // ======================================================
-
   db.Alerta.belongsTo(db.Incidencia, {
     foreignKey: "incidencia_id",
     as: "incidencia",
+    onUpdate: "CASCADE",
+    onDelete: "SET NULL",
   });
 
   db.Incidencia.hasMany(db.Alerta, {
     foreignKey: "incidencia_id",
     as: "alertas",
+    onUpdate: "CASCADE",
+    onDelete: "SET NULL",
   });
 
   // ======================================================
   // ALERTA - DESTINATARIOS
   // ======================================================
-
   db.Alerta.hasMany(db.AlertaDestinatario, {
     foreignKey: "alerta_id",
     as: "destinatarios",
@@ -76,7 +87,6 @@ module.exports = (db) => {
   // ======================================================
   // USUARIO - ALERTAS RECIBIDAS
   // ======================================================
-
   db.Usuario.hasMany(db.AlertaDestinatario, {
     foreignKey: "usuario_id",
     as: "alertasRecibidas",
@@ -92,9 +102,8 @@ module.exports = (db) => {
   });
 
   // ======================================================
-  // USUARIO - DISPOSITIVOS
+  // USUARIO - DISPOSITIVOS FCM
   // ======================================================
-
   db.Usuario.hasMany(db.UsuarioDispositivo, {
     foreignKey: "usuario_id",
     as: "dispositivos",

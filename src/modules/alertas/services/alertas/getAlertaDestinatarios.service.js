@@ -100,6 +100,8 @@ const getAlertaDestinatariosService = async ({
                 "id",
                 "nombres",
                 "apellidos",
+                "documento_identidad",
+                "foto_perfil"
               ],
             },
           ]
@@ -244,7 +246,6 @@ const getAlertaDestinatariosService = async ({
   // ======================================================
   // CONSULTAR DESTINATARIOS
   // ======================================================
-
   const usuarioInclude = {
     model: Usuario,
     as: "destinatario",
@@ -273,8 +274,9 @@ const getAlertaDestinatariosService = async ({
           "id",
           "nombres",
           "apellidos",
-          "nro_documento",
+          "documento_identidad",
           "telefono",
+          "foto_perfil"
         ],
       },
     ];

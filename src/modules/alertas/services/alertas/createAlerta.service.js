@@ -8,6 +8,7 @@ const {
 // Socket handler
 const {
   emitirAlertaPorSocket,
+  normalizarDestinatarios
 } = require("../../../../socket/services/alerta_socket.service");
 
 // Modelos
@@ -42,8 +43,7 @@ const createAlertaService = async ({
     destinatarios,
   } = body;
 
-  const destinatariosUnicos =
-    normalizarDestinatarios(destinatarios);
+  const destinatariosUnicos = normalizarDestinatarios(destinatarios);
 
   if (destinatariosUnicos.length === 0) {
     throw new Error(

@@ -123,7 +123,7 @@ module.exports = (io, socket) => {
   // CREAR ALERTA DESDE EL SERENO
   // ======================================================
 
-  socket.off("alerta:crear-sereno");
+  // socket.off("alerta:crear-sereno");
 
   socket.on(
     "alerta:crear-sereno",
@@ -315,7 +315,7 @@ module.exports = (io, socket) => {
   // CONFIRMAR RECEPCIÓN
   // ======================================================
 
-  socket.off("alerta:recibida");
+  // socket.off("alerta:recibida");
 
   socket.on(
     "alerta:recibida",
@@ -403,8 +403,7 @@ module.exports = (io, socket) => {
   // ======================================================
   // MARCAR COMO LEÍDA
   // ======================================================
-
-  socket.off("alerta:leida");
+  // socket.off("alerta:leida");
 
   socket.on(
     "alerta:leida",
@@ -501,7 +500,7 @@ module.exports = (io, socket) => {
   // RESPONDER ALERTA
   // ======================================================
 
-  socket.off("alerta:responder");
+  // socket.off("alerta:responder");
 
   socket.on(
     "alerta:responder",
@@ -636,7 +635,7 @@ module.exports = (io, socket) => {
   // MARCAR ALERTA COMO ATENDIDA
   // ======================================================
 
-  socket.off("alerta:atendida");
+  // socket.off("alerta:atendida");
 
   socket.on(
     "alerta:atendida",

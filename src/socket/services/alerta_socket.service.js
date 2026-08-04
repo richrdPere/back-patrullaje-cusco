@@ -1,7 +1,50 @@
 // ======================================================
 // UTILIDADES
 // ======================================================
-const normalizarUsuariosIds = (usuariosIds = []) => {
+const normalizarDestinatarios = (destinatarios) => {
+  if (!Array.isArray(destinatarios)) {
+    return [];
+  }
+
+  return [
+    ...new Set(
+      destinatarios
+        .map((destinatario) => {
+          // Permite recibir directamente:
+          // [6, 8, "10"]
+          if (
+            typeof destinatario === "number" ||
+            typeof destinatario === "string"
+          ) {
+            return Number(destinatario);
+          }
+
+          // También permite recibir:
+          // [{ id: 6 }, { usuario_id: 8 }]
+          if (
+            destinatario &&
+            typeof destinatario === "object"
+          ) {
+            return Number(
+              destinatario.usuario_id ??
+              destinatario.id
+            );
+          }
+
+          return NaN;
+        })
+        .filter(
+          (usuarioId) =>
+            Number.isInteger(usuarioId) &&
+            usuarioId > 0
+        )
+    ),
+  ];
+};
+
+const normalizarUsuariosIds = (
+  usuariosIds = []
+) => {
   if (!Array.isArray(usuariosIds)) {
     return [];
   }
@@ -9,7 +52,7 @@ const normalizarUsuariosIds = (usuariosIds = []) => {
   return [
     ...new Set(
       usuariosIds
-        .map((id) => Number(id))
+        .map(Number)
         .filter(
           (id) =>
             Number.isInteger(id) &&
@@ -19,13 +62,8 @@ const normalizarUsuariosIds = (usuariosIds = []) => {
   ];
 };
 
-// ======================================================
-// 1. ENVIAR ALERTA A UN USUARIO
-// ======================================================
-const emitirAlertaAUsuario = (
-  io,
-  usuarioId,
-  alerta
+const normalizarUsuarioId = (
+  usuarioId
 ) => {
   const id = Number(usuarioId);
 
@@ -33,54 +71,158 @@ const emitirAlertaAUsuario = (
     !Number.isInteger(id) ||
     id <= 0
   ) {
-    return;
+    return null;
   }
 
-  io.to(`usuario:${id}`).emit(
-    "alerta:nueva",
-    alerta
-  );
+  return id;
+};
+
+const convertirAJson = (data) => {
+  if (
+    data &&
+    typeof data.toJSON === "function"
+  ) {
+    return data.toJSON();
+  }
+
+  return data;
 };
 
 // ======================================================
-// 2. ENVIAR ALERTA A VARIOS USUARIOS
+// EMISORES GENÉRICOS
+// ======================================================
+
+const emitirARoom = ({
+  io,
+  room,
+  evento,
+  payload,
+}) => {
+  if (!io) {
+    throw new Error(
+      "La instancia de Socket.IO es obligatoria"
+    );
+  }
+
+  if (
+    typeof room !== "string" ||
+    !room.trim()
+  ) {
+    return false;
+  }
+
+  if (
+    typeof evento !== "string" ||
+    !evento.trim()
+  ) {
+    return false;
+  }
+
+  io.to(room.trim()).emit(
+    evento.trim(),
+    payload
+  );
+
+  return true;
+};
+
+const emitirAUsuario = ({
+  io,
+  usuarioId,
+  evento,
+  payload,
+}) => {
+  const id =
+    normalizarUsuarioId(usuarioId);
+
+  if (id === null) {
+    return false;
+  }
+
+  return emitirARoom({
+    io,
+    room: `usuario:${id}`,
+    evento,
+    payload,
+  });
+};
+
+const emitirAUsuarios = ({
+  io,
+  usuariosIds = [],
+  evento,
+  payload,
+}) => {
+  const idsUnicos =
+    normalizarUsuariosIds(
+      usuariosIds
+    );
+
+  for (const usuarioId of idsUnicos) {
+    emitirAUsuario({
+      io,
+      usuarioId,
+      evento,
+      payload,
+    });
+  }
+
+  return idsUnicos.length;
+};
+
+// ======================================================
+// 1. ENVIAR NUEVA ALERTA A UN USUARIO
+// ======================================================
+const emitirAlertaAUsuario = (
+  io,
+  usuarioId,
+  payload
+) => {
+  return emitirAUsuario({
+    io,
+    usuarioId,
+    evento: "alerta:nueva",
+    payload,
+  });
+};
+
+// ======================================================
+// 2. ENVIAR NUEVA ALERTA A VARIOS USUARIOS
 // ======================================================
 const emitirAlertaAUsuarios = (
   io,
   usuariosIds = [],
-  alerta
+  payload
 ) => {
-  const idsUnicos =
-    normalizarUsuariosIds(usuariosIds);
-
-  for (const usuarioId of idsUnicos) {
-    emitirAlertaAUsuario(
-      io,
-      usuarioId,
-      alerta
-    );
-  }
+  return emitirAUsuarios({
+    io,
+    usuariosIds,
+    evento: "alerta:nueva",
+    payload,
+  });
 };
 
 // ======================================================
-// 3. ENVIAR ALERTA A UN ROL
+// 3. ENVIAR NUEVA ALERTA A UN ROL
 // ======================================================
 const emitirAlertaARol = (
   io,
   rol,
-  alerta
+  payload
 ) => {
   if (
     typeof rol !== "string" ||
     !rol.trim()
   ) {
-    return;
+    return false;
   }
 
-  io.to(`rol:${rol.trim()}`).emit(
-    "alerta:nueva",
-    alerta
-  );
+  return emitirARoom({
+    io,
+    room: `rol:${rol.trim()}`,
+    evento: "alerta:nueva",
+    payload,
+  });
 };
 
 // ======================================================
@@ -88,48 +230,45 @@ const emitirAlertaARol = (
 // ======================================================
 const emitirAlertaAOperadores = (
   io,
-  alerta
+  payload
 ) => {
-  io.to("operadores").emit(
-    "alerta:nueva",
-    alerta
-  );
+  return emitirARoom({
+    io,
+    room: "operadores",
+    evento: "alerta:nueva",
+    payload,
+  });
 };
 
 // ======================================================
-// 5. INFORMAR A LA CENTRAL QUE SE CREÓ UNA ALERTA
+// 5. INFORMAR A OPERADORES QUE SE CREÓ UNA ALERTA
 // ======================================================
 const emitirAlertaCreadaAOperadores = (
   io,
-  alerta
+  payload
 ) => {
-  io.to("operadores").emit(
-    "alerta:creada",
-    alerta
-  );
+  return emitirARoom({
+    io,
+    room: "operadores",
+    evento: "alerta:creada",
+    payload,
+  });
 };
 
 // ======================================================
-// 6. ENVIAR ACTUALIZACIÓN A UN USUARIO
+// 6. ENVIAR ALERTA ACTUALIZADA A UN USUARIO
 // ======================================================
 const emitirAlertaActualizada = (
   io,
   usuarioId,
   payload
 ) => {
-  const id = Number(usuarioId);
-
-  if (
-    !Number.isInteger(id) ||
-    id <= 0
-  ) {
-    return;
-  }
-
-  io.to(`usuario:${id}`).emit(
-    "alerta:actualizada",
-    payload
-  );
+  return emitirAUsuario({
+    io,
+    usuarioId,
+    evento: "alerta:actualizada",
+    payload,
+  });
 };
 
 // ======================================================
@@ -139,10 +278,12 @@ const emitirActualizacionAOperadores = (
   io,
   payload
 ) => {
-  io.to("operadores").emit(
-    "alerta:actualizada",
-    payload
-  );
+  return emitirARoom({
+    io,
+    room: "operadores",
+    evento: "alerta:actualizada",
+    payload,
+  });
 };
 
 // ======================================================
@@ -153,19 +294,16 @@ const emitirAlertaCancelada = (
   usuariosIds = [],
   payload
 ) => {
-  const idsUnicos =
-    normalizarUsuariosIds(usuariosIds);
-
-  for (const usuarioId of idsUnicos) {
-    io.to(`usuario:${usuarioId}`).emit(
-      "alerta:cancelada",
-      payload
-    );
-  }
+  return emitirAUsuarios({
+    io,
+    usuariosIds,
+    evento: "alerta:cancelada",
+    payload,
+  });
 };
 
 // ======================================================
-// 9. EMITIR ALERTA CREADA DESDE UN SERVICE REST
+// 9. EMITIR ALERTA CREADA DESDE SERVICE REST
 // ======================================================
 const emitirAlertaPorSocket = ({
   alerta,
@@ -173,8 +311,8 @@ const emitirAlertaPorSocket = ({
 }) => {
   try {
     /*
-     * Se importa aquí para disminuir el riesgo de dependencia
-     * circular durante la inicialización de Socket.IO.
+     * Importación interna para evitar problemas
+     * durante la inicialización de Socket.IO.
      */
     const {
       getIO,
@@ -194,9 +332,7 @@ const emitirAlertaPorSocket = ({
       );
 
     const alertaJson =
-      typeof alerta.toJSON === "function"
-        ? alerta.toJSON()
-        : alerta;
+      convertirAJson(alerta);
 
     const payload = {
       success: true,
@@ -207,14 +343,13 @@ const emitirAlertaPorSocket = ({
         new Date().toISOString(),
     };
 
-    // Enviar a los usuarios destinatarios
-    emitirAlertaAUsuarios(
-      io,
-      idsUnicos,
-      payload
-    );
+    const totalEmitidos =
+      emitirAlertaAUsuarios(
+        io,
+        idsUnicos,
+        payload
+      );
 
-    // Informar al panel web de la central
     emitirAlertaCreadaAOperadores(
       io,
       payload
@@ -230,13 +365,9 @@ const emitirAlertaPorSocket = ({
     return {
       success: true,
       destinatarios_emitidos:
-        idsUnicos.length,
+        totalEmitidos,
     };
   } catch (error) {
-    /*
-     * La alerta ya fue confirmada en la base de datos.
-     * Un error de Socket.IO no debe revertir la operación.
-     */
     console.error(
       "⚠️ La alerta fue creada, pero no pudo emitirse por Socket.IO:",
       error.message
@@ -260,4 +391,5 @@ module.exports = {
   emitirActualizacionAOperadores,
   emitirAlertaCancelada,
   emitirAlertaPorSocket,
+  normalizarDestinatarios
 };

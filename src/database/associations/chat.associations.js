@@ -95,5 +95,4 @@ module.exports = (db) => {
       as: "usuario"
     }
   );
-
 };

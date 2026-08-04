@@ -374,8 +374,7 @@ const getAlertaDestinatariosController = async (
 
     return res.status(200).json({
       success: true,
-      message:
-        "Destinatarios de la alerta obtenidos correctamente",
+      message: "Destinatarios de la alerta obtenidos correctamente",
       data: resultado,
     });
   } catch (error) {

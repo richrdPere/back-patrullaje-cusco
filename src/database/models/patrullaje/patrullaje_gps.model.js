@@ -21,6 +21,11 @@ const PatrullajeGps = sequelize.define("PatrullajeGps", {
     onDelete: "CASCADE"
   },
 
+  usuario_id: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+  },
+
   latitud: {
     type: DataTypes.DECIMAL(10, 7),
     allowNull: false,
