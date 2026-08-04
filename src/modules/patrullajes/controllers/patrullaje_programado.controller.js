@@ -2,12 +2,13 @@ const { getIO } = require("../../../socket");
 
 const {
   createPatrullajePService,
-  getPatrullajesPService,
+  deletePatrullajePService,
+  finishPatrullajePService,
   getPatrullajePByIdService,
   getPatrullajesPAllService,
-  finishPatrullajePService,
+  getPatrullajesPService,
+  getRecorridoPatrullajePService,
   updatePatrullajePService,
-  deletePatrullajePService
 } = require("../services/patrullaje_programado");
 
 
@@ -215,12 +216,41 @@ const deletePatrullajePController = async (req, res) => {
   }
 };
 
+/*
+|--------------------------------------------------------------------------
+| 8. Obtener recorrido de un patrullaje programado
+|--------------------------------------------------------------------------
+*/
+const getRecorridoPatrullajePController =
+  async (req, res) => {
+    try {
+      const { patrullajeId } = req.params;
+
+      const data = await getRecorridoPatrullajePService(patrullajeId);
+
+      return res.status(200).json({
+        success: true,
+        message: "Recorrido obtenido correctamente.",
+        data,
+      });
+    } catch (error) {
+      console.error("Error obteniendo recorrido:", error);
+
+      return res.status(400).json({
+        success: false,
+        message: "No se pudo obtener el recorrido.",
+        error: error.message,
+      });
+    }
+  };
+
 module.exports = {
   createPatrullajePController,
-  getPatrullajesPController,
+  deletePatrullajePController,
+  finishPatrullajePController,
   getPatrullajePByIdController,
   getPatrullajesPAllController,
-  finishPatrullajePController,
+  getPatrullajesPController,
+  getRecorridoPatrullajePController,
   updatePatrullajePController,
-  deletePatrullajePController
 };

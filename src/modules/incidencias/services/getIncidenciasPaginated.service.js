@@ -8,6 +8,7 @@ const {
   Incidencia,
   IncidenciaArchivo,
   PatrullajeProgramado,
+  Persona,
   Usuario,
   Zonas
 } = db;
@@ -82,18 +83,61 @@ const getIncidenciasPaginatedService = async ({
       as: "usuario",
       attributes:
         mode === "web"
-          ? ["id", "nombre", "apellidos", "email", "telefono"]
-          : ["id", "nombre", "apellidos"],
+          ? [
+            "id",
+            "username",
+            "correo",
+            "estado",
+          ]
+          : [
+            "id",
+            "username",
+          ],
+      include: [
+        {
+          model: Persona,
+          as: "persona",
+          attributes:
+            mode === "web"
+              ? [
+                "id",
+                "nombres",
+                "apellidos",
+                "documento_identidad",
+                "telefono",
+                "direccion",
+                "departamento",
+                "provincia",
+                "distrito",
+                "foto_perfil",
+              ]
+              : [
+                "id",
+                "nombres",
+                "apellidos",
+                "foto_perfil",
+              ],
+        },
+      ],
     },
     {
       model: Zonas,
       as: "zona",
-      attributes: ["id", "nombre"],
+      attributes: [
+        "id",
+        "nombre",
+      ],
     },
     {
       model: PatrullajeProgramado,
       as: "patrullaje",
-      attributes: ["id", "fecha_inicio", "fecha_fin", "estado"],
+      attributes: [
+        "id",
+        "fecha",
+        "hora_inicio",
+        "hora_fin",
+        "estado",
+      ],
       required: false,
     },
   ];

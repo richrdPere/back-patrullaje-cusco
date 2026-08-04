@@ -3,7 +3,10 @@ const { Op } = require("sequelize");
 const db = require("../../../database/models");
 
 // Modelos
-const { Incidencia } = db;
+const {
+  sequelize,
+  Incidencia,
+} = db;
 
 const estadosPermitidos = [
   "REPORTADO",
@@ -14,97 +17,193 @@ const estadosPermitidos = [
 
 /*
 |--------------------------------------------------------------------------
-| Cambiar Estado Masivo de Incidencias
+| Cambiar estado masivo de incidencias
 |--------------------------------------------------------------------------
 */
 const updateEstadoMasivoIncidenciasService = async ({
   ids,
   estado,
 }) => {
-  const t = await db.sequelize.transaction();
+  /*
+  |--------------------------------------------------------------------------
+  | 1. Validar IDs
+  |--------------------------------------------------------------------------
+  */
+  if (!Array.isArray(ids) || ids.length === 0) {
+    const error = new Error(
+      "Debe enviar un arreglo de IDs de incidencias"
+    );
+    error.statusCode = 400;
+    throw error;
+  }
 
-  try {
-    if (!Array.isArray(ids) || ids.length === 0) {
-      const error = new Error("Debe enviar un arreglo de IDs de incidencias");
-      error.statusCode = 400;
-      throw error;
-    }
+  /*
+  |--------------------------------------------------------------------------
+  | Convertir, validar y eliminar duplicados
+  |--------------------------------------------------------------------------
+  */
+  const idsValidos = [
+    ...new Set(
+      ids
+        .map((id) => Number(id))
+        .filter(
+          (id) =>
+            Number.isInteger(id) &&
+            id > 0
+        )
+    ),
+  ];
 
-    const idsValidos = ids
-      .map((id) => Number(id))
-      .filter((id) => !isNaN(id) && id > 0);
+  if (idsValidos.length === 0) {
+    const error = new Error(
+      "No se enviaron IDs de incidencias válidos"
+    );
+    error.statusCode = 400;
+    throw error;
+  }
 
-    if (idsValidos.length === 0) {
-      const error = new Error("No se enviaron IDs válidos");
-      error.statusCode = 400;
-      throw error;
-    }
+  /*
+  |--------------------------------------------------------------------------
+  | 2. Validar estado
+  |--------------------------------------------------------------------------
+  */
+  if (!estado || typeof estado !== "string") {
+    const error = new Error("El estado es obligatorio");
+    error.statusCode = 400;
+    throw error;
+  }
 
-    if (!estado) {
-      const error = new Error("El estado es obligatorio");
-      error.statusCode = 400;
-      throw error;
-    }
+  const estadoNormalizado = estado.trim().toUpperCase();
 
-    if (!estadosPermitidos.includes(estado)) {
-      const error = new Error("Estado no válido");
-      error.statusCode = 400;
-      error.estadosPermitidos = estadosPermitidos;
-      throw error;
-    }
+  if (!estadosPermitidos.includes(estadoNormalizado)) {
+    const error = new Error(
+      `Estado no válido. Estados permitidos: ${estadosPermitidos.join(", ")}`
+    );
+    error.statusCode = 400;
+    error.estadosPermitidos = estadosPermitidos;
+    throw error;
+  }
 
-    const incidencias = await Incidencia.findAll({
-      where: {
-        id: {
-          [Op.in]: idsValidos,
+  /*
+  |--------------------------------------------------------------------------
+  | 3. Actualizar dentro de una transacción administrada
+  |--------------------------------------------------------------------------
+  */
+  const resultado = await sequelize.transaction(
+    async (transaction) => {
+      /*
+      |--------------------------------------------------------------------------
+      | Buscar incidencias existentes y no eliminadas
+      |--------------------------------------------------------------------------
+      */
+      const incidenciasEncontradas = await Incidencia.findAll({
+        where: {
+          id: {
+            [Op.in]: idsValidos,
+          },
+          estado: {
+            [Op.ne]: "ELIMINADO",
+          },
         },
-        estado: {
-          [Op.ne]: "ELIMINADO",
-        },
-      },
-      transaction: t,
-    });
+        attributes: [
+          "id",
+          "estado",
+        ],
+        transaction,
+        lock: transaction.LOCK.UPDATE,
+      });
 
-    if (incidencias.length === 0) {
-      const error = new Error("No se encontraron incidencias válidas para actualizar");
-      error.statusCode = 404;
-      throw error;
-    }
+      if (incidenciasEncontradas.length === 0) {
+        const error = new Error(
+          "No se encontraron incidencias válidas para actualizar"
+        );
+        error.statusCode = 404;
+        throw error;
+      }
 
-    const idsEncontrados = incidencias.map((incidencia) => incidencia.id);
+      const idsEncontrados = incidenciasEncontradas.map(
+        (incidencia) => incidencia.id
+      );
 
-    const [totalActualizadas] = await Incidencia.update(
-      {
-        estado,
-      },
-      {
+      /*
+      |--------------------------------------------------------------------------
+      | Obtener las incidencias que realmente necesitan actualización
+      |--------------------------------------------------------------------------
+      */
+      const idsPorActualizar = incidenciasEncontradas
+        .filter(
+          (incidencia) =>
+            incidencia.estado !== estadoNormalizado
+        )
+        .map((incidencia) => incidencia.id);
+
+      /*
+      |--------------------------------------------------------------------------
+      | Actualizar solo las que tienen un estado diferente
+      |--------------------------------------------------------------------------
+      */
+      let totalActualizadas = 0;
+
+      if (idsPorActualizar.length > 0) {
+        const [cantidadActualizada] = await Incidencia.update(
+          {
+            estado: estadoNormalizado,
+          },
+          {
+            where: {
+              id: {
+                [Op.in]: idsPorActualizar,
+              },
+            },
+            transaction,
+          }
+        );
+
+        totalActualizadas = cantidadActualizada;
+      }
+
+      /*
+      |--------------------------------------------------------------------------
+      | Recuperar el resultado final dentro de la misma transacción
+      |--------------------------------------------------------------------------
+      */
+      const incidenciasActualizadas = await Incidencia.findAll({
         where: {
           id: {
             [Op.in]: idsEncontrados,
           },
-          estado: {
-            [Op.ne]: estado,
-          },
         },
-        transaction: t,
-      }
-    );
+        attributes: [
+          "id",
+          "estado",
+        ],
+        order: [
+          ["id", "ASC"],
+        ],
+        transaction,
+      });
 
-    await t.commit();
+      return {
+        estado: estadoNormalizado,
+        total_solicitadas: idsValidos.length,
+        total_encontradas: idsEncontrados.length,
+        total_actualizadas: totalActualizadas,
 
-    return {
-      estado,
-      solicitadas: idsValidos.length,
-      encontradas: incidencias.length,
-      actualizadas: totalActualizadas,
-      no_encontradas: idsValidos.filter(
-        (id) => !idsEncontrados.includes(id)
-      ),
-    };
-  } catch (error) {
-    await t.rollback();
-    throw error;
-  }
+        incidencias: incidenciasActualizadas.map(
+          (incidencia) => ({
+            id: incidencia.id,
+            estado: incidencia.estado,
+          })
+        ),
+
+        no_encontradas: idsValidos.filter(
+          (id) => !idsEncontrados.includes(id)
+        ),
+      };
+    }
+  );
+
+  return resultado;
 };
 
 module.exports = updateEstadoMasivoIncidenciasService;

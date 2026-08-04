@@ -1,17 +1,19 @@
 const createPatrullajePService = require("./createPatrullajeP.service");
-const getPatrullajesPService = require("./getPatrullajesP.service");
+const deletePatrullajePService = require("./deletePatrullajeP.service");
+const finishPatrullajePService = require("./finishPatrullajeP.service");
 const getPatrullajePByIdService = require("./getPatrullajePById.service");
 const getPatrullajesPAllService = require("./getPatrullajesPAll.service");
-const finishPatrullajePService = require("./finishPatrullajeP.service");
+const getPatrullajesPService = require("./getPatrullajesP.service");
+const getRecorridoPatrullajePService = require("./getRecorridoPatrullajeP.service");
 const updatePatrullajePService = require("./updatePatrullajeP.service");
-const deletePatrullajePService = require("./deletePatrullajeP.service");
 
 module.exports = {
     createPatrullajePService,
-    getPatrullajesPService,
+    deletePatrullajePService,
+    finishPatrullajePService,
     getPatrullajePByIdService,
     getPatrullajesPAllService,
-    finishPatrullajePService,
+    getPatrullajesPService,
+    getRecorridoPatrullajePService,
     updatePatrullajePService,
-    deletePatrullajePService
 };

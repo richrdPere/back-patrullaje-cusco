@@ -7,12 +7,13 @@ const verificarToken = require("../../../middlewares/auth.middleware");
 // Controllers
 const {
     createPatrullajePController,
-    getPatrullajesPController,
-    getPatrullajesPAllController,
-    getPatrullajePByIdController,
+    deletePatrullajePController,
     finishPatrullajePController,
+    getPatrullajePByIdController,
+    getPatrullajesPAllController,
+    getPatrullajesPController,
+    getRecorridoPatrullajePController,
     updatePatrullajePController,
-    deletePatrullajePController
 } = require("../controllers/patrullaje_programado.controller");
 
 // ============================
@@ -25,5 +26,6 @@ router.get("/detalle/:id", verificarToken, getPatrullajePByIdController);
 router.put("/finalizar/:id", verificarToken, finishPatrullajePController);
 router.put("/editar/:id", verificarToken, updatePatrullajePController);
 router.delete("/eliminar/:id", verificarToken, deletePatrullajePController);
+router.get("/recorrido/:patrullajeId", verificarToken, getRecorridoPatrullajePController);
 
 module.exports = router;
