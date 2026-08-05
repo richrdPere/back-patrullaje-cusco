@@ -120,12 +120,19 @@ const initSocket = server => {
         roles.includes("CONDUCTOR");
 
       if (esSereno) {
-        socket.join(
-          "serenos"
-        );
+        socket.join("serenos");
 
-        console.log(
-          `🚓 Sereno ${userId} unido a room serenos`
+        console.log(`🚓 Sereno ${userId} unido a room serenos`);
+
+        io.to("central_tracking").emit(
+          "tracking:sereno-online",
+          {
+            usuarioId: userId,
+            realtime: {
+              online: true,
+              timestamp: new Date().toISOString(),
+            },
+          }
         );
       }
 
@@ -138,61 +145,55 @@ const initSocket = server => {
       socket.on(
         "disconnecting",
         reason => {
-          console.log(
-            `⚠️ Desconectando: ${userId} | Socket: ${socket.id}`
-          );
+          console.log(`⚠️ Desconectando: ${userId} | Socket: ${socket.id}`);
 
-          console.log(
-            `Motivo previo: ${reason}`
-          );
+          console.log(`Motivo previo: ${reason}`);
         }
       );
 
-      socket.on(
-        "disconnect",
-        reason => {
-          console.log(
-            `🔴 Usuario desconectado: ${userId} | Socket: ${socket.id}`
+      socket.on("disconnect", reason => {
+        console.log(
+          `🔴 Usuario desconectado: ${userId} | Socket: ${socket.id}`
+        );
+
+        console.log(
+          `Motivo: ${reason}`
+        );
+
+        removeUser(
+          userId,
+          socket.id
+        );
+
+        const socketsRestantes =
+          getUserSockets(
+            userId
           );
 
-          console.log(
-            `Motivo: ${reason}`
-          );
+        if (
+          !socketsRestantes ||
+          socketsRestantes.size === 0
+        ) {
+          io.to(
+            "central_tracking"
+          ).emit(
+            "tracking:sereno-offline",
+            {
+              usuarioId:
+                userId,
 
-          removeUser(
-            userId,
-            socket.id
-          );
+              realtime: {
+                online:
+                  false,
 
-          const socketsRestantes =
-            getUserSockets(
-              userId
-            );
-
-          if (
-            !socketsRestantes ||
-            socketsRestantes.size === 0
-          ) {
-            io.to(
-              "central_tracking"
-            ).emit(
-              "tracking:sereno-offline",
-              {
-                usuarioId:
-                  userId,
-
-                realtime: {
-                  online:
-                    false,
-
-                  timestamp:
-                    new Date()
-                      .toISOString()
-                }
+                timestamp:
+                  new Date()
+                    .toISOString()
               }
-            );
-          }
+            }
+          );
         }
+      }
       );
     }
   );

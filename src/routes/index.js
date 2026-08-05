@@ -15,6 +15,7 @@ const unidadPatrullajeRoutes = require("../modules/patrullajes/routes/unidad_pat
 const unidadSerenoRoutes = require("../modules/patrullajes/routes/unidad_sereno.routes");
 const usuarioRoutes = require("../modules/usuarios/routes/usuarios.route");
 const zonasRoutes = require("../modules/zonas/routes/zonas.route");
+const reportesRoutes = require("../modules/reportes/routes/reportes.routes");
 // const authRoutes = require("./auth.routes");
 // const usuarioRoutes = require("./usuario.routes");
 // const zonasRoutes = require("./zonas.routes");
@@ -48,6 +49,7 @@ router.use("/unidad-patrullaje", unidadPatrullajeRoutes);
 router.use("/unidad-sereno", unidadSerenoRoutes);
 router.use("/usuarios", usuarioRoutes);
 router.use("/zonas", zonasRoutes);
+router.use("/reportes", reportesRoutes);
 
 // exportar router
 module.exports = router;

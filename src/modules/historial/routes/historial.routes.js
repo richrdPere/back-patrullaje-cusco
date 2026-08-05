@@ -2,24 +2,27 @@ const express = require("express");
 const router = express.Router();
 
 // Middleware
-const verificarToken = require("../../../middlewares/auth.middleware");
+const authMiddleware = require("../../../middlewares/auth.middleware");
+router.use(authMiddleware);
 
 // Controllers
 const {
-    createHistorialController,
-    getHistorialByPatrullajeController,
-    getHistorialByIdController,
-    updateHistorialController,
-    archiveHistorialController
+  archiveHistorialController,
+  createHistorialController,
+  getHistorialByIdController,
+  getHistorialByPatrullajeController,
+  getHistorialPaginadoController,
+  updateHistorialController,
 } = require("../controllers/historial.controller");
 
 // ============================
 // RUTAS HISTORIAL - PATRULLAJES
 // ============================
-router.get("/patrullaje/:id", verificarToken, getHistorialByPatrullajeController);
-router.get("/detalle/:id", verificarToken, getHistorialByIdController);
-router.post('/crear', verificarToken, createHistorialController);
-router.put('/editar/:id', verificarToken, updateHistorialController);
-router.patch('/archivar/:id', verificarToken, archiveHistorialController);
+router.get("/patrullaje/:id", getHistorialByPatrullajeController);
+router.get("/detalle/:id", getHistorialByIdController);
+router.post('/crear', createHistorialController);
+router.put('/editar/:id', updateHistorialController);
+router.patch('/archivar/:id', archiveHistorialController);
+router.get("/paginado", getHistorialPaginadoController);
 
 module.exports = router;

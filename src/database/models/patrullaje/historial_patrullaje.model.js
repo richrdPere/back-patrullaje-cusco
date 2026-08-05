@@ -14,7 +14,7 @@ const HistorialPatrullaje = sequelize.define("HistorialPatrullaje", {
     allowNull: false,
   },
 
-  sereno_id: {
+  usuario_id: {
     type: DataTypes.INTEGER,
     allowNull: false,
   },

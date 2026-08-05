@@ -1,13 +1,15 @@
-const createHistorialService = require("./createHistorial.service");
-const getHistorialByPatrullajeService = require("./getHistorialByPatrullajeId.service");
-const getHistorialByIdService = require("./getHistorialById.service");
-const updateHistorialService = require("./updateHistorial.service");
 const archiveHistorialService = require("./archivarHistorial.service")
+const createHistorialService = require("./createHistorial.service");
+const getHistorialByIdService = require("./getHistorialById.service");
+const getHistorialByPatrullajeService = require("./getHistorialByPatrullajeId.service");
+const getHistorialPaginadoService = require("./getHistorialPaginado.service");
+const updateHistorialService = require("./updateHistorial.service");
 
 module.exports = {
+    archiveHistorialService,
     createHistorialService,
-    getHistorialByPatrullajeService,
     getHistorialByIdService,
+    getHistorialByPatrullajeService,
+    getHistorialPaginadoService,
     updateHistorialService,
-    archiveHistorialService
 }

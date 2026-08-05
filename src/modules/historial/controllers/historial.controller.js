@@ -1,9 +1,10 @@
 const {
+  archiveHistorialService,
   createHistorialService,
-  getHistorialByPatrullajeService,
   getHistorialByIdService,
+  getHistorialByPatrullajeService,
+  getHistorialPaginadoService,
   updateHistorialService,
-  archiveHistorialService
 } = require("../services");
 
 /*
@@ -168,11 +169,36 @@ const archiveHistorialController = async (req, res) => {
     });
   }
 };
+/*
+|--------------------------------------------------------------------------
+| 6. Obtener historial paginado
+|--------------------------------------------------------------------------
+*/
+const getHistorialPaginadoController = async (req, res) => {
+  try {
+    const result = await getHistorialPaginadoService(req.query);
+
+    return res.status(200).json({
+      success: true,
+      message: "Historial de patrullajes obtenido correctamente.",
+      data: result,
+    });
+  } catch (error) {
+    console.error("Error en getHistorialPaginadoController:", error);
+
+    return res.status(500).json({
+      success: false,
+      message: "No se pudo obtener el historial de patrullajes.",
+      error: error.message,
+    });
+  }
+};
 
 module.exports = {
+  archiveHistorialController,
   createHistorialController,
-  getHistorialByPatrullajeController,
   getHistorialByIdController,
+  getHistorialByPatrullajeController,
+  getHistorialPaginadoController,
   updateHistorialController,
-  archiveHistorialController
 };
