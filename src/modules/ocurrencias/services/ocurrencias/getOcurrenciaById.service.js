@@ -1,121 +1,257 @@
 const db = require('../../../../database/models');
 
-// Modelos
 const {
-  Usuario,
-  Persona,
-  Incidencia,
-  PatrullajeProgramado,
-  Zonas,
-  UnidadPatrullaje,
   Ocurrencia,
-  OcurrenciaClasificadorVersion,
-  OcurrenciaCategoriaGenerica,
-  OcurrenciaCategoriaEspecifica,
-  OcurrenciaModalidad,
-  OcurrenciaModalidadRegla,
-  OcurrenciaPersona,
-  OcurrenciaConsecuencia,
-  OcurrenciaMedioEmpleado,
-  OcurrenciaEfectivoPnp,
-  OcurrenciaHistorial,
 } = db;
 
-// SERVICES
-const getOcurrenciaById = async (ocurrenciaId, { transaction = null, } = {}) => {
+const ROLES_CONSULTA_GLOBAL = new Set([
+  'ADMIN',
+  'SUPERVISOR_SERENAZGO',
+  'GERENTE_SERENAZGO',
+  'OPERADOR',
+]);
 
-  const modelosIncluidos = {
-    Usuario,
-    Persona,
-    Incidencia,
-    PatrullajeProgramado,
-    Zonas,
-    UnidadPatrullaje,
-    Ocurrencia,
-    OcurrenciaClasificadorVersion,
-    OcurrenciaCategoriaGenerica,
-    OcurrenciaCategoriaEspecifica,
-    OcurrenciaModalidad,
-    OcurrenciaModalidadRegla,
-    OcurrenciaPersona,
-    OcurrenciaConsecuencia,
-    OcurrenciaMedioEmpleado,
-    OcurrenciaEfectivoPnp,
-    OcurrenciaHistorial,
-  };
+const ROLES_INFORMACION_SENSIBLE = new Set([
+  'ADMIN',
+  'SUPERVISOR_SERENAZGO',
+  'GERENTE_SERENAZGO',
+]);
 
-  console.log(
-    'Modelos no encontrados:',
-    Object.entries(modelosIncluidos)
-      .filter(([, modelo]) => !modelo)
-      .map(([nombre]) => nombre),
+const crearError = (
+  message,
+  statusCode,
+  code,
+) => {
+  const error = new Error(message);
+
+  error.statusCode = statusCode;
+  error.code = code;
+
+  return error;
+};
+
+const normalizarRoles = (roles) => {
+  if (!roles) {
+    return [];
+  }
+
+  const lista = Array.isArray(roles)
+    ? roles
+    : [roles];
+
+  return lista
+    .map((rol) => {
+      if (typeof rol === 'string') {
+        return rol;
+      }
+
+      return (
+        rol?.nombre ||
+        rol?.rol ||
+        rol?.codigo ||
+        rol?.name ||
+        null
+      );
+    })
+    .filter(Boolean)
+    .map((rol) =>
+      String(rol).trim().toUpperCase(),
+    );
+};
+
+const getOcurrenciaById = async (
+  ocurrenciaId,
+  {
+    usuarioId,
+    roles,
+    transaction = null,
+  } = {},
+) => {
+  const parsedOcurrenciaId = Number(ocurrenciaId);
+  const parsedUsuarioId = Number(usuarioId);
+
+  if (
+    !Number.isInteger(parsedOcurrenciaId) ||
+    parsedOcurrenciaId <= 0
+  ) {
+    throw crearError(
+      'El identificador de la ocurrencia no es válido.',
+      400,
+      'OCURRENCIA_ID_INVALIDO',
+    );
+  }
+
+  if (
+    !Number.isInteger(parsedUsuarioId) ||
+    parsedUsuarioId <= 0
+  ) {
+    throw crearError(
+      'No se pudo identificar al usuario autenticado.',
+      401,
+      'USUARIO_NO_IDENTIFICADO',
+    );
+  }
+
+  const rolesNormalizados =
+    normalizarRoles(roles);
+
+  if (rolesNormalizados.length === 0) {
+    throw crearError(
+      'No se pudo determinar el rol del usuario autenticado.',
+      403,
+      'ROL_NO_IDENTIFICADO',
+    );
+  }
+
+  const esSereno =
+    rolesNormalizados.includes('SERENO');
+
+  const tieneConsultaGlobal =
+    rolesNormalizados.some(
+      (rol) => ROLES_CONSULTA_GLOBAL.has(rol),
+    );
+
+  if (!esSereno && !tieneConsultaGlobal) {
+    throw crearError(
+      'No tiene permisos para consultar ocurrencias.',
+      403,
+      'SIN_PERMISO_CONSULTAR_OCURRENCIA',
+    );
+  }
+
+  // Consulta inicial para revisar propiedad y existencia.
+  const ocurrenciaBase = await Ocurrencia.findByPk(
+    parsedOcurrenciaId,
+    {
+      attributes: [
+        'id',
+        'sereno_id',
+        'estado',
+      ],
+      transaction,
+    },
   );
 
-  console.log({
-    asociacionSerenoExiste:
-      Boolean(Ocurrencia.associations.sereno),
+  if (!ocurrenciaBase) {
+    throw crearError(
+      'La ocurrencia solicitada no existe.',
+      404,
+      'OCURRENCIA_NO_ENCONTRADA',
+    );
+  }
 
-    mismoModeloUsuario:
-      Ocurrencia.associations.sereno?.target === Usuario,
+  const esPropietario =
+    Number(ocurrenciaBase.sereno_id) ===
+    parsedUsuarioId;
 
-    usuarioConsulta:
-      Usuario?.name,
+  /*
+   * Un sereno solamente puede consultar su propia ocurrencia,
+   * salvo que también posea un rol de consulta global.
+   */
+  if (
+    esSereno &&
+    !tieneConsultaGlobal &&
+    !esPropietario
+  ) {
+    throw crearError(
+      'No tiene permisos para consultar esta ocurrencia.',
+      403,
+      'OCURRENCIA_NO_AUTORIZADA',
+    );
+  }
 
-    usuarioAsociacion:
-      Ocurrencia.associations.sereno?.target?.name,
-  });
+  const tieneRolSensible =
+    rolesNormalizados.some(
+      (rol) =>
+        ROLES_INFORMACION_SENSIBLE.has(rol),
+    );
 
+  /*
+   * Puede consultar información sensible:
+   * - el sereno propietario;
+   * - administrador;
+   * - supervisor;
+   * - gerente.
+   *
+   * El OPERADOR puede consultar el detalle operativo,
+   * pero no documentos, identidad completa ni evidencias.
+   */
+  const puedeVerInformacionSensible =
+    esPropietario || tieneRolSensible;
 
+  const includeIncidencia = {
+    association: 'incidencia',
+    required: false,
+  };
 
-  return Ocurrencia.findByPk(
-    ocurrenciaId,
+  /*
+   * Las evidencias se encuentran asociadas a la incidencia.
+   * Solo se incluyen para usuarios autorizados.
+   */
+  if (puedeVerInformacionSensible) {
+    includeIncidencia.include = [
+      {
+        association: 'archivos',
+        required: false,
+        where: {
+          estado: 'ACTIVO',
+        },
+      },
+    ];
+  }
+
+  const ocurrencia = await Ocurrencia.findByPk(
+    parsedOcurrenciaId,
     {
       include: [
+        // ===============================================
+        // SERENO RESPONSABLE
+        // ===============================================
         {
-          model: Usuario,
-          as: 'sereno',
+          association: 'sereno',
           attributes: [
             'id',
             'persona_id',
           ],
+          include: [
+            {
+              association: 'persona',
 
-          include: Persona
-            ? [
-              {
-                model: Persona,
-                as: 'persona',
-                attributes: [
+              attributes: puedeVerInformacionSensible
+                ? [
                   'id',
                   'nombres',
                   'apellidos',
                   'documento_identidad',
+                ]
+                : [
+                  'id',
+                  'nombres',
+                  'apellidos',
                 ],
-              },
-            ]
-            : [],
+
+              required: false,
+            },
+          ],
         },
 
+        // ===============================================
+        // CLASIFICACIÓN OFICIAL
+        // ===============================================
         {
-          model: OcurrenciaModalidad,
-          as: 'modalidad',
+          association: 'modalidad',
 
           include: [
             {
-              model:
-                OcurrenciaCategoriaEspecifica,
-              as: 'categoria_especifica',
+              association: 'categoria_especifica',
 
               include: [
                 {
-                  model:
-                    OcurrenciaCategoriaGenerica,
-                  as: 'categoria_generica',
+                  association: 'categoria_generica',
 
                   include: [
                     {
-                      model:
-                        OcurrenciaClasificadorVersion,
-                      as: 'version',
+                      association: 'version',
                     },
                   ],
                 },
@@ -123,8 +259,7 @@ const getOcurrenciaById = async (ocurrenciaId, { transaction = null, } = {}) => 
             },
 
             {
-              model: OcurrenciaModalidadRegla,
-              as: 'reglas',
+              association: 'reglas',
               required: false,
 
               where: {
@@ -134,75 +269,150 @@ const getOcurrenciaById = async (ocurrenciaId, { transaction = null, } = {}) => 
           ],
         },
 
+        // ===============================================
+        // INCIDENCIA Y EVIDENCIAS
+        // ===============================================
+        includeIncidencia,
+
+        // ===============================================
+        // DATOS OPERATIVOS
+        // ===============================================
         {
-          model: Incidencia,
-          as: 'incidencia',
+          association: 'patrullaje',
+          required: false,
+        },
+        {
+          association: 'zonas',
+          required: false,
+        },
+        {
+          association: 'unidad',
           required: false,
         },
 
+        // ===============================================
+        // PERSONAS INVOLUCRADAS
+        // ===============================================
         {
-          model: PatrullajeProgramado,
-          as: 'patrullaje',
+          association: 'personas',
           required: false,
+          separate: true,
+
+          attributes: puedeVerInformacionSensible
+            ? undefined
+            : {
+              exclude: [
+                'documento_identidad',
+                'nombres_apellidos',
+                'caracteristicas_fisicas',
+              ],
+            },
+
+          order: [
+            ['orden', 'ASC'],
+            ['id', 'ASC'],
+          ],
         },
 
+        // ===============================================
+        // CONSECUENCIAS
+        // ===============================================
         {
-          model: Zonas,
-          as: 'zonas',
+          association: 'consecuencias',
           required: false,
+          separate: true,
+
+          order: [
+            ['id', 'ASC'],
+          ],
         },
 
+        // ===============================================
+        // MEDIOS EMPLEADOS
+        // ===============================================
         {
-          model: UnidadPatrullaje,
-          as: 'unidad',
+          association: 'medios_empleados',
           required: false,
+          separate: true,
+
+          order: [
+            ['id', 'ASC'],
+          ],
         },
 
+        // ===============================================
+        // EFECTIVOS PNP
+        // ===============================================
         {
-          model: OcurrenciaPersona,
-          as: 'personas',
+          association: 'efectivos_pnp',
           required: false,
+          separate: true,
+
+          attributes: puedeVerInformacionSensible
+            ? undefined
+            : {
+              exclude: [
+                'codigo_institucional',
+                'apellidos',
+                'nombres',
+              ],
+            },
+
+          include: puedeVerInformacionSensible
+            ? [
+              {
+                association: 'policia',
+                required: false,
+              },
+            ]
+            : [],
+
+          order: [
+            ['id', 'ASC'],
+          ],
         },
 
+        // ===============================================
+        // ESTADO, VALIDACIÓN E HISTORIAL
+        // ===============================================
         {
-          model: OcurrenciaConsecuencia,
-          as: 'consecuencias',
+          association: 'historial',
           required: false,
-        },
+          separate: true,
 
-        {
-          model: OcurrenciaMedioEmpleado,
-          as: 'medios_empleados',
-          required: false,
-        },
+          attributes: puedeVerInformacionSensible
+            ? undefined
+            : {
+              exclude: [
+                'ip',
+                'user_agent',
+                'cambios',
+              ],
+            },
 
-        {
-          model: OcurrenciaEfectivoPnp,
-          as: 'efectivos_pnp',
-          required: false,
-        },
+          include: [
+            {
+              association: 'usuario',
+              required: false,
+              attributes: [
+                'id',
+                'persona_id',
+              ],
+            },
+          ],
 
-        {
-          model: OcurrenciaHistorial,
-          as: 'historial',
-          required: false,
+          order: [
+            ['created_at', 'ASC'],
+            ['id', 'ASC'],
+          ],
         },
       ],
 
       transaction,
-
-      order: [
-        [
-          {
-            model: OcurrenciaHistorial,
-            as: 'historial',
-          },
-          'created_at',
-          'ASC',
-        ],
-      ],
     },
   );
+
+  return ocurrencia;
 };
 
 module.exports = getOcurrenciaById;

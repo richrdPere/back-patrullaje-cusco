@@ -8,6 +8,8 @@ router.use(authMiddleware);
 // Controllers
 const {
     createOcurrenciaController,
+    getOcurrenciasPaginadasController,
+    getOcurrenciaByIdController,
 
 } = require("../controllers/ocurrencias.controller");
 
@@ -15,9 +17,7 @@ const {
 // RUTAS PATRULLAJES - CLASIFICADOR
 // ============================
 router.post('/create', createOcurrenciaController);
-// router.get('/arbol', getClasificadorArbolController);
-// router.get('/codigo/:codigo', getModalidadByCodigoController);
-// router.patch('/:id/estado', changeEstadoModalidadController);
-
+router.get('/paginado', getOcurrenciasPaginadasController);
+router.get('/detalle/:id', getOcurrenciaByIdController);
 module.exports = router;
 
