@@ -1,0 +1,2590 @@
+{
+    "version": {
+        "nombre": "Clasificador Estandarizado de Ocurrencias 2024",
+        "resolucion": "RM N.° 0427-2024-IN",
+        "descripcion": "Clasificador Estandarizado de Ocurrencias para el Servicio de Serenazgo Municipal.",
+        "fecha_publicacion": "2024-04-05",
+        "vigencia_desde": "2024-04-05",
+        "vigencia_hasta": null,
+        "estado": true
+    },
+    "categorias": [
+        {
+            "codigo": "01",
+            "nombre": "Emisión de alertas tempranas en apoyo a la PNP, en actividades presuntamente delictivas",
+            "descripcion": null,
+            "orden": 1,
+            "estado": true,
+            "categorias_especificas": [
+                {
+                    "codigo": "0101",
+                    "nombre": "Presuntas actividades contra la vida, el cuerpo y la salud",
+                    "descripcion": null,
+                    "orden": 1,
+                    "estado": true,
+                    "modalidades": [
+                        {
+                            "codigo": "010101",
+                            "nombre": "Presunto homicidio",
+                            "descripcion": null,
+                            "requiere_autor": false,
+                            "requiere_victima": false,
+                            "requiere_conductor": false,
+                            "requiere_datos_pnp": false,
+                            "requiere_descripcion": false,
+                            "orden": 1,
+                            "vigencia_desde": "2024-04-05",
+                            "vigencia_hasta": null,
+                            "estado": true,
+                            "reglas": []
+                        },
+                        {
+                            "codigo": "010102",
+                            "nombre": "Presunto feminicidio",
+                            "descripcion": null,
+                            "requiere_autor": false,
+                            "requiere_victima": false,
+                            "requiere_conductor": false,
+                            "requiere_datos_pnp": false,
+                            "requiere_descripcion": false,
+                            "orden": 2,
+                            "vigencia_desde": "2024-04-05",
+                            "vigencia_hasta": null,
+                            "estado": true,
+                            "reglas": []
+                        },
+                        {
+                            "codigo": "010103",
+                            "nombre": "Presunto sicariato",
+                            "descripcion": null,
+                            "requiere_autor": false,
+                            "requiere_victima": false,
+                            "requiere_conductor": false,
+                            "requiere_datos_pnp": false,
+                            "requiere_descripcion": false,
+                            "orden": 3,
+                            "vigencia_desde": "2024-04-05",
+                            "vigencia_hasta": null,
+                            "estado": true,
+                            "reglas": []
+                        },
+                        {
+                            "codigo": "010104",
+                            "nombre": "Presuntas lesiones leves y graves",
+                            "descripcion": null,
+                            "requiere_autor": false,
+                            "requiere_victima": false,
+                            "requiere_conductor": false,
+                            "requiere_datos_pnp": false,
+                            "requiere_descripcion": false,
+                            "orden": 4,
+                            "vigencia_desde": "2024-04-05",
+                            "vigencia_hasta": null,
+                            "estado": true,
+                            "reglas": []
+                        },
+                        {
+                            "codigo": "010105",
+                            "nombre": "Presunta exposición a peligro o abandono de personas (exposición, abandono, omisión de socorro y auxilio)",
+                            "descripcion": null,
+                            "requiere_autor": false,
+                            "requiere_victima": false,
+                            "requiere_conductor": false,
+                            "requiere_datos_pnp": false,
+                            "requiere_descripcion": false,
+                            "orden": 5,
+                            "vigencia_desde": "2024-04-05",
+                            "vigencia_hasta": null,
+                            "estado": true,
+                            "reglas": []
+                        }
+                    ]
+                },
+                {
+                    "codigo": "0102",
+                    "nombre": "Presunta actividad contra la libertad",
+                    "descripcion": null,
+                    "orden": 2,
+                    "estado": true,
+                    "modalidades": [
+                        {
+                            "codigo": "010201",
+                            "nombre": "Presunto contra la libertad personal (acoso, secuestro)",
+                            "descripcion": null,
+                            "requiere_autor": false,
+                            "requiere_victima": false,
+                            "requiere_conductor": false,
+                            "requiere_datos_pnp": false,
+                            "requiere_descripcion": false,
+                            "orden": 1,
+                            "vigencia_desde": "2024-04-05",
+                            "vigencia_hasta": null,
+                            "estado": true,
+                            "reglas": []
+                        },
+                        {
+                            "codigo": "010202",
+                            "nombre": "Presunta trata de personas",
+                            "descripcion": null,
+                            "requiere_autor": false,
+                            "requiere_victima": false,
+                            "requiere_conductor": false,
+                            "requiere_datos_pnp": false,
+                            "requiere_descripcion": false,
+                            "orden": 2,
+                            "vigencia_desde": "2024-04-05",
+                            "vigencia_hasta": null,
+                            "estado": true,
+                            "reglas": []
+                        },
+                        {
+                            "codigo": "010203",
+                            "nombre": "Presunta violación de la libertad sexual (mayor y menor de edad, seducción, pornografía, tocamientos, acoso, exhibicionismo y chantaje)",
+                            "descripcion": null,
+                            "requiere_autor": false,
+                            "requiere_victima": false,
+                            "requiere_conductor": false,
+                            "requiere_datos_pnp": false,
+                            "requiere_descripcion": false,
+                            "orden": 3,
+                            "vigencia_desde": "2024-04-05",
+                            "vigencia_hasta": null,
+                            "estado": true,
+                            "reglas": []
+                        },
+                        {
+                            "codigo": "010204",
+                            "nombre": "Otros presuntos contra la libertad (intimidad, violación de domicilio, comunicaciones, secreto profesional, reunión, trabajo, expresión, proxenetismo y ofensas al pudor)",
+                            "descripcion": null,
+                            "requiere_autor": false,
+                            "requiere_victima": false,
+                            "requiere_conductor": false,
+                            "requiere_datos_pnp": false,
+                            "requiere_descripcion": false,
+                            "orden": 4,
+                            "vigencia_desde": "2024-04-05",
+                            "vigencia_hasta": null,
+                            "estado": true,
+                            "reglas": []
+                        }
+                    ]
+                },
+                {
+                    "codigo": "0103",
+                    "nombre": "Presuntas actividades contra el patrimonio",
+                    "descripcion": null,
+                    "orden": 3,
+                    "estado": true,
+                    "modalidades": [
+                        {
+                            "codigo": "010301",
+                            "nombre": "Presunto robo a personas (celulares, mochilas, carteras, billeteras, relojes, joyas y otros)",
+                            "descripcion": null,
+                            "requiere_autor": false,
+                            "requiere_victima": false,
+                            "requiere_conductor": false,
+                            "requiere_datos_pnp": false,
+                            "requiere_descripcion": false,
+                            "orden": 1,
+                            "vigencia_desde": "2024-04-05",
+                            "vigencia_hasta": null,
+                            "estado": true,
+                            "reglas": []
+                        },
+                        {
+                            "codigo": "010302",
+                            "nombre": "Presunto robo de casa habitada",
+                            "descripcion": null,
+                            "requiere_autor": false,
+                            "requiere_victima": false,
+                            "requiere_conductor": false,
+                            "requiere_datos_pnp": false,
+                            "requiere_descripcion": false,
+                            "orden": 2,
+                            "vigencia_desde": "2024-04-05",
+                            "vigencia_hasta": null,
+                            "estado": true,
+                            "reglas": []
+                        },
+                        {
+                            "codigo": "010303",
+                            "nombre": "Presunto robo de ganado (abigeato)",
+                            "descripcion": null,
+                            "requiere_autor": false,
+                            "requiere_victima": false,
+                            "requiere_conductor": false,
+                            "requiere_datos_pnp": false,
+                            "requiere_descripcion": false,
+                            "orden": 3,
+                            "vigencia_desde": "2024-04-05",
+                            "vigencia_hasta": null,
+                            "estado": true,
+                            "reglas": []
+                        },
+                        {
+                            "codigo": "010304",
+                            "nombre": "Presunto robo a empresas particulares y estatales",
+                            "descripcion": null,
+                            "requiere_autor": false,
+                            "requiere_victima": false,
+                            "requiere_conductor": false,
+                            "requiere_datos_pnp": false,
+                            "requiere_descripcion": false,
+                            "orden": 4,
+                            "vigencia_desde": "2024-04-05",
+                            "vigencia_hasta": null,
+                            "estado": true,
+                            "reglas": []
+                        },
+                        {
+                            "codigo": "010305",
+                            "nombre": "Presunto robo de vehículos (mayores y menores)",
+                            "descripcion": null,
+                            "requiere_autor": false,
+                            "requiere_victima": false,
+                            "requiere_conductor": false,
+                            "requiere_datos_pnp": false,
+                            "requiere_descripcion": false,
+                            "orden": 5,
+                            "vigencia_desde": "2024-04-05",
+                            "vigencia_hasta": null,
+                            "estado": true,
+                            "reglas": []
+                        },
+                        {
+                            "codigo": "010306",
+                            "nombre": "Presunto robo de accesorios y autopartes",
+                            "descripcion": null,
+                            "requiere_autor": false,
+                            "requiere_victima": false,
+                            "requiere_conductor": false,
+                            "requiere_datos_pnp": false,
+                            "requiere_descripcion": false,
+                            "orden": 6,
+                            "vigencia_desde": "2024-04-05",
+                            "vigencia_hasta": null,
+                            "estado": true,
+                            "reglas": []
+                        },
+                        {
+                            "codigo": "010307",
+                            "nombre": "Presunto robo a pasajeros en vehículos de transporte y mercancías en vehículos de carga y repartidores",
+                            "descripcion": null,
+                            "requiere_autor": false,
+                            "requiere_victima": false,
+                            "requiere_conductor": false,
+                            "requiere_datos_pnp": false,
+                            "requiere_descripcion": false,
+                            "orden": 7,
+                            "vigencia_desde": "2024-04-05",
+                            "vigencia_hasta": null,
+                            "estado": true,
+                            "reglas": []
+                        },
+                        {
+                            "codigo": "010308",
+                            "nombre": "Presunto daño (dañar, destruir o inutilizar bien mueble o inmueble)",
+                            "descripcion": null,
+                            "requiere_autor": false,
+                            "requiere_victima": false,
+                            "requiere_conductor": false,
+                            "requiere_datos_pnp": false,
+                            "requiere_descripcion": false,
+                            "orden": 8,
+                            "vigencia_desde": "2024-04-05",
+                            "vigencia_hasta": null,
+                            "estado": true,
+                            "reglas": [
+                                {
+                                    "clave": "MEDIO_EXCLUSIVO",
+                                    "descripcion": "Solo debe habilitarse el medio empleado HABILIDAD.",
+                                    "parametros": {
+                                        "medios_permitidos": [
+                                            "HABILIDAD"
+                                        ]
+                                    },
+                                    "estado": true
+                                }
+                            ]
+                        },
+                        {
+                            "codigo": "010309",
+                            "nombre": "Presunto hurto a personas (celulares, mochilas, carteras, billeteras, relojes, joyas y otros)",
+                            "descripcion": null,
+                            "requiere_autor": false,
+                            "requiere_victima": false,
+                            "requiere_conductor": false,
+                            "requiere_datos_pnp": false,
+                            "requiere_descripcion": false,
+                            "orden": 9,
+                            "vigencia_desde": "2024-04-05",
+                            "vigencia_hasta": null,
+                            "estado": true,
+                            "reglas": [
+                                {
+                                    "clave": "MEDIO_EXCLUSIVO",
+                                    "descripcion": "Solo debe habilitarse el medio empleado HABILIDAD.",
+                                    "parametros": {
+                                        "medios_permitidos": [
+                                            "HABILIDAD"
+                                        ]
+                                    },
+                                    "estado": true
+                                }
+                            ]
+                        },
+                        {
+                            "codigo": "010310",
+                            "nombre": "Hurto de casa habitada",
+                            "descripcion": null,
+                            "requiere_autor": false,
+                            "requiere_victima": false,
+                            "requiere_conductor": false,
+                            "requiere_datos_pnp": false,
+                            "requiere_descripcion": false,
+                            "orden": 10,
+                            "vigencia_desde": "2024-04-05",
+                            "vigencia_hasta": null,
+                            "estado": true,
+                            "reglas": [
+                                {
+                                    "clave": "MEDIO_EXCLUSIVO",
+                                    "descripcion": "Solo debe habilitarse el medio empleado HABILIDAD.",
+                                    "parametros": {
+                                        "medios_permitidos": [
+                                            "HABILIDAD"
+                                        ]
+                                    },
+                                    "estado": true
+                                }
+                            ]
+                        },
+                        {
+                            "codigo": "010311",
+                            "nombre": "Presunto hurto de ganado (abigeato)",
+                            "descripcion": null,
+                            "requiere_autor": false,
+                            "requiere_victima": false,
+                            "requiere_conductor": false,
+                            "requiere_datos_pnp": false,
+                            "requiere_descripcion": false,
+                            "orden": 11,
+                            "vigencia_desde": "2024-04-05",
+                            "vigencia_hasta": null,
+                            "estado": true,
+                            "reglas": [
+                                {
+                                    "clave": "MEDIO_EXCLUSIVO",
+                                    "descripcion": "Solo debe habilitarse el medio empleado HABILIDAD.",
+                                    "parametros": {
+                                        "medios_permitidos": [
+                                            "HABILIDAD"
+                                        ]
+                                    },
+                                    "estado": true
+                                }
+                            ]
+                        },
+                        {
+                            "codigo": "010312",
+                            "nombre": "Presunto hurto a empresas particulares y estatales",
+                            "descripcion": null,
+                            "requiere_autor": false,
+                            "requiere_victima": false,
+                            "requiere_conductor": false,
+                            "requiere_datos_pnp": false,
+                            "requiere_descripcion": false,
+                            "orden": 12,
+                            "vigencia_desde": "2024-04-05",
+                            "vigencia_hasta": null,
+                            "estado": true,
+                            "reglas": [
+                                {
+                                    "clave": "MEDIO_EXCLUSIVO",
+                                    "descripcion": "Solo debe habilitarse el medio empleado HABILIDAD.",
+                                    "parametros": {
+                                        "medios_permitidos": [
+                                            "HABILIDAD"
+                                        ]
+                                    },
+                                    "estado": true
+                                }
+                            ]
+                        },
+                        {
+                            "codigo": "010313",
+                            "nombre": "Presunto hurto de vehículos (mayores y menores)",
+                            "descripcion": null,
+                            "requiere_autor": false,
+                            "requiere_victima": false,
+                            "requiere_conductor": false,
+                            "requiere_datos_pnp": false,
+                            "requiere_descripcion": false,
+                            "orden": 13,
+                            "vigencia_desde": "2024-04-05",
+                            "vigencia_hasta": null,
+                            "estado": true,
+                            "reglas": [
+                                {
+                                    "clave": "MEDIO_EXCLUSIVO",
+                                    "descripcion": "Solo debe habilitarse el medio empleado HABILIDAD.",
+                                    "parametros": {
+                                        "medios_permitidos": [
+                                            "HABILIDAD"
+                                        ]
+                                    },
+                                    "estado": true
+                                }
+                            ]
+                        },
+                        {
+                            "codigo": "010314",
+                            "nombre": "Presunto hurto a pasajeros en vehículos de transporte y mercancías en vehículos de carga y repartidores",
+                            "descripcion": null,
+                            "requiere_autor": false,
+                            "requiere_victima": false,
+                            "requiere_conductor": false,
+                            "requiere_datos_pnp": false,
+                            "requiere_descripcion": false,
+                            "orden": 14,
+                            "vigencia_desde": "2024-04-05",
+                            "vigencia_hasta": null,
+                            "estado": true,
+                            "reglas": []
+                        },
+                        {
+                            "codigo": "010315",
+                            "nombre": "Presunto otros contra el patrimonio (receptación, apropiación ilícita, estafa, extorsión, chantaje y usurpación de inmueble)",
+                            "descripcion": null,
+                            "requiere_autor": false,
+                            "requiere_victima": false,
+                            "requiere_conductor": false,
+                            "requiere_datos_pnp": false,
+                            "requiere_descripcion": false,
+                            "orden": 15,
+                            "vigencia_desde": "2024-04-05",
+                            "vigencia_hasta": null,
+                            "estado": true,
+                            "reglas": []
+                        }
+                    ]
+                },
+                {
+                    "codigo": "0104",
+                    "nombre": "Presuntas actividades delictivas contra la seguridad pública",
+                    "descripcion": null,
+                    "orden": 4,
+                    "estado": true,
+                    "modalidades": [
+                        {
+                            "codigo": "010401",
+                            "nombre": "Presunto peligro común (crear incendio o explosión, conducción o manipulación en estado de ebriedad o drogadicción, fabricación, tráfico o tenencia de armas, explosivos y pirotécnicos)",
+                            "descripcion": null,
+                            "requiere_autor": false,
+                            "requiere_victima": false,
+                            "requiere_conductor": false,
+                            "requiere_datos_pnp": false,
+                            "requiere_descripcion": false,
+                            "orden": 1,
+                            "vigencia_desde": "2024-04-05",
+                            "vigencia_hasta": null,
+                            "estado": true,
+                            "reglas": []
+                        },
+                        {
+                            "codigo": "010402",
+                            "nombre": "Presunto contra el transporte (contra la seguridad común y entorpecimiento del servicio)",
+                            "descripcion": null,
+                            "requiere_autor": false,
+                            "requiere_victima": false,
+                            "requiere_conductor": false,
+                            "requiere_datos_pnp": false,
+                            "requiere_descripcion": false,
+                            "orden": 2,
+                            "vigencia_desde": "2024-04-05",
+                            "vigencia_hasta": null,
+                            "estado": true,
+                            "reglas": []
+                        }
+                    ]
+                },
+                {
+                    "codigo": "0105",
+                    "nombre": "Presuntas actividades contra la salud pública",
+                    "descripcion": null,
+                    "orden": 5,
+                    "estado": true,
+                    "modalidades": [
+                        {
+                            "codigo": "010501",
+                            "nombre": "Presunta contaminación y propagación (contaminación de aguas, adulteración de sustancias y comercialización de productos nocivos)",
+                            "descripcion": null,
+                            "requiere_autor": false,
+                            "requiere_victima": false,
+                            "requiere_conductor": false,
+                            "requiere_datos_pnp": false,
+                            "requiere_descripcion": false,
+                            "orden": 1,
+                            "vigencia_desde": "2024-04-05",
+                            "vigencia_hasta": null,
+                            "estado": true,
+                            "reglas": []
+                        },
+                        {
+                            "codigo": "010502",
+                            "nombre": "Presunto tráfico ilícito de drogas (promoción, favorecimiento, comercialización, producción, microcomercialización y posesión)",
+                            "descripcion": null,
+                            "requiere_autor": false,
+                            "requiere_victima": false,
+                            "requiere_conductor": false,
+                            "requiere_datos_pnp": false,
+                            "requiere_descripcion": false,
+                            "orden": 2,
+                            "vigencia_desde": "2024-04-05",
+                            "vigencia_hasta": null,
+                            "estado": true,
+                            "reglas": []
+                        }
+                    ]
+                },
+                {
+                    "codigo": "0106",
+                    "nombre": "Presuntas actividades ambientales",
+                    "descripcion": null,
+                    "orden": 6,
+                    "estado": true,
+                    "modalidades": [
+                        {
+                            "codigo": "010601",
+                            "nombre": "Presunta actividad contra los recursos naturales y medio ambiente (contaminación, residuos peligrosos y minería ilegal)",
+                            "descripcion": null,
+                            "requiere_autor": false,
+                            "requiere_victima": false,
+                            "requiere_conductor": false,
+                            "requiere_datos_pnp": false,
+                            "requiere_descripcion": false,
+                            "orden": 1,
+                            "vigencia_desde": "2024-04-05",
+                            "vigencia_hasta": null,
+                            "estado": true,
+                            "reglas": []
+                        },
+                        {
+                            "codigo": "010602",
+                            "nombre": "Presunta actividad contra los recursos naturales (tráfico ilegal de especies acuáticas, flora y fauna, tala ilegal y deforestación de bosques)",
+                            "descripcion": null,
+                            "requiere_autor": false,
+                            "requiere_victima": false,
+                            "requiere_conductor": false,
+                            "requiere_datos_pnp": false,
+                            "requiere_descripcion": false,
+                            "orden": 2,
+                            "vigencia_desde": "2024-04-05",
+                            "vigencia_hasta": null,
+                            "estado": true,
+                            "reglas": []
+                        }
+                    ]
+                },
+                {
+                    "codigo": "0107",
+                    "nombre": "Presunta actividad contra la tranquilidad pública",
+                    "descripcion": null,
+                    "orden": 7,
+                    "estado": true,
+                    "modalidades": [
+                        {
+                            "codigo": "010701",
+                            "nombre": "Presunta actividad contra la paz pública (disturbios, apología, organización criminal, banda y reglaje o marcaje)",
+                            "descripcion": null,
+                            "requiere_autor": false,
+                            "requiere_victima": false,
+                            "requiere_conductor": false,
+                            "requiere_datos_pnp": false,
+                            "requiere_descripcion": false,
+                            "orden": 1,
+                            "vigencia_desde": "2024-04-05",
+                            "vigencia_hasta": null,
+                            "estado": true,
+                            "reglas": []
+                        },
+                        {
+                            "codigo": "010702",
+                            "nombre": "Presunta actividad terrorista (provoca, crea o mantiene estado de zozobra, alarma o terror a la población)",
+                            "descripcion": null,
+                            "requiere_autor": false,
+                            "requiere_victima": false,
+                            "requiere_conductor": false,
+                            "requiere_datos_pnp": false,
+                            "requiere_descripcion": false,
+                            "orden": 2,
+                            "vigencia_desde": "2024-04-05",
+                            "vigencia_hasta": null,
+                            "estado": true,
+                            "reglas": []
+                        },
+                        {
+                            "codigo": "010703",
+                            "nombre": "Otros presuntos contra la tranquilidad pública (discriminación, contra la humanidad, genocidio, desaparición forzada y tortura)",
+                            "descripcion": null,
+                            "requiere_autor": false,
+                            "requiere_victima": false,
+                            "requiere_conductor": false,
+                            "requiere_datos_pnp": false,
+                            "requiere_descripcion": false,
+                            "orden": 3,
+                            "vigencia_desde": "2024-04-05",
+                            "vigencia_hasta": null,
+                            "estado": true,
+                            "reglas": []
+                        }
+                    ]
+                },
+                {
+                    "codigo": "0108",
+                    "nombre": "Presuntas actividades contra la administración pública",
+                    "descripcion": null,
+                    "orden": 8,
+                    "estado": true,
+                    "modalidades": [
+                        {
+                            "codigo": "010801",
+                            "nombre": "Cometidos por funcionarios públicos (abuso de autoridad, malversación y otros)",
+                            "descripcion": null,
+                            "requiere_autor": false,
+                            "requiere_victima": false,
+                            "requiere_conductor": false,
+                            "requiere_datos_pnp": false,
+                            "requiere_descripcion": false,
+                            "orden": 1,
+                            "vigencia_desde": "2024-04-05",
+                            "vigencia_hasta": null,
+                            "estado": true,
+                            "reglas": []
+                        },
+                        {
+                            "codigo": "010802",
+                            "nombre": "Cometidos por particulares (usurpación de autoridad, violencia y resistencia y otros)",
+                            "descripcion": null,
+                            "requiere_autor": false,
+                            "requiere_victima": false,
+                            "requiere_conductor": false,
+                            "requiere_datos_pnp": false,
+                            "requiere_descripcion": false,
+                            "orden": 2,
+                            "vigencia_desde": "2024-04-05",
+                            "vigencia_hasta": null,
+                            "estado": true,
+                            "reglas": []
+                        }
+                    ]
+                },
+                {
+                    "codigo": "0109",
+                    "nombre": "Presuntas actividades contra los poderes del Estado",
+                    "descripcion": null,
+                    "orden": 9,
+                    "estado": true,
+                    "modalidades": [
+                        {
+                            "codigo": "010901",
+                            "nombre": "Rebelión, sedición y motín",
+                            "descripcion": null,
+                            "requiere_autor": false,
+                            "requiere_victima": false,
+                            "requiere_conductor": false,
+                            "requiere_datos_pnp": false,
+                            "requiere_descripcion": false,
+                            "orden": 1,
+                            "vigencia_desde": "2024-04-05",
+                            "vigencia_hasta": null,
+                            "estado": true,
+                            "reglas": []
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "codigo": "02",
+            "nombre": "Emisión de alertas tempranas en apoyo a la PNP, en presuntas faltas",
+            "descripcion": null,
+            "orden": 2,
+            "estado": true,
+            "categorias_especificas": [
+                {
+                    "codigo": "0201",
+                    "nombre": "Presunta actividad contra la persona",
+                    "descripcion": null,
+                    "orden": 1,
+                    "estado": true,
+                    "modalidades": [
+                        {
+                            "codigo": "020101",
+                            "nombre": "Presuntas lesiones (muy leves)",
+                            "descripcion": null,
+                            "requiere_autor": false,
+                            "requiere_victima": false,
+                            "requiere_conductor": false,
+                            "requiere_datos_pnp": false,
+                            "requiere_descripcion": false,
+                            "orden": 1,
+                            "vigencia_desde": "2024-04-05",
+                            "vigencia_hasta": null,
+                            "estado": true,
+                            "reglas": []
+                        },
+                        {
+                            "codigo": "020102",
+                            "nombre": "Presunto maltrato (sin lesión)",
+                            "descripcion": null,
+                            "requiere_autor": false,
+                            "requiere_victima": false,
+                            "requiere_conductor": false,
+                            "requiere_datos_pnp": false,
+                            "requiere_descripcion": false,
+                            "orden": 2,
+                            "vigencia_desde": "2024-04-05",
+                            "vigencia_hasta": null,
+                            "estado": true,
+                            "reglas": []
+                        },
+                        {
+                            "codigo": "020103",
+                            "nombre": "Presuntas peleas callejeras con lesiones muy leves o sin lesiones",
+                            "descripcion": null,
+                            "requiere_autor": false,
+                            "requiere_victima": false,
+                            "requiere_conductor": false,
+                            "requiere_datos_pnp": false,
+                            "requiere_descripcion": false,
+                            "orden": 3,
+                            "vigencia_desde": "2024-04-05",
+                            "vigencia_hasta": null,
+                            "estado": true,
+                            "reglas": []
+                        },
+                        {
+                            "codigo": "020104",
+                            "nombre": "Presunta mordedura canina, patada de caballo o lesión de animal doméstico",
+                            "descripcion": null,
+                            "requiere_autor": false,
+                            "requiere_victima": false,
+                            "requiere_conductor": false,
+                            "requiere_datos_pnp": false,
+                            "requiere_descripcion": false,
+                            "orden": 4,
+                            "vigencia_desde": "2024-04-05",
+                            "vigencia_hasta": null,
+                            "estado": true,
+                            "reglas": []
+                        }
+                    ]
+                },
+                {
+                    "codigo": "0202",
+                    "nombre": "Presunta actividad contra el patrimonio",
+                    "descripcion": null,
+                    "orden": 2,
+                    "estado": true,
+                    "modalidades": [
+                        {
+                            "codigo": "020201",
+                            "nombre": "Presunto hurto simple que no sobrepase una remuneración mínima vital",
+                            "descripcion": null,
+                            "requiere_autor": false,
+                            "requiere_victima": false,
+                            "requiere_conductor": false,
+                            "requiere_datos_pnp": false,
+                            "requiere_descripcion": false,
+                            "orden": 1,
+                            "vigencia_desde": "2024-04-05",
+                            "vigencia_hasta": null,
+                            "estado": true,
+                            "reglas": []
+                        },
+                        {
+                            "codigo": "020202",
+                            "nombre": "Presunto daño a la propiedad mueble o inmueble",
+                            "descripcion": null,
+                            "requiere_autor": false,
+                            "requiere_victima": false,
+                            "requiere_conductor": false,
+                            "requiere_datos_pnp": false,
+                            "requiere_descripcion": false,
+                            "orden": 2,
+                            "vigencia_desde": "2024-04-05",
+                            "vigencia_hasta": null,
+                            "estado": true,
+                            "reglas": []
+                        },
+                        {
+                            "codigo": "020203",
+                            "nombre": "Presunto hurto famélico (consumir y no pagar)",
+                            "descripcion": null,
+                            "requiere_autor": false,
+                            "requiere_victima": false,
+                            "requiere_conductor": false,
+                            "requiere_datos_pnp": false,
+                            "requiere_descripcion": false,
+                            "orden": 3,
+                            "vigencia_desde": "2024-04-05",
+                            "vigencia_hasta": null,
+                            "estado": true,
+                            "reglas": []
+                        },
+                        {
+                            "codigo": "020204",
+                            "nombre": "Presunta usurpación breve y juegos prohibidos",
+                            "descripcion": null,
+                            "requiere_autor": false,
+                            "requiere_victima": false,
+                            "requiere_conductor": false,
+                            "requiere_datos_pnp": false,
+                            "requiere_descripcion": false,
+                            "orden": 4,
+                            "vigencia_desde": "2024-04-05",
+                            "vigencia_hasta": null,
+                            "estado": true,
+                            "reglas": []
+                        }
+                    ]
+                },
+                {
+                    "codigo": "0203",
+                    "nombre": "Presunta actividad contra la seguridad pública",
+                    "descripcion": null,
+                    "orden": 3,
+                    "estado": true,
+                    "modalidades": [
+                        {
+                            "codigo": "020301",
+                            "nombre": "Arrojo de basura o quema de basura causando molestias",
+                            "descripcion": null,
+                            "requiere_autor": false,
+                            "requiere_victima": false,
+                            "requiere_conductor": false,
+                            "requiere_datos_pnp": false,
+                            "requiere_descripcion": false,
+                            "orden": 1,
+                            "vigencia_desde": "2024-04-05",
+                            "vigencia_hasta": null,
+                            "estado": true,
+                            "reglas": []
+                        },
+                        {
+                            "codigo": "020302",
+                            "nombre": "Presunta obstrucción y arrojo de escombros y/o materiales; también no colocar señales preventivas en la vía",
+                            "descripcion": null,
+                            "requiere_autor": false,
+                            "requiere_victima": false,
+                            "requiere_conductor": false,
+                            "requiere_datos_pnp": false,
+                            "requiere_descripcion": false,
+                            "orden": 2,
+                            "vigencia_desde": "2024-04-05",
+                            "vigencia_hasta": null,
+                            "estado": true,
+                            "reglas": []
+                        },
+                        {
+                            "codigo": "020303",
+                            "nombre": "Conducir vehículo no motorizado o animal a excesiva velocidad, o confiar vehículo a menor de edad o inexperto",
+                            "descripcion": null,
+                            "requiere_autor": false,
+                            "requiere_victima": false,
+                            "requiere_conductor": false,
+                            "requiere_datos_pnp": false,
+                            "requiere_descripcion": false,
+                            "orden": 3,
+                            "vigencia_desde": "2024-04-05",
+                            "vigencia_hasta": null,
+                            "estado": true,
+                            "reglas": []
+                        }
+                    ]
+                },
+                {
+                    "codigo": "0204",
+                    "nombre": "Presunta actividad contra las buenas costumbres",
+                    "descripcion": null,
+                    "orden": 4,
+                    "estado": true,
+                    "modalidades": [
+                        {
+                            "codigo": "020401",
+                            "nombre": "Presunto consumo de alcohol o drogas perturbando la tranquilidad o seguridad de las personas, o suministro a menores de edad",
+                            "descripcion": null,
+                            "requiere_autor": false,
+                            "requiere_victima": false,
+                            "requiere_conductor": false,
+                            "requiere_datos_pnp": false,
+                            "requiere_descripcion": false,
+                            "orden": 1,
+                            "vigencia_desde": "2024-04-05",
+                            "vigencia_hasta": null,
+                            "estado": true,
+                            "reglas": []
+                        },
+                        {
+                            "codigo": "020402",
+                            "nombre": "Presunta destrucción de plantas",
+                            "descripcion": null,
+                            "requiere_autor": false,
+                            "requiere_victima": false,
+                            "requiere_conductor": false,
+                            "requiere_datos_pnp": false,
+                            "requiere_descripcion": false,
+                            "orden": 2,
+                            "vigencia_desde": "2024-04-05",
+                            "vigencia_hasta": null,
+                            "estado": true,
+                            "reglas": []
+                        },
+                        {
+                            "codigo": "020403",
+                            "nombre": "Presuntos actos de crueldad contra los animales",
+                            "descripcion": null,
+                            "requiere_autor": false,
+                            "requiere_victima": false,
+                            "requiere_conductor": false,
+                            "requiere_datos_pnp": false,
+                            "requiere_descripcion": false,
+                            "orden": 3,
+                            "vigencia_desde": "2024-04-05",
+                            "vigencia_hasta": null,
+                            "estado": true,
+                            "reglas": []
+                        },
+                        {
+                            "codigo": "020404",
+                            "nombre": "Presunta proposición inmoral o deshonesta",
+                            "descripcion": null,
+                            "requiere_autor": false,
+                            "requiere_victima": false,
+                            "requiere_conductor": false,
+                            "requiere_datos_pnp": false,
+                            "requiere_descripcion": false,
+                            "orden": 4,
+                            "vigencia_desde": "2024-04-05",
+                            "vigencia_hasta": null,
+                            "estado": true,
+                            "reglas": []
+                        }
+                    ]
+                },
+                {
+                    "codigo": "0205",
+                    "nombre": "Presunta actividad contra la tranquilidad pública",
+                    "descripcion": null,
+                    "orden": 5,
+                    "estado": true,
+                    "modalidades": [
+                        {
+                            "codigo": "020501",
+                            "nombre": "Perturbar actos solemnes o reuniones públicas",
+                            "descripcion": null,
+                            "requiere_autor": false,
+                            "requiere_victima": false,
+                            "requiere_conductor": false,
+                            "requiere_datos_pnp": false,
+                            "requiere_descripcion": false,
+                            "orden": 1,
+                            "vigencia_desde": "2024-04-05",
+                            "vigencia_hasta": null,
+                            "estado": true,
+                            "reglas": []
+                        },
+                        {
+                            "codigo": "020502",
+                            "nombre": "Faltamiento de palabra a una autoridad",
+                            "descripcion": null,
+                            "requiere_autor": false,
+                            "requiere_victima": false,
+                            "requiere_conductor": false,
+                            "requiere_datos_pnp": false,
+                            "requiere_descripcion": false,
+                            "orden": 2,
+                            "vigencia_desde": "2024-04-05",
+                            "vigencia_hasta": null,
+                            "estado": true,
+                            "reglas": []
+                        },
+                        {
+                            "codigo": "020503",
+                            "nombre": "Ocultar su nombre, domicilio o estado civil a la autoridad",
+                            "descripcion": null,
+                            "requiere_autor": false,
+                            "requiere_victima": false,
+                            "requiere_conductor": false,
+                            "requiere_datos_pnp": false,
+                            "requiere_descripcion": false,
+                            "orden": 3,
+                            "vigencia_desde": "2024-04-05",
+                            "vigencia_hasta": null,
+                            "estado": true,
+                            "reglas": []
+                        },
+                        {
+                            "codigo": "020504",
+                            "nombre": "Negar auxilio a una autoridad para socorrer a un tercero",
+                            "descripcion": null,
+                            "requiere_autor": false,
+                            "requiere_victima": false,
+                            "requiere_conductor": false,
+                            "requiere_datos_pnp": false,
+                            "requiere_descripcion": false,
+                            "orden": 4,
+                            "vigencia_desde": "2024-04-05",
+                            "vigencia_hasta": null,
+                            "estado": true,
+                            "reglas": []
+                        },
+                        {
+                            "codigo": "020505",
+                            "nombre": "Perturbar con discusiones, ruidos o molestias análogas",
+                            "descripcion": null,
+                            "requiere_autor": false,
+                            "requiere_victima": false,
+                            "requiere_conductor": false,
+                            "requiere_datos_pnp": false,
+                            "requiere_descripcion": false,
+                            "orden": 5,
+                            "vigencia_desde": "2024-04-05",
+                            "vigencia_hasta": null,
+                            "estado": true,
+                            "reglas": []
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "codigo": "03",
+            "nombre": "Emisión de alertas tempranas en apoyo a la PNP y otras gerencias, en presuntas infracciones",
+            "descripcion": null,
+            "orden": 3,
+            "estado": true,
+            "categorias_especificas": [
+                {
+                    "codigo": "0301",
+                    "nombre": "Presuntos accidentes e infracciones al tránsito y transporte",
+                    "descripcion": null,
+                    "orden": 1,
+                    "estado": true,
+                    "modalidades": [
+                        {
+                            "codigo": "030101",
+                            "nombre": "Presunto atropello",
+                            "descripcion": null,
+                            "requiere_autor": false,
+                            "requiere_victima": false,
+                            "requiere_conductor": true,
+                            "requiere_datos_pnp": false,
+                            "requiere_descripcion": false,
+                            "orden": 1,
+                            "vigencia_desde": "2024-04-05",
+                            "vigencia_hasta": null,
+                            "estado": true,
+                            "reglas": []
+                        },
+                        {
+                            "codigo": "030102",
+                            "nombre": "Presunto atropello y fuga",
+                            "descripcion": null,
+                            "requiere_autor": false,
+                            "requiere_victima": false,
+                            "requiere_conductor": true,
+                            "requiere_datos_pnp": false,
+                            "requiere_descripcion": false,
+                            "orden": 2,
+                            "vigencia_desde": "2024-04-05",
+                            "vigencia_hasta": null,
+                            "estado": true,
+                            "reglas": []
+                        },
+                        {
+                            "codigo": "030103",
+                            "nombre": "Presunto choque",
+                            "descripcion": null,
+                            "requiere_autor": false,
+                            "requiere_victima": false,
+                            "requiere_conductor": true,
+                            "requiere_datos_pnp": false,
+                            "requiere_descripcion": false,
+                            "orden": 3,
+                            "vigencia_desde": "2024-04-05",
+                            "vigencia_hasta": null,
+                            "estado": true,
+                            "reglas": [
+                                {
+                                    "clave": "DUPLICAR_CONDUCTOR_COMO_VICTIMA",
+                                    "descripcion": "Los conductores también deben registrarse como víctimas.",
+                                    "parametros": {
+                                        "origen": "CONDUCTOR",
+                                        "destino": "VICTIMA"
+                                    },
+                                    "estado": true
+                                }
+                            ]
+                        },
+                        {
+                            "codigo": "030104",
+                            "nombre": "Presunto choque y fuga",
+                            "descripcion": null,
+                            "requiere_autor": false,
+                            "requiere_victima": false,
+                            "requiere_conductor": true,
+                            "requiere_datos_pnp": false,
+                            "requiere_descripcion": false,
+                            "orden": 4,
+                            "vigencia_desde": "2024-04-05",
+                            "vigencia_hasta": null,
+                            "estado": true,
+                            "reglas": [
+                                {
+                                    "clave": "DUPLICAR_CONDUCTOR_COMO_VICTIMA",
+                                    "descripcion": "Los conductores también deben registrarse como víctimas.",
+                                    "parametros": {
+                                        "origen": "CONDUCTOR",
+                                        "destino": "VICTIMA"
+                                    },
+                                    "estado": true
+                                }
+                            ]
+                        },
+                        {
+                            "codigo": "030105",
+                            "nombre": "Otros presuntos accidentes (despiste, volcadura, caída de pasajero e incendio)",
+                            "descripcion": null,
+                            "requiere_autor": false,
+                            "requiere_victima": false,
+                            "requiere_conductor": true,
+                            "requiere_datos_pnp": false,
+                            "requiere_descripcion": false,
+                            "orden": 5,
+                            "vigencia_desde": "2024-04-05",
+                            "vigencia_hasta": null,
+                            "estado": true,
+                            "reglas": []
+                        },
+                        {
+                            "codigo": "030106",
+                            "nombre": "Apoyo subsidiario a la PNP para el control de tránsito vehicular cuando lo solicite",
+                            "descripcion": null,
+                            "requiere_autor": false,
+                            "requiere_victima": false,
+                            "requiere_conductor": true,
+                            "requiere_datos_pnp": false,
+                            "requiere_descripcion": false,
+                            "orden": 6,
+                            "vigencia_desde": "2024-04-05",
+                            "vigencia_hasta": null,
+                            "estado": true,
+                            "reglas": []
+                        },
+                        {
+                            "codigo": "030107",
+                            "nombre": "Presunto vehículo abandonado",
+                            "descripcion": null,
+                            "requiere_autor": false,
+                            "requiere_victima": false,
+                            "requiere_conductor": true,
+                            "requiere_datos_pnp": false,
+                            "requiere_descripcion": false,
+                            "orden": 7,
+                            "vigencia_desde": "2024-04-05",
+                            "vigencia_hasta": null,
+                            "estado": true,
+                            "reglas": []
+                        },
+                        {
+                            "codigo": "030108",
+                            "nombre": "Vehículos no autorizados o prohibidos para servicio público",
+                            "descripcion": null,
+                            "requiere_autor": false,
+                            "requiere_victima": false,
+                            "requiere_conductor": true,
+                            "requiere_datos_pnp": false,
+                            "requiere_descripcion": false,
+                            "orden": 8,
+                            "vigencia_desde": "2024-04-05",
+                            "vigencia_hasta": null,
+                            "estado": true,
+                            "reglas": []
+                        },
+                        {
+                            "codigo": "030109",
+                            "nombre": "Vehículos que realizan piques y carreras",
+                            "descripcion": null,
+                            "requiere_autor": false,
+                            "requiere_victima": false,
+                            "requiere_conductor": true,
+                            "requiere_datos_pnp": false,
+                            "requiere_descripcion": false,
+                            "orden": 9,
+                            "vigencia_desde": "2024-04-05",
+                            "vigencia_hasta": null,
+                            "estado": true,
+                            "reglas": []
+                        },
+                        {
+                            "codigo": "030110",
+                            "nombre": "Paraderos y vehículos de transporte público informales",
+                            "descripcion": null,
+                            "requiere_autor": false,
+                            "requiere_victima": false,
+                            "requiere_conductor": true,
+                            "requiere_datos_pnp": false,
+                            "requiere_descripcion": false,
+                            "orden": 10,
+                            "vigencia_desde": "2024-04-05",
+                            "vigencia_hasta": null,
+                            "estado": true,
+                            "reglas": []
+                        },
+                        {
+                            "codigo": "030111",
+                            "nombre": "Vehículos estacionados en zona prohibida",
+                            "descripcion": null,
+                            "requiere_autor": false,
+                            "requiere_victima": false,
+                            "requiere_conductor": true,
+                            "requiere_datos_pnp": false,
+                            "requiere_descripcion": false,
+                            "orden": 11,
+                            "vigencia_desde": "2024-04-05",
+                            "vigencia_hasta": null,
+                            "estado": true,
+                            "reglas": []
+                        },
+                        {
+                            "codigo": "030112",
+                            "nombre": "Otras infracciones al Reglamento de Tránsito",
+                            "descripcion": null,
+                            "requiere_autor": false,
+                            "requiere_victima": false,
+                            "requiere_conductor": true,
+                            "requiere_datos_pnp": false,
+                            "requiere_descripcion": false,
+                            "orden": 12,
+                            "vigencia_desde": "2024-04-05",
+                            "vigencia_hasta": null,
+                            "estado": true,
+                            "reglas": []
+                        }
+                    ]
+                },
+                {
+                    "codigo": "0302",
+                    "nombre": "Presunta actividad contra la Ley de Protección y Bienestar Animal",
+                    "descripcion": null,
+                    "orden": 2,
+                    "estado": true,
+                    "modalidades": [
+                        {
+                            "codigo": "030201",
+                            "nombre": "Presunta actividad contra la Ley N.° 30407 - Ley de Protección y Bienestar Animal",
+                            "descripcion": null,
+                            "requiere_autor": false,
+                            "requiere_victima": false,
+                            "requiere_conductor": false,
+                            "requiere_datos_pnp": false,
+                            "requiere_descripcion": false,
+                            "orden": 1,
+                            "vigencia_desde": "2024-04-05",
+                            "vigencia_hasta": null,
+                            "estado": true,
+                            "reglas": []
+                        }
+                    ]
+                },
+                {
+                    "codigo": "0303",
+                    "nombre": "Presunta actividad de personas que afectan la tranquilidad y el orden",
+                    "descripcion": null,
+                    "orden": 3,
+                    "estado": true,
+                    "modalidades": [
+                        {
+                            "codigo": "030301",
+                            "nombre": "Cambistas en la vía pública que interrumpen el tránsito peatonal y vehicular",
+                            "descripcion": null,
+                            "requiere_autor": false,
+                            "requiere_victima": false,
+                            "requiere_conductor": false,
+                            "requiere_datos_pnp": false,
+                            "requiere_descripcion": false,
+                            "orden": 1,
+                            "vigencia_desde": "2024-04-05",
+                            "vigencia_hasta": null,
+                            "estado": true,
+                            "reglas": []
+                        },
+                        {
+                            "codigo": "030302",
+                            "nombre": "Llamadores, jaladores y parqueadores informales que gritan y se apropian de espacios públicos",
+                            "descripcion": null,
+                            "requiere_autor": false,
+                            "requiere_victima": false,
+                            "requiere_conductor": false,
+                            "requiere_datos_pnp": false,
+                            "requiere_descripcion": false,
+                            "orden": 2,
+                            "vigencia_desde": "2024-04-05",
+                            "vigencia_hasta": null,
+                            "estado": true,
+                            "reglas": []
+                        },
+                        {
+                            "codigo": "030303",
+                            "nombre": "Recicladores formales o informales",
+                            "descripcion": null,
+                            "requiere_autor": false,
+                            "requiere_victima": false,
+                            "requiere_conductor": false,
+                            "requiere_datos_pnp": false,
+                            "requiere_descripcion": false,
+                            "orden": 3,
+                            "vigencia_desde": "2024-04-05",
+                            "vigencia_hasta": null,
+                            "estado": true,
+                            "reglas": []
+                        },
+                        {
+                            "codigo": "030304",
+                            "nombre": "Orates y/o indigentes agresivos, que exigen dinero o se posesionan de espacios",
+                            "descripcion": null,
+                            "requiere_autor": false,
+                            "requiere_victima": false,
+                            "requiere_conductor": false,
+                            "requiere_datos_pnp": false,
+                            "requiere_descripcion": false,
+                            "orden": 4,
+                            "vigencia_desde": "2024-04-05",
+                            "vigencia_hasta": null,
+                            "estado": true,
+                            "reglas": []
+                        },
+                        {
+                            "codigo": "030305",
+                            "nombre": "Presuntas personas en actitud sospechosa",
+                            "descripcion": null,
+                            "requiere_autor": false,
+                            "requiere_victima": false,
+                            "requiere_conductor": false,
+                            "requiere_datos_pnp": false,
+                            "requiere_descripcion": false,
+                            "orden": 5,
+                            "vigencia_desde": "2024-04-05",
+                            "vigencia_hasta": null,
+                            "estado": true,
+                            "reglas": []
+                        },
+                        {
+                            "codigo": "030306",
+                            "nombre": "Presuntas personas en vehículos sospechosos",
+                            "descripcion": null,
+                            "requiere_autor": false,
+                            "requiere_victima": false,
+                            "requiere_conductor": false,
+                            "requiere_datos_pnp": false,
+                            "requiere_descripcion": false,
+                            "orden": 6,
+                            "vigencia_desde": "2024-04-05",
+                            "vigencia_hasta": null,
+                            "estado": true,
+                            "reglas": []
+                        },
+                        {
+                            "codigo": "030307",
+                            "nombre": "Presuntos trabajadores sexuales en la vía pública (masculino o femenino)",
+                            "descripcion": null,
+                            "requiere_autor": false,
+                            "requiere_victima": false,
+                            "requiere_conductor": false,
+                            "requiere_datos_pnp": false,
+                            "requiere_descripcion": false,
+                            "orden": 7,
+                            "vigencia_desde": "2024-04-05",
+                            "vigencia_hasta": null,
+                            "estado": true,
+                            "reglas": []
+                        },
+                        {
+                            "codigo": "030308",
+                            "nombre": "Presuntas personas que miccionan en vía pública",
+                            "descripcion": null,
+                            "requiere_autor": false,
+                            "requiere_victima": false,
+                            "requiere_conductor": false,
+                            "requiere_datos_pnp": false,
+                            "requiere_descripcion": false,
+                            "orden": 8,
+                            "vigencia_desde": "2024-04-05",
+                            "vigencia_hasta": null,
+                            "estado": true,
+                            "reglas": []
+                        },
+                        {
+                            "codigo": "030309",
+                            "nombre": "Otros presuntos que afectan la tranquilidad y el orden (especificar en datos importantes)",
+                            "descripcion": null,
+                            "requiere_autor": false,
+                            "requiere_victima": false,
+                            "requiere_conductor": false,
+                            "requiere_datos_pnp": false,
+                            "requiere_descripcion": true,
+                            "orden": 9,
+                            "vigencia_desde": "2024-04-05",
+                            "vigencia_hasta": null,
+                            "estado": true,
+                            "reglas": [
+                                {
+                                    "clave": "REQUERIR_DATOS_IMPORTANTES",
+                                    "descripcion": "Debe completarse la sección Datos importantes.",
+                                    "parametros": {
+                                        "campo": "datos_importantes",
+                                        "maximo_caracteres": 140
+                                    },
+                                    "estado": true
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "codigo": "0304",
+                    "nombre": "Presuntas infracciones a las ordenanzas y licencias municipales",
+                    "descripcion": null,
+                    "orden": 4,
+                    "estado": true,
+                    "modalidades": [
+                        {
+                            "codigo": "030401",
+                            "nombre": "Comercio en vía pública distinto al autorizado",
+                            "descripcion": null,
+                            "requiere_autor": false,
+                            "requiere_victima": false,
+                            "requiere_conductor": false,
+                            "requiere_datos_pnp": false,
+                            "requiere_descripcion": false,
+                            "orden": 1,
+                            "vigencia_desde": "2024-04-05",
+                            "vigencia_hasta": null,
+                            "estado": true,
+                            "reglas": []
+                        },
+                        {
+                            "codigo": "030402",
+                            "nombre": "Comercio en vía pública no autorizado",
+                            "descripcion": null,
+                            "requiere_autor": false,
+                            "requiere_victima": false,
+                            "requiere_conductor": false,
+                            "requiere_datos_pnp": false,
+                            "requiere_descripcion": false,
+                            "orden": 2,
+                            "vigencia_desde": "2024-04-05",
+                            "vigencia_hasta": null,
+                            "estado": true,
+                            "reglas": []
+                        },
+                        {
+                            "codigo": "030403",
+                            "nombre": "Comercio sin licencia de funcionamiento",
+                            "descripcion": null,
+                            "requiere_autor": false,
+                            "requiere_victima": false,
+                            "requiere_conductor": false,
+                            "requiere_datos_pnp": false,
+                            "requiere_descripcion": false,
+                            "orden": 3,
+                            "vigencia_desde": "2024-04-05",
+                            "vigencia_hasta": null,
+                            "estado": true,
+                            "reglas": []
+                        },
+                        {
+                            "codigo": "030404",
+                            "nombre": "Construcciones sin licencia municipal",
+                            "descripcion": null,
+                            "requiere_autor": false,
+                            "requiere_victima": false,
+                            "requiere_conductor": false,
+                            "requiere_datos_pnp": false,
+                            "requiere_descripcion": false,
+                            "orden": 4,
+                            "vigencia_desde": "2024-04-05",
+                            "vigencia_hasta": null,
+                            "estado": true,
+                            "reglas": []
+                        },
+                        {
+                            "codigo": "030405",
+                            "nombre": "Trabajo sexual clandestino en inmueble (sala de masajes, saunas y otros)",
+                            "descripcion": null,
+                            "requiere_autor": false,
+                            "requiere_victima": false,
+                            "requiere_conductor": false,
+                            "requiere_datos_pnp": false,
+                            "requiere_descripcion": false,
+                            "orden": 5,
+                            "vigencia_desde": "2024-04-05",
+                            "vigencia_hasta": null,
+                            "estado": true,
+                            "reglas": []
+                        },
+                        {
+                            "codigo": "030406",
+                            "nombre": "Establecimientos en malas condiciones de limpieza",
+                            "descripcion": null,
+                            "requiere_autor": false,
+                            "requiere_victima": false,
+                            "requiere_conductor": false,
+                            "requiere_datos_pnp": false,
+                            "requiere_descripcion": false,
+                            "orden": 6,
+                            "vigencia_desde": "2024-04-05",
+                            "vigencia_hasta": null,
+                            "estado": true,
+                            "reglas": []
+                        },
+                        {
+                            "codigo": "030407",
+                            "nombre": "Ruidos molestos",
+                            "descripcion": null,
+                            "requiere_autor": false,
+                            "requiere_victima": false,
+                            "requiere_conductor": false,
+                            "requiere_datos_pnp": false,
+                            "requiere_descripcion": false,
+                            "orden": 7,
+                            "vigencia_desde": "2024-04-05",
+                            "vigencia_hasta": null,
+                            "estado": true,
+                            "reglas": []
+                        },
+                        {
+                            "codigo": "030408",
+                            "nombre": "Obstrucción de calzada, vereda y otros, sin vía alterna, señalización o medidas de seguridad",
+                            "descripcion": null,
+                            "requiere_autor": false,
+                            "requiere_victima": false,
+                            "requiere_conductor": false,
+                            "requiere_datos_pnp": false,
+                            "requiere_descripcion": false,
+                            "orden": 8,
+                            "vigencia_desde": "2024-04-05",
+                            "vigencia_hasta": null,
+                            "estado": true,
+                            "reglas": []
+                        },
+                        {
+                            "codigo": "030409",
+                            "nombre": "Ingerir alcohol en la vía pública",
+                            "descripcion": null,
+                            "requiere_autor": false,
+                            "requiere_victima": false,
+                            "requiere_conductor": false,
+                            "requiere_datos_pnp": false,
+                            "requiere_descripcion": false,
+                            "orden": 9,
+                            "vigencia_desde": "2024-04-05",
+                            "vigencia_hasta": null,
+                            "estado": true,
+                            "reglas": []
+                        },
+                        {
+                            "codigo": "030410",
+                            "nombre": "Otras infracciones a ordenanzas y licencias municipales (especificar en datos importantes)",
+                            "descripcion": null,
+                            "requiere_autor": false,
+                            "requiere_victima": false,
+                            "requiere_conductor": false,
+                            "requiere_datos_pnp": false,
+                            "requiere_descripcion": true,
+                            "orden": 10,
+                            "vigencia_desde": "2024-04-05",
+                            "vigencia_hasta": null,
+                            "estado": true,
+                            "reglas": [
+                                {
+                                    "clave": "REQUERIR_DATOS_IMPORTANTES",
+                                    "descripcion": "Debe completarse la sección Datos importantes.",
+                                    "parametros": {
+                                        "campo": "datos_importantes",
+                                        "maximo_caracteres": 140
+                                    },
+                                    "estado": true
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "codigo": "04",
+            "nombre": "Ayuda y apoyo a personas y entidades",
+            "descripcion": null,
+            "orden": 4,
+            "estado": true,
+            "categorias_especificas": [
+                {
+                    "codigo": "0401",
+                    "nombre": "Ayuda, auxilio y rescate de personas",
+                    "descripcion": null,
+                    "orden": 1,
+                    "estado": true,
+                    "modalidades": [
+                        {
+                            "codigo": "040101",
+                            "nombre": "Rescate y auxilio de personas",
+                            "descripcion": null,
+                            "requiere_autor": false,
+                            "requiere_victima": false,
+                            "requiere_conductor": false,
+                            "requiere_datos_pnp": false,
+                            "requiere_descripcion": false,
+                            "orden": 1,
+                            "vigencia_desde": "2024-04-05",
+                            "vigencia_hasta": null,
+                            "estado": true,
+                            "reglas": []
+                        },
+                        {
+                            "codigo": "040102",
+                            "nombre": "Auxilio vial",
+                            "descripcion": null,
+                            "requiere_autor": false,
+                            "requiere_victima": false,
+                            "requiere_conductor": false,
+                            "requiere_datos_pnp": false,
+                            "requiere_descripcion": false,
+                            "orden": 2,
+                            "vigencia_desde": "2024-04-05",
+                            "vigencia_hasta": null,
+                            "estado": true,
+                            "reglas": []
+                        },
+                        {
+                            "codigo": "040103",
+                            "nombre": "Menores y ancianos en estado de abandono",
+                            "descripcion": null,
+                            "requiere_autor": false,
+                            "requiere_victima": false,
+                            "requiere_conductor": false,
+                            "requiere_datos_pnp": false,
+                            "requiere_descripcion": false,
+                            "orden": 3,
+                            "vigencia_desde": "2024-04-05",
+                            "vigencia_hasta": null,
+                            "estado": true,
+                            "reglas": []
+                        },
+                        {
+                            "codigo": "040104",
+                            "nombre": "Apoyo al vecino",
+                            "descripcion": null,
+                            "requiere_autor": false,
+                            "requiere_victima": false,
+                            "requiere_conductor": false,
+                            "requiere_datos_pnp": false,
+                            "requiere_descripcion": false,
+                            "orden": 4,
+                            "vigencia_desde": "2024-04-05",
+                            "vigencia_hasta": null,
+                            "estado": true,
+                            "reglas": []
+                        },
+                        {
+                            "codigo": "040105",
+                            "nombre": "Personas extraviadas, desaparecidas y desorientadas",
+                            "descripcion": null,
+                            "requiere_autor": false,
+                            "requiere_victima": false,
+                            "requiere_conductor": false,
+                            "requiere_datos_pnp": false,
+                            "requiere_descripcion": false,
+                            "orden": 5,
+                            "vigencia_desde": "2024-04-05",
+                            "vigencia_hasta": null,
+                            "estado": true,
+                            "reglas": []
+                        },
+                        {
+                            "codigo": "040106",
+                            "nombre": "Apoyo al turista",
+                            "descripcion": null,
+                            "requiere_autor": false,
+                            "requiere_victima": false,
+                            "requiere_conductor": false,
+                            "requiere_datos_pnp": false,
+                            "requiere_descripcion": false,
+                            "orden": 6,
+                            "vigencia_desde": "2024-04-05",
+                            "vigencia_hasta": null,
+                            "estado": true,
+                            "reglas": []
+                        },
+                        {
+                            "codigo": "040107",
+                            "nombre": "Entrevista por conflicto vecinal",
+                            "descripcion": null,
+                            "requiere_autor": false,
+                            "requiere_victima": false,
+                            "requiere_conductor": false,
+                            "requiere_datos_pnp": false,
+                            "requiere_descripcion": false,
+                            "orden": 7,
+                            "vigencia_desde": "2024-04-05",
+                            "vigencia_hasta": null,
+                            "estado": true,
+                            "reglas": []
+                        },
+                        {
+                            "codigo": "040108",
+                            "nombre": "Otros servicios de ayuda, auxilio y rescate (especificar en datos importantes)",
+                            "descripcion": null,
+                            "requiere_autor": false,
+                            "requiere_victima": false,
+                            "requiere_conductor": false,
+                            "requiere_datos_pnp": false,
+                            "requiere_descripcion": true,
+                            "orden": 8,
+                            "vigencia_desde": "2024-04-05",
+                            "vigencia_hasta": null,
+                            "estado": true,
+                            "reglas": [
+                                {
+                                    "clave": "REQUERIR_DATOS_IMPORTANTES",
+                                    "descripcion": "Debe completarse la sección Datos importantes.",
+                                    "parametros": {
+                                        "campo": "datos_importantes",
+                                        "maximo_caracteres": 140
+                                    },
+                                    "estado": true
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "codigo": "0402",
+                    "nombre": "Apoyo a otras gerencias o áreas de la municipalidad",
+                    "descripcion": null,
+                    "orden": 2,
+                    "estado": true,
+                    "modalidades": [
+                        {
+                            "codigo": "040201",
+                            "nombre": "Fiscalización y otros apoyos a gerencias o áreas municipales (especificar en datos importantes)",
+                            "descripcion": null,
+                            "requiere_autor": false,
+                            "requiere_victima": false,
+                            "requiere_conductor": false,
+                            "requiere_datos_pnp": false,
+                            "requiere_descripcion": true,
+                            "orden": 1,
+                            "vigencia_desde": "2024-04-05",
+                            "vigencia_hasta": null,
+                            "estado": true,
+                            "reglas": [
+                                {
+                                    "clave": "REQUERIR_DATOS_IMPORTANTES",
+                                    "descripcion": "Debe completarse la sección Datos importantes.",
+                                    "parametros": {
+                                        "campo": "datos_importantes",
+                                        "maximo_caracteres": 140
+                                    },
+                                    "estado": true
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "codigo": "0403",
+                    "nombre": "Apoyo a otras entidades",
+                    "descripcion": null,
+                    "orden": 3,
+                    "estado": true,
+                    "modalidades": [
+                        {
+                            "codigo": "040301",
+                            "nombre": "Policía Nacional y otros apoyos a entidades (especificar en datos importantes)",
+                            "descripcion": null,
+                            "requiere_autor": false,
+                            "requiere_victima": false,
+                            "requiere_conductor": false,
+                            "requiere_datos_pnp": false,
+                            "requiere_descripcion": true,
+                            "orden": 1,
+                            "vigencia_desde": "2024-04-05",
+                            "vigencia_hasta": null,
+                            "estado": true,
+                            "reglas": [
+                                {
+                                    "clave": "REQUERIR_DATOS_IMPORTANTES",
+                                    "descripcion": "Debe completarse la sección Datos importantes.",
+                                    "parametros": {
+                                        "campo": "datos_importantes",
+                                        "maximo_caracteres": 140
+                                    },
+                                    "estado": true
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "codigo": "05",
+            "nombre": "Emisión de alertas tempranas en desastres, infraestructura, servicios y espacios públicos afectados y en riesgo",
+            "descripcion": null,
+            "orden": 5,
+            "estado": true,
+            "categorias_especificas": [
+                {
+                    "codigo": "0501",
+                    "nombre": "Desastres",
+                    "descripcion": null,
+                    "orden": 1,
+                    "estado": true,
+                    "modalidades": [
+                        {
+                            "codigo": "050101",
+                            "nombre": "Huaycos, inundaciones y desplazamientos",
+                            "descripcion": null,
+                            "requiere_autor": false,
+                            "requiere_victima": false,
+                            "requiere_conductor": false,
+                            "requiere_datos_pnp": false,
+                            "requiere_descripcion": false,
+                            "orden": 1,
+                            "vigencia_desde": "2024-04-05",
+                            "vigencia_hasta": null,
+                            "estado": true,
+                            "reglas": []
+                        },
+                        {
+                            "codigo": "050102",
+                            "nombre": "Otros fenómenos naturales (especificar en datos importantes)",
+                            "descripcion": null,
+                            "requiere_autor": false,
+                            "requiere_victima": false,
+                            "requiere_conductor": false,
+                            "requiere_datos_pnp": false,
+                            "requiere_descripcion": true,
+                            "orden": 2,
+                            "vigencia_desde": "2024-04-05",
+                            "vigencia_hasta": null,
+                            "estado": true,
+                            "reglas": [
+                                {
+                                    "clave": "REQUERIR_DATOS_IMPORTANTES",
+                                    "descripcion": "Debe completarse la sección Datos importantes.",
+                                    "parametros": {
+                                        "campo": "datos_importantes",
+                                        "maximo_caracteres": 140
+                                    },
+                                    "estado": true
+                                }
+                            ]
+                        },
+                        {
+                            "codigo": "050103",
+                            "nombre": "Incendios",
+                            "descripcion": null,
+                            "requiere_autor": false,
+                            "requiere_victima": false,
+                            "requiere_conductor": false,
+                            "requiere_datos_pnp": false,
+                            "requiere_descripcion": false,
+                            "orden": 3,
+                            "vigencia_desde": "2024-04-05",
+                            "vigencia_hasta": null,
+                            "estado": true,
+                            "reglas": []
+                        },
+                        {
+                            "codigo": "050104",
+                            "nombre": "Amago de incendios",
+                            "descripcion": null,
+                            "requiere_autor": false,
+                            "requiere_victima": false,
+                            "requiere_conductor": false,
+                            "requiere_datos_pnp": false,
+                            "requiere_descripcion": false,
+                            "orden": 4,
+                            "vigencia_desde": "2024-04-05",
+                            "vigencia_hasta": null,
+                            "estado": true,
+                            "reglas": []
+                        },
+                        {
+                            "codigo": "050105",
+                            "nombre": "Fuga de gas y derrame de sustancias tóxicas",
+                            "descripcion": null,
+                            "requiere_autor": false,
+                            "requiere_victima": false,
+                            "requiere_conductor": false,
+                            "requiere_datos_pnp": false,
+                            "requiere_descripcion": false,
+                            "orden": 5,
+                            "vigencia_desde": "2024-04-05",
+                            "vigencia_hasta": null,
+                            "estado": true,
+                            "reglas": []
+                        },
+                        {
+                            "codigo": "050106",
+                            "nombre": "Caída de puentes",
+                            "descripcion": null,
+                            "requiere_autor": false,
+                            "requiere_victima": false,
+                            "requiere_conductor": false,
+                            "requiere_datos_pnp": false,
+                            "requiere_descripcion": false,
+                            "orden": 6,
+                            "vigencia_desde": "2024-04-05",
+                            "vigencia_hasta": null,
+                            "estado": true,
+                            "reglas": []
+                        },
+                        {
+                            "codigo": "050107",
+                            "nombre": "Otros desastres (especificar en datos importantes)",
+                            "descripcion": null,
+                            "requiere_autor": false,
+                            "requiere_victima": false,
+                            "requiere_conductor": false,
+                            "requiere_datos_pnp": false,
+                            "requiere_descripcion": true,
+                            "orden": 7,
+                            "vigencia_desde": "2024-04-05",
+                            "vigencia_hasta": null,
+                            "estado": true,
+                            "reglas": [
+                                {
+                                    "clave": "REQUERIR_DATOS_IMPORTANTES",
+                                    "descripcion": "Debe completarse la sección Datos importantes.",
+                                    "parametros": {
+                                        "campo": "datos_importantes",
+                                        "maximo_caracteres": 140
+                                    },
+                                    "estado": true
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "codigo": "0502",
+                    "nombre": "Infraestructura y servicios esenciales afectados",
+                    "descripcion": null,
+                    "orden": 2,
+                    "estado": true,
+                    "modalidades": [
+                        {
+                            "codigo": "050201",
+                            "nombre": "Corte de fluido eléctrico, agua, internet, gas o teléfono",
+                            "descripcion": null,
+                            "requiere_autor": false,
+                            "requiere_victima": false,
+                            "requiere_conductor": false,
+                            "requiere_datos_pnp": false,
+                            "requiere_descripcion": false,
+                            "orden": 1,
+                            "vigencia_desde": "2024-04-05",
+                            "vigencia_hasta": null,
+                            "estado": true,
+                            "reglas": []
+                        },
+                        {
+                            "codigo": "050202",
+                            "nombre": "Aniegos y/o problemas de desagüe",
+                            "descripcion": null,
+                            "requiere_autor": false,
+                            "requiere_victima": false,
+                            "requiere_conductor": false,
+                            "requiere_datos_pnp": false,
+                            "requiere_descripcion": false,
+                            "orden": 2,
+                            "vigencia_desde": "2024-04-05",
+                            "vigencia_hasta": null,
+                            "estado": true,
+                            "reglas": []
+                        },
+                        {
+                            "codigo": "050203",
+                            "nombre": "Semáforos apagados o con desperfectos",
+                            "descripcion": null,
+                            "requiere_autor": false,
+                            "requiere_victima": false,
+                            "requiere_conductor": false,
+                            "requiere_datos_pnp": false,
+                            "requiere_descripcion": false,
+                            "orden": 3,
+                            "vigencia_desde": "2024-04-05",
+                            "vigencia_hasta": null,
+                            "estado": true,
+                            "reglas": []
+                        },
+                        {
+                            "codigo": "050204",
+                            "nombre": "Caída de postes, cables, árboles u otros",
+                            "descripcion": null,
+                            "requiere_autor": false,
+                            "requiere_victima": false,
+                            "requiere_conductor": false,
+                            "requiere_datos_pnp": false,
+                            "requiere_descripcion": false,
+                            "orden": 4,
+                            "vigencia_desde": "2024-04-05",
+                            "vigencia_hasta": null,
+                            "estado": true,
+                            "reglas": []
+                        },
+                        {
+                            "codigo": "050205",
+                            "nombre": "Viviendas colapsadas",
+                            "descripcion": null,
+                            "requiere_autor": false,
+                            "requiere_victima": false,
+                            "requiere_conductor": false,
+                            "requiere_datos_pnp": false,
+                            "requiere_descripcion": false,
+                            "orden": 5,
+                            "vigencia_desde": "2024-04-05",
+                            "vigencia_hasta": null,
+                            "estado": true,
+                            "reglas": []
+                        },
+                        {
+                            "codigo": "050206",
+                            "nombre": "Buzones sin tapa",
+                            "descripcion": null,
+                            "requiere_autor": false,
+                            "requiere_victima": false,
+                            "requiere_conductor": false,
+                            "requiere_datos_pnp": false,
+                            "requiere_descripcion": false,
+                            "orden": 6,
+                            "vigencia_desde": "2024-04-05",
+                            "vigencia_hasta": null,
+                            "estado": true,
+                            "reglas": []
+                        },
+                        {
+                            "codigo": "050207",
+                            "nombre": "Trabajo de terceros informal y/o sin condiciones de seguridad",
+                            "descripcion": null,
+                            "requiere_autor": false,
+                            "requiere_victima": false,
+                            "requiere_conductor": false,
+                            "requiere_datos_pnp": false,
+                            "requiere_descripcion": false,
+                            "orden": 7,
+                            "vigencia_desde": "2024-04-05",
+                            "vigencia_hasta": null,
+                            "estado": true,
+                            "reglas": []
+                        },
+                        {
+                            "codigo": "050208",
+                            "nombre": "Otros problemas de infraestructura o servicios esenciales",
+                            "descripcion": null,
+                            "requiere_autor": false,
+                            "requiere_victima": false,
+                            "requiere_conductor": false,
+                            "requiere_datos_pnp": false,
+                            "requiere_descripcion": false,
+                            "orden": 8,
+                            "vigencia_desde": "2024-04-05",
+                            "vigencia_hasta": null,
+                            "estado": true,
+                            "reglas": []
+                        }
+                    ]
+                },
+                {
+                    "codigo": "0503",
+                    "nombre": "Espacios públicos en riesgo",
+                    "descripcion": null,
+                    "orden": 3,
+                    "estado": true,
+                    "modalidades": [
+                        {
+                            "codigo": "050301",
+                            "nombre": "Parques y calles sin iluminación o con iluminación deficiente",
+                            "descripcion": null,
+                            "requiere_autor": false,
+                            "requiere_victima": false,
+                            "requiere_conductor": false,
+                            "requiere_datos_pnp": false,
+                            "requiere_descripcion": false,
+                            "orden": 1,
+                            "vigencia_desde": "2024-04-05",
+                            "vigencia_hasta": null,
+                            "estado": true,
+                            "reglas": []
+                        },
+                        {
+                            "codigo": "050302",
+                            "nombre": "Obras inconclusas en la vía pública",
+                            "descripcion": null,
+                            "requiere_autor": false,
+                            "requiere_victima": false,
+                            "requiere_conductor": false,
+                            "requiere_datos_pnp": false,
+                            "requiere_descripcion": false,
+                            "orden": 2,
+                            "vigencia_desde": "2024-04-05",
+                            "vigencia_hasta": null,
+                            "estado": true,
+                            "reglas": []
+                        },
+                        {
+                            "codigo": "050303",
+                            "nombre": "Construcciones abandonadas",
+                            "descripcion": null,
+                            "requiere_autor": false,
+                            "requiere_victima": false,
+                            "requiere_conductor": false,
+                            "requiere_datos_pnp": false,
+                            "requiere_descripcion": false,
+                            "orden": 3,
+                            "vigencia_desde": "2024-04-05",
+                            "vigencia_hasta": null,
+                            "estado": true,
+                            "reglas": []
+                        },
+                        {
+                            "codigo": "050304",
+                            "nombre": "Vías semiobstruidas por baches profundos o gran congestión vehicular",
+                            "descripcion": null,
+                            "requiere_autor": false,
+                            "requiere_victima": false,
+                            "requiere_conductor": false,
+                            "requiere_datos_pnp": false,
+                            "requiere_descripcion": false,
+                            "orden": 4,
+                            "vigencia_desde": "2024-04-05",
+                            "vigencia_hasta": null,
+                            "estado": true,
+                            "reglas": []
+                        },
+                        {
+                            "codigo": "050305",
+                            "nombre": "Mobiliario urbano deteriorado y/o falta de mantenimiento",
+                            "descripcion": null,
+                            "requiere_autor": false,
+                            "requiere_victima": false,
+                            "requiere_conductor": false,
+                            "requiere_datos_pnp": false,
+                            "requiere_descripcion": false,
+                            "orden": 5,
+                            "vigencia_desde": "2024-04-05",
+                            "vigencia_hasta": null,
+                            "estado": true,
+                            "reglas": []
+                        },
+                        {
+                            "codigo": "050306",
+                            "nombre": "Venta de mercadería usada (cachinas)",
+                            "descripcion": null,
+                            "requiere_autor": false,
+                            "requiere_victima": false,
+                            "requiere_conductor": false,
+                            "requiere_datos_pnp": false,
+                            "requiere_descripcion": false,
+                            "orden": 6,
+                            "vigencia_desde": "2024-04-05",
+                            "vigencia_hasta": null,
+                            "estado": true,
+                            "reglas": []
+                        },
+                        {
+                            "codigo": "050307",
+                            "nombre": "Talleres en la vía pública",
+                            "descripcion": null,
+                            "requiere_autor": false,
+                            "requiere_victima": false,
+                            "requiere_conductor": false,
+                            "requiere_datos_pnp": false,
+                            "requiere_descripcion": false,
+                            "orden": 7,
+                            "vigencia_desde": "2024-04-05",
+                            "vigencia_hasta": null,
+                            "estado": true,
+                            "reglas": []
+                        },
+                        {
+                            "codigo": "050308",
+                            "nombre": "Otros espacios públicos en riesgo (especificar en datos importantes)",
+                            "descripcion": null,
+                            "requiere_autor": false,
+                            "requiere_victima": false,
+                            "requiere_conductor": false,
+                            "requiere_datos_pnp": false,
+                            "requiere_descripcion": true,
+                            "orden": 8,
+                            "vigencia_desde": "2024-04-05",
+                            "vigencia_hasta": null,
+                            "estado": true,
+                            "reglas": [
+                                {
+                                    "clave": "REQUERIR_DATOS_IMPORTANTES",
+                                    "descripcion": "Debe completarse la sección Datos importantes.",
+                                    "parametros": {
+                                        "campo": "datos_importantes",
+                                        "maximo_caracteres": 140
+                                    },
+                                    "estado": true
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "codigo": "06",
+            "nombre": "Acontecimientos especiales",
+            "descripcion": null,
+            "orden": 6,
+            "estado": true,
+            "categorias_especificas": [
+                {
+                    "codigo": "0601",
+                    "nombre": "Presuntos acontecimientos especiales",
+                    "descripcion": null,
+                    "orden": 1,
+                    "estado": true,
+                    "modalidades": [
+                        {
+                            "codigo": "060101",
+                            "nombre": "Suicidio",
+                            "descripcion": null,
+                            "requiere_autor": false,
+                            "requiere_victima": false,
+                            "requiere_conductor": false,
+                            "requiere_datos_pnp": false,
+                            "requiere_descripcion": false,
+                            "orden": 1,
+                            "vigencia_desde": "2024-04-05",
+                            "vigencia_hasta": null,
+                            "estado": true,
+                            "reglas": [
+                                {
+                                    "clave": "DUPLICAR_AUTOR_COMO_VICTIMA",
+                                    "descripcion": "Los datos del autor también deben registrarse como víctima.",
+                                    "parametros": {
+                                        "origen": "AUTOR",
+                                        "destino": "VICTIMA"
+                                    },
+                                    "estado": true
+                                }
+                            ]
+                        },
+                        {
+                            "codigo": "060102",
+                            "nombre": "Intento de suicidio",
+                            "descripcion": null,
+                            "requiere_autor": false,
+                            "requiere_victima": false,
+                            "requiere_conductor": false,
+                            "requiere_datos_pnp": false,
+                            "requiere_descripcion": false,
+                            "orden": 2,
+                            "vigencia_desde": "2024-04-05",
+                            "vigencia_hasta": null,
+                            "estado": true,
+                            "reglas": [
+                                {
+                                    "clave": "DUPLICAR_AUTOR_COMO_VICTIMA",
+                                    "descripcion": "Los datos del autor también deben registrarse como víctima.",
+                                    "parametros": {
+                                        "origen": "AUTOR",
+                                        "destino": "VICTIMA"
+                                    },
+                                    "estado": true
+                                }
+                            ]
+                        },
+                        {
+                            "codigo": "060103",
+                            "nombre": "Muerte repentina y/o natural (especificar en datos importantes)",
+                            "descripcion": null,
+                            "requiere_autor": false,
+                            "requiere_victima": false,
+                            "requiere_conductor": false,
+                            "requiere_datos_pnp": false,
+                            "requiere_descripcion": true,
+                            "orden": 3,
+                            "vigencia_desde": "2024-04-05",
+                            "vigencia_hasta": null,
+                            "estado": true,
+                            "reglas": [
+                                {
+                                    "clave": "REQUERIR_DATOS_IMPORTANTES",
+                                    "descripcion": "Debe completarse la sección Datos importantes.",
+                                    "parametros": {
+                                        "campo": "datos_importantes",
+                                        "maximo_caracteres": 140
+                                    },
+                                    "estado": true
+                                }
+                            ]
+                        },
+                        {
+                            "codigo": "060104",
+                            "nombre": "Otros acontecimientos especiales (especificar en datos importantes)",
+                            "descripcion": null,
+                            "requiere_autor": false,
+                            "requiere_victima": false,
+                            "requiere_conductor": false,
+                            "requiere_datos_pnp": false,
+                            "requiere_descripcion": true,
+                            "orden": 4,
+                            "vigencia_desde": "2024-04-05",
+                            "vigencia_hasta": null,
+                            "estado": true,
+                            "reglas": [
+                                {
+                                    "clave": "REQUERIR_DATOS_IMPORTANTES",
+                                    "descripcion": "Debe completarse la sección Datos importantes.",
+                                    "parametros": {
+                                        "campo": "datos_importantes",
+                                        "maximo_caracteres": 140
+                                    },
+                                    "estado": true
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "codigo": "07",
+            "nombre": "Operativos",
+            "descripcion": null,
+            "orden": 7,
+            "estado": true,
+            "categorias_especificas": [
+                {
+                    "codigo": "0701",
+                    "nombre": "Operativo municipal",
+                    "descripcion": null,
+                    "orden": 1,
+                    "estado": true,
+                    "modalidades": [
+                        {
+                            "codigo": "070101",
+                            "nombre": "Operativo preventivo",
+                            "descripcion": null,
+                            "requiere_autor": false,
+                            "requiere_victima": false,
+                            "requiere_conductor": false,
+                            "requiere_datos_pnp": false,
+                            "requiere_descripcion": false,
+                            "orden": 1,
+                            "vigencia_desde": "2024-04-05",
+                            "vigencia_hasta": null,
+                            "estado": true,
+                            "reglas": []
+                        },
+                        {
+                            "codigo": "070102",
+                            "nombre": "Protección escolar",
+                            "descripcion": null,
+                            "requiere_autor": false,
+                            "requiere_victima": false,
+                            "requiere_conductor": false,
+                            "requiere_datos_pnp": false,
+                            "requiere_descripcion": false,
+                            "orden": 2,
+                            "vigencia_desde": "2024-04-05",
+                            "vigencia_hasta": null,
+                            "estado": true,
+                            "reglas": []
+                        },
+                        {
+                            "codigo": "070103",
+                            "nombre": "Aceleramiento y descongestión vehicular",
+                            "descripcion": null,
+                            "requiere_autor": false,
+                            "requiere_victima": false,
+                            "requiere_conductor": false,
+                            "requiere_datos_pnp": false,
+                            "requiere_descripcion": false,
+                            "orden": 3,
+                            "vigencia_desde": "2024-04-05",
+                            "vigencia_hasta": null,
+                            "estado": true,
+                            "reglas": []
+                        },
+                        {
+                            "codigo": "070104",
+                            "nombre": "Otros operativos municipales (especificar en datos importantes)",
+                            "descripcion": null,
+                            "requiere_autor": false,
+                            "requiere_victima": false,
+                            "requiere_conductor": false,
+                            "requiere_datos_pnp": false,
+                            "requiere_descripcion": true,
+                            "orden": 4,
+                            "vigencia_desde": "2024-04-05",
+                            "vigencia_hasta": null,
+                            "estado": true,
+                            "reglas": [
+                                {
+                                    "clave": "REQUERIR_DATOS_IMPORTANTES",
+                                    "descripcion": "Debe completarse la sección Datos importantes.",
+                                    "parametros": {
+                                        "campo": "datos_importantes",
+                                        "maximo_caracteres": 140
+                                    },
+                                    "estado": true
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "codigo": "0702",
+                    "nombre": "Estrategias y operativos especiales",
+                    "descripcion": null,
+                    "orden": 2,
+                    "estado": true,
+                    "modalidades": [
+                        {
+                            "codigo": "070201",
+                            "nombre": "Apoyo a la PNP en programas preventivos (especificar en datos importantes)",
+                            "descripcion": null,
+                            "requiere_autor": false,
+                            "requiere_victima": false,
+                            "requiere_conductor": false,
+                            "requiere_datos_pnp": false,
+                            "requiere_descripcion": true,
+                            "orden": 1,
+                            "vigencia_desde": "2024-04-05",
+                            "vigencia_hasta": null,
+                            "estado": true,
+                            "reglas": [
+                                {
+                                    "clave": "REQUERIR_DATOS_IMPORTANTES",
+                                    "descripcion": "Debe completarse la sección Datos importantes.",
+                                    "parametros": {
+                                        "campo": "datos_importantes",
+                                        "maximo_caracteres": 140
+                                    },
+                                    "estado": true
+                                }
+                            ]
+                        },
+                        {
+                            "codigo": "070202",
+                            "nombre": "Apoyo a otras entidades en programas preventivos (especificar en datos importantes)",
+                            "descripcion": null,
+                            "requiere_autor": false,
+                            "requiere_victima": false,
+                            "requiere_conductor": false,
+                            "requiere_datos_pnp": false,
+                            "requiere_descripcion": true,
+                            "orden": 2,
+                            "vigencia_desde": "2024-04-05",
+                            "vigencia_hasta": null,
+                            "estado": true,
+                            "reglas": [
+                                {
+                                    "clave": "REQUERIR_DATOS_IMPORTANTES",
+                                    "descripcion": "Debe completarse la sección Datos importantes.",
+                                    "parametros": {
+                                        "campo": "datos_importantes",
+                                        "maximo_caracteres": 140
+                                    },
+                                    "estado": true
+                                }
+                            ]
+                        },
+                        {
+                            "codigo": "070203",
+                            "nombre": "Serenazgo sin fronteras",
+                            "descripcion": null,
+                            "requiere_autor": false,
+                            "requiere_victima": false,
+                            "requiere_conductor": false,
+                            "requiere_datos_pnp": false,
+                            "requiere_descripcion": false,
+                            "orden": 3,
+                            "vigencia_desde": "2024-04-05",
+                            "vigencia_hasta": null,
+                            "estado": true,
+                            "reglas": []
+                        },
+                        {
+                            "codigo": "070204",
+                            "nombre": "Patrullaje mixto (serenazgo, juntas vecinales y PNP)",
+                            "descripcion": null,
+                            "requiere_autor": false,
+                            "requiere_victima": false,
+                            "requiere_conductor": false,
+                            "requiere_datos_pnp": false,
+                            "requiere_descripcion": false,
+                            "orden": 4,
+                            "vigencia_desde": "2024-04-05",
+                            "vigencia_hasta": null,
+                            "estado": true,
+                            "reglas": []
+                        },
+                        {
+                            "codigo": "070205",
+                            "nombre": "Contacto y control ciudadano",
+                            "descripcion": null,
+                            "requiere_autor": false,
+                            "requiere_victima": false,
+                            "requiere_conductor": false,
+                            "requiere_datos_pnp": false,
+                            "requiere_descripcion": false,
+                            "orden": 5,
+                            "vigencia_desde": "2024-04-05",
+                            "vigencia_hasta": null,
+                            "estado": true,
+                            "reglas": []
+                        },
+                        {
+                            "codigo": "070206",
+                            "nombre": "Otras estrategias y operativos especiales (especificar en datos importantes)",
+                            "descripcion": null,
+                            "requiere_autor": false,
+                            "requiere_victima": false,
+                            "requiere_conductor": false,
+                            "requiere_datos_pnp": false,
+                            "requiere_descripcion": true,
+                            "orden": 6,
+                            "vigencia_desde": "2024-04-05",
+                            "vigencia_hasta": null,
+                            "estado": true,
+                            "reglas": [
+                                {
+                                    "clave": "REQUERIR_DATOS_IMPORTANTES",
+                                    "descripcion": "Debe completarse la sección Datos importantes.",
+                                    "parametros": {
+                                        "campo": "datos_importantes",
+                                        "maximo_caracteres": 140
+                                    },
+                                    "estado": true
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

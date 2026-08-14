@@ -1,5 +1,5 @@
 module.exports = (db) => {
-  
+
   // - Auth
   require('./auth.association')(db);
 
@@ -17,5 +17,8 @@ module.exports = (db) => {
 
   // - Gps
   require('./gps.associations')(db);
+
+  // - Ocurrencias
+  require("./ocurrencias.associations")(db);
 
 }

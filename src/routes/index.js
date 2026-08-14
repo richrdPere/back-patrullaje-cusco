@@ -16,19 +16,7 @@ const unidadSerenoRoutes = require("../modules/patrullajes/routes/unidad_sereno.
 const usuarioRoutes = require("../modules/usuarios/routes/usuarios.route");
 const zonasRoutes = require("../modules/zonas/routes/zonas.route");
 const reportesRoutes = require("../modules/reportes/routes/reportes.routes");
-// const authRoutes = require("./auth.routes");
-// const usuarioRoutes = require("./usuario.routes");
-// const zonasRoutes = require("./zonas.routes");
-// const policiasRoutes = require("./policia.routes");
-// const patrullajeProgramadoRoutes = require("./patrullaje_programado.routes");
-// const unidadPatrullajeRoutes = require("./unidad_patrullaje.routes");
-// const unidadSerenoRoutes = require("./unidad_sereno.route");
-// const profileRoutes = require("./profile.routes");
-// const movilesRoutes = require("./moviles.routes");
-// const historialRoutes = require("./historial_patrullaje.routes");
-// const incidenciasRoutes = require("./incidencia.routes");
-// const alertaRoutes = require("./alerta.routes");
-
+const clasificadoresRoutes = require("../modules/ocurrencias/routes/clasificador.routes");
 const gpsPatrullajeRoutes = require("./gps_patrullaje.routes");
 const gpsRoutes = require("./gps.routes");
 
@@ -50,6 +38,7 @@ router.use("/unidad-sereno", unidadSerenoRoutes);
 router.use("/usuarios", usuarioRoutes);
 router.use("/zonas", zonasRoutes);
 router.use("/reportes", reportesRoutes);
+router.use("/clasificadores", clasificadoresRoutes);
 
 // exportar router
 module.exports = router;

@@ -13,20 +13,21 @@ const {
 } = require("../utils/zonas_criticas/puntos_criticos.utils");
 
 const {
+  applyDateRange,
+  applyPatrullajeFilter,
   buildEmptyResponse,
   buildFiltersResponse,
+  countByField,
   createServiceError,
   formatDateOnly,
-  normalizeEndDate,
-  normalizeStartDate,
-  normalizeEnum,
-  parseBoolean,
-  applyDateRange,
-  hasValidCoordinates,
-  obtenerUltimaActividad,
   getPredominantValue,
-  countByField,
   groupByZona,
+  hasValidCoordinates,
+  normalizeEndDate,
+  normalizeEnum,
+  normalizeStartDate,
+  obtenerUltimaActividad,
+  parseBoolean,
 } = require("../utils/zonas_criticas/zonas_criticas.utils");
 
 
@@ -85,48 +86,6 @@ const NIVELES_CRITICIDAD = [
   "CRITICO",
 ];
 
-// =========================================================
-// PUNTAJES
-// =========================================================
-
-const PUNTAJE_INCIDENCIA_BASE = 1;
-
-const PUNTAJE_ESTADO_INCIDENCIA = {
-  REPORTADO: 1,
-  EN_PROCESO: 1,
-  ATENDIDO: 0,
-  CERRADO: 0,
-  ELIMINADO: 0,
-};
-
-const PUNTAJE_PRIORIDAD_HISTORIAL = {
-  BAJA: 1,
-  MEDIA: 1,
-  ALTA: 2,
-  CRITICA: 4,
-};
-
-const PUNTAJE_TIPO_HISTORIAL = {
-  OBSERVACION: 0,
-  NOVEDAD: 1,
-  ALERTA: 2,
-  RECOMENDACION: 0,
-  PUNTO_CRITICO: 3,
-  CAMBIO_TURNO: 0,
-};
-
-const PUNTAJE_PRIORIDAD_ALERTA = {
-  BAJA: 1,
-  MEDIA: 2,
-  ALTA: 3,
-  CRITICA: 5,
-};
-
-const TIPOS_ALERTA_EMERGENCIA = [
-  "PANICO",
-  "EMERGENCIA",
-  "SOS",
-];
 
 // =========================================================
 // SERVICE
