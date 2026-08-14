@@ -28,8 +28,13 @@ Object.assign(db, require("./incidencias"));
 // - CHAT
 Object.assign(db, require("./chat"));
 
-// - OCURRENCIAS
+// - OCURRENCIAS 
 Object.assign(db, require("./ocurrencias"));
+
+// - OCURRENCIAS CLASIFICADORES
+Object.assign(db, require("./ocurrencias_clasificadores"));
+
+
 
 
 // CARGAR ASOCIACIONES

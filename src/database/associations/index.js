@@ -21,4 +21,9 @@ module.exports = (db) => {
   // - Ocurrencias
   require("./ocurrencias.associations")(db);
 
+  // - Ocurrencias clasificadores
+  require("./ocurrencias_clasificadores.associations")(db);
+
+
+
 }

@@ -1,14 +1,17 @@
-const OcurrenciaCategoriaEspecifica = require("./ocu_categorias_especificas.model");
-const OcurrenciaCategoriaGenerica = require("./ocu_categorias_genericas.model");
-const OcurrenciaClasificadorVersion = require("./ocu_clasificador_versiones.model");
-const OcurrenciaModalidadRegla = require("./ocu_modalidad_reglas.model");
-const OcurrenciaModalidad = require("./ocu_modalidad.model")
-
+const Ocurrencia = require("./ocurrencia.model");
+const OcurrenciaConsecuencia = require("./ocurrencia_consecuencia.model");
+const OcurrenciaCorrelativo = require("./ocurrencia_correlativo.model");
+const OcurrenciaEfectivoPnp = require("./ocurrencia_efectivo_pnp.model");
+const OcurrenciaHistorial = require("./ocurrencia_historial.model");
+const OcurrenciaMedioEmpleado = require("./ocurrencia_medio_empleado.model");
+const OcurrenciaPersona = require("./ocurrencia_persona.model");
 
 module.exports = {
-    OcurrenciaCategoriaEspecifica,
-    OcurrenciaCategoriaGenerica,
-    OcurrenciaClasificadorVersion,
-    OcurrenciaModalidadRegla,
-    OcurrenciaModalidad,
+    Ocurrencia,
+    OcurrenciaConsecuencia,
+    OcurrenciaCorrelativo,
+    OcurrenciaEfectivoPnp,
+    OcurrenciaHistorial,
+    OcurrenciaMedioEmpleado,
+    OcurrenciaPersona,
 }
