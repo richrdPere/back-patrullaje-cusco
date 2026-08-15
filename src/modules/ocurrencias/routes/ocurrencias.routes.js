@@ -10,7 +10,8 @@ const {
     createOcurrenciaController,
     getOcurrenciasPaginadasController,
     getOcurrenciaByIdController,
-
+    exportarOcurrenciaController,
+    exportarConsolidadoOcurrenciasController,
 } = require("../controllers/ocurrencias.controller");
 
 // ============================
@@ -19,5 +20,8 @@ const {
 router.post('/create', createOcurrenciaController);
 router.get('/paginado', getOcurrenciasPaginadasController);
 router.get('/detalle/:id', getOcurrenciaByIdController);
+router.get('/exportar', exportarConsolidadoOcurrenciasController);
+router.get('/:id/formato', exportarOcurrenciaController);
+
 module.exports = router;
 
