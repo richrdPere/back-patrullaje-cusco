@@ -47,10 +47,7 @@ const getClasificadorArbolController = async (req, res) => {
             data: clasificador,
         });
     } catch (error) {
-        console.error(
-            'Error al obtener el árbol del clasificador:',
-            error,
-        );
+        console.error('Error al obtener el árbol del clasificador:', error);
 
         return res.status(500).json({
             success: false,

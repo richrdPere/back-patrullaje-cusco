@@ -33,7 +33,8 @@ const createHistorialController = async (req, res) => {
 
     return res.status(error.statusCode || 500).json({
       success: false,
-      message: error.message
+      message: "No se pudo crear el historial",
+      error: error.message
     });
   }
 };
@@ -100,7 +101,8 @@ const getHistorialByIdController = async (req, res) => {
 
     return res.status(error.statusCode || 500).json({
       success: false,
-      message: error.message
+      message: "No se pudo obtener el historial.",
+      error: error.message
     });
   }
 };
@@ -133,7 +135,8 @@ const updateHistorialController = async (req, res) => {
 
     return res.status(error.statusCode || 500).json({
       success: false,
-      message: error.message
+      message: "No se pudo actualizar el historial.",
+      error: error.message
     });
   }
 };
@@ -165,7 +168,8 @@ const archiveHistorialController = async (req, res) => {
 
     return res.status(error.statusCode || 500).json({
       success: false,
-      message: error.message
+      message: "No se pudo archivar el historial.",
+      error: error.message
     });
   }
 };

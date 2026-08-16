@@ -2,9 +2,10 @@ const express = require("express");
 const router = express.Router();
 
 // Middlewares
-const verificarToken = require("../../../middlewares/auth.middleware");
-const verificarRol = require("../../../middlewares/rol.middleware");
+const authMiddleware = require("../../../middlewares/auth.middleware");
+router.use(authMiddleware);
 
+// Controllers
 const {
     getUsuariosController,
     getUsuarioByIdController,
@@ -18,13 +19,12 @@ const {
 // ==========================
 // RUTAS USUARIOS
 // ==========================
-router.get("/paginado", verificarToken, getUsuariosController);
-router.get("/serenos", verificarToken, getSerenosAndConductoresController);
-router.get("/detalle/:id", verificarToken, getUsuarioByIdController);
-router.post("/crear", verificarToken, createUsuarioController);
-router.put("/editar/:id", verificarToken, updateUsuarioController);
-router.patch("/estado/:id", verificarToken, changeEstadoUsuarioController);
-router.delete("/eliminar/:id", verificarToken, deleteUsuarioController);
-
+router.get("/paginado", getUsuariosController);
+router.get("/serenos", getSerenosAndConductoresController);
+router.get("/detalle/:id", getUsuarioByIdController);
+router.post("/crear", createUsuarioController);
+router.put("/editar/:id", updateUsuarioController);
+router.patch("/estado/:id", changeEstadoUsuarioController);
+router.delete("/eliminar/:id", deleteUsuarioController);
 
 module.exports = router;

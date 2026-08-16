@@ -2,7 +2,8 @@ const express = require('express');
 const router = express.Router();
 
 // Middleware
-const verificarToken = require("../../../middlewares/auth.middleware");
+const authMiddleware = require("../../../middlewares/auth.middleware");
+router.use(authMiddleware);
 
 // Controllers
 const {
@@ -18,13 +19,12 @@ const {
 // ==========================
 // RUTAS UNIDAD PATRULLAJE
 // ==========================
-
-router.post('/crear', verificarToken, createUnidadPController);
-router.get('/codigo', verificarToken, getSiguienteCodigoController);
-router.get('/paginado', verificarToken, getUnidadesPController);
-router.get('/detalle/:id', verificarToken, getUnidadPByIdController);
-router.put('/editar/:id', verificarToken, updateUnidadPController);
-router.delete('/eliminar/:id', verificarToken, deleteUnidadPController);
-router.get("/todos", verificarToken, getUnidadesPAllController);
+router.post('/crear', createUnidadPController);
+router.get('/codigo', getSiguienteCodigoController);
+router.get('/paginado', getUnidadesPController);
+router.get('/detalle/:id', getUnidadPByIdController);
+router.put('/editar/:id', updateUnidadPController);
+router.delete('/eliminar/:id', deleteUnidadPController);
+router.get("/todos", getUnidadesPAllController);
 
 module.exports = router;

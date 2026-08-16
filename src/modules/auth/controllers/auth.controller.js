@@ -25,7 +25,8 @@ const loginController = async (req, res) => {
   } catch (error) {
     return res.status(400).json({
       success: false,
-      message: error.message
+      message: "Error de Login",
+      error: error.message
     });
   }
 };
@@ -47,7 +48,9 @@ const registerController = async (req, res) => {
   } catch (error) {
     return res.status(400).json({
       success: false,
-      message: error.message
+      message: "Error de Register",
+      error: error.message,
+
     });
 
   }
@@ -72,7 +75,8 @@ const renewTokenController = async (req, res) => {
 
     return res.status(401).json({
       success: false,
-      message: error.message
+      message: "No se pudo renovar el token",
+      error: error.message
     });
 
   }
@@ -96,7 +100,8 @@ const confirmAccountController = async (req, res) => {
 
     return res.status(400).json({
       success: false,
-      message: error.message
+      message: "Error al confirmar cuenta",
+      error: error.message
     });
   }
 };
@@ -122,7 +127,8 @@ const recoverAccountController = async (req, res) => {
 
     return res.status(400).json({
       success: false,
-      message: error.message
+      message: "Error al recuperar",
+      error: error.message
     });
 
   }
@@ -152,7 +158,8 @@ const resetPasswordController = async (req, res) => {
 
     return res.status(400).json({
       success: false,
-      message: error.message
+      message: "No se pudo resetrar el password",
+      error: error.message
     });
 
   }

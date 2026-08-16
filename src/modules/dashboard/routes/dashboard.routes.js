@@ -2,7 +2,8 @@ const express = require("express");
 const router = express.Router();
 
 // Middleware
-const verificarToken = require("../../../middlewares/auth.middleware");
+const authMiddleware = require("../../../middlewares/auth.middleware");
+router.use(authMiddleware);
 
 // Controllers
 const {
@@ -12,6 +13,6 @@ const {
 // ============================
 // RUTAS HISTORIAL - DASHBOARD
 // ============================
-router.get('/resumen',  getResumenOperativoController);// verificarToken,
+router.get('/resumen', getResumenOperativoController);// verificarToken,
 
 module.exports = router;

@@ -16,8 +16,6 @@ const getPatrullajeActivoController = async (req, res) => {
 
     const usuarioId = req.usuario.id;
 
-    console.log("USUARIO ID: ", usuarioId);
-
     const patrullaje = await getPatrullajeActivoService(usuarioId);
 
     if (!patrullaje) {
@@ -71,7 +69,8 @@ const startPatrullajeController = async (req, res) => {
 
     return res.status(error.statusCode || 500).json({
       success: false,
-      message: error.message || "Error al iniciar el patrullaje."
+      message: "Error al iniciar el patrullaje.",
+      error: error.message,
     });
   }
 };
@@ -111,16 +110,12 @@ const endPatrullajeController = async (req, res) => {
       data: patrullaje,
     });
   } catch (error) {
-    console.error(
-      "Error al finalizar patrullaje:",
-      error,
-    );
+    console.error("Error al finalizar patrullaje:", error);
 
     return res.status(error.statusCode || 500).json({
       success: false,
-      message:
-        error.message ||
-        "Error al finalizar el patrullaje.",
+      message: "Error al finalizar el patrullaje.",
+      error: error.message,
     });
   }
 };
@@ -152,7 +147,8 @@ const sendLocationController = async (req, res) => {
 
     return res.status(error.statusCode || 500).json({
       success: false,
-      message: error.message || "Error al registrar la ubicación."
+      message: "Error al registrar la ubicación.",
+      error: error.message,
     });
   }
 };

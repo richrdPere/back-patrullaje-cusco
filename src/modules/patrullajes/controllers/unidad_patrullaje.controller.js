@@ -32,7 +32,8 @@ const createUnidadPController = async (req, res) => {
 
     return res.status(500).json({
       success: false,
-      message: error.message
+      message: "No se pudo crear la unidad de patrullaje.",
+      error: error.message
     });
   }
 };
@@ -58,7 +59,8 @@ const getUnidadesPController = async (req, res) => {
 
     return res.status(500).json({
       success: false,
-      message: error.message
+      message: "No se pudo listar las unidades de patrullaje.",
+      error: error.message
     });
   }
 };
@@ -85,7 +87,8 @@ const getUnidadPByIdController = async (req, res) => {
 
     return res.status(404).json({
       success: false,
-      message: error.message
+      message: "No se pudo obtener el patrullaje.",
+      error: error.message
     });
   }
 };
@@ -113,7 +116,8 @@ const updateUnidadPController = async (req, res) => {
 
     return res.status(400).json({
       success: false,
-      message: error.message
+      message: "No se pudo actualizar el patrullaje.",
+      error: error.message
     });
   }
 }
@@ -140,7 +144,8 @@ const deleteUnidadPController = async (req, res) => {
 
     return res.status(400).json({
       success: false,
-      message: error.message
+      message: "No se pudo eliminar la unidad de patrullaje.",
+      error: error.message
     });
   }
 }
@@ -166,7 +171,8 @@ const getSiguienteCodigoController = async (req, res) => {
 
     return res.status(500).json({
       success: false,
-      message: error.message
+      message: "Error al obtener el siguiente codigo.",
+      error: error.message
     });
   }
 };
@@ -190,7 +196,8 @@ const getUnidadesPAllController = async (req, res) => {
 
     return res.status(500).json({
       success: false,
-      message: error.message
+      message: "Error al listar todas las unidades de patrullaje.",
+      error: error.message
     });
   }
 };

@@ -37,7 +37,6 @@ const registerDispositivoController = async (
 | 2. Desactivar dispositivo 
 |--------------------------------------------------------------------------
 */
-
 const desactivarDispositivoController = async (
   req,
   res
@@ -59,10 +58,7 @@ const desactivarDispositivoController = async (
       data: resultado,
     });
   } catch (error) {
-    console.error(
-      "Error al desactivar dispositivo:",
-      error
-    );
+    console.error("Error al desactivar dispositivo:", error);
 
     if (
       error.message ===
@@ -70,16 +66,14 @@ const desactivarDispositivoController = async (
     ) {
       return res.status(404).json({
         success: false,
-        message:
-          "No se pudo desactivar el dispositivo",
+        message: "No se pudo desactivar el dispositivo",
         error: error.message,
       });
     }
 
     return res.status(400).json({
       success: false,
-      message:
-        "No se pudo desactivar el dispositivo",
+      message: "No se pudo desactivar el dispositivo",
       error: error.message,
     });
   }

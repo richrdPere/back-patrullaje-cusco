@@ -200,7 +200,7 @@ const getPoliciasAllController = async (req, res) => {
 
   } catch (error) {
 
-    console.error("❌ Error al listar policías:", error);
+    console.error("Error al listar policías:", error);
 
     return res.status(500).json({
       success: false,

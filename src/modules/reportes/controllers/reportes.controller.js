@@ -28,9 +28,7 @@ const getReporteIncidenciasController = async (req, res) => {
       .status(statusCode)
       .json({
         success: false,
-        message: statusCode === 400
-          ? error.message
-          : "No se pudo generar el reporte de incidencias.",
+        message: "No se pudo generar el reporte de incidencias.",
         error: error.message,
       });
   }
@@ -59,10 +57,7 @@ const getReporteActividadOperativaController = async (req, res) => {
 
     return res.status(statusCode).json({
       success: false,
-      message:
-        statusCode === 400
-          ? error.message
-          : "No se pudo generar el reporte de actividad operativa.",
+      message: "No se pudo generar el reporte de actividad operativa.",
       error: error.message,
     });
   }
@@ -91,10 +86,7 @@ const getReporteRecorridosController = async (req, res) => {
 
     return res.status(statusCode).json({
       success: false,
-      message: statusCode === 400
-        ? error.message
-        : "No se pudo generar el reporte de recorridos.",
-
+      message: "No se pudo generar el reporte de recorridos.",
       error: error.message,
     });
   }
@@ -123,9 +115,7 @@ const getReporteZonasCriticasController = async (req, res) => {
 
     return res.status(statusCode).json({
       success: false,
-      message: statusCode === 400
-        ? error.message
-        : "No se pudo generar el reporte de zonas críticas.",
+      message: "No se pudo generar el reporte de zonas críticas.",
       error: error.message,
     });
   }

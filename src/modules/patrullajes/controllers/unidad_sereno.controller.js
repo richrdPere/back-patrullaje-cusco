@@ -24,7 +24,8 @@ const assignSerenosController = async (req, res) => {
 
     return res.status(400).json({
       success: false,
-      message: error.message
+      message: "Error al asignar a los serenos.",
+      error: error.message
     });
   }
 };
@@ -51,7 +52,8 @@ const getSerenosByUnidadController = async (req, res) => {
 
     return res.status(404).json({
       success: false,
-      message: error.message
+      message: "Error al obtener serenos por unidad.",
+      error: error.message
     });
   }
 };
@@ -77,7 +79,8 @@ const deleteAsignacionController = async (req, res) => {
 
     return res.status(404).json({
       success: false,
-      message: error.message
+      message: "Error al eliminar la asignacion.",
+      error: error.message
     });
   }
 };

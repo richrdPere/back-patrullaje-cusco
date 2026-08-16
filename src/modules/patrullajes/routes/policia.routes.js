@@ -4,7 +4,8 @@ const express = require("express");
 const router = express.Router();
 
 // Middleware
-const verificarToken = require("../../../middlewares/auth.middleware");
+const authMiddleware = require("../../../middlewares/auth.middleware");
+router.use(authMiddleware);
 
 // Controllers
 const {
@@ -19,11 +20,11 @@ const {
 // ==========================
 // RUTAS POLICIAS
 // ==========================
-router.post("/crear", verificarToken, createPoliciaController);
-router.get("/todos", verificarToken, getPoliciasAllController);
-router.get("/paginado", verificarToken, getPoliciasController);
-router.get("/detalle/:id", verificarToken, getPoliciaByIdController);
-router.put("/editar/:id", verificarToken, updatePoliciaController);
-router.delete("/eliminar/:id", verificarToken, deletePoliciaController);
+router.post("/crear", createPoliciaController);
+router.get("/todos", getPoliciasAllController);
+router.get("/paginado", getPoliciasController);
+router.get("/detalle/:id", getPoliciaByIdController);
+router.put("/editar/:id", updatePoliciaController);
+router.delete("/eliminar/:id", deletePoliciaController);
 
 module.exports = router;

@@ -7,10 +7,10 @@ const {
 
 // Services de generacion
 const {
-  generarOcurrenciaJson,
-  generarOcurrenciaPdf,
+  generarOcurrenciaJsonService,
+  generarOcurrenciaPdfService,
   generarOcurrenciasCsvService,
-  generarOcurrenciasXlsx,
+  generarOcurrenciasXlsxService,
 } = require("../services/ocurrencias/exportacion");
 /*
 |--------------------------------------------------------------------------
@@ -282,8 +282,7 @@ const exportarOcurrenciaController = async (
       },
     );
 
-    const generadoPor =
-      obtenerNombreUsuario(req.usuario);
+    const generadoPor = obtenerNombreUsuario(req.usuario);
 
     const nombreBase = limpiarNombreArchivo(
       ocurrencia.numero_ocurrencia ||
@@ -333,7 +332,7 @@ const exportarOcurrenciaController = async (
     // ==================================================
     // PDF INDIVIDUAL
     // ==================================================
-    const pdf = await generarOcurrenciaPdf(
+    const pdf = await generarOcurrenciaPdfService(
       ocurrencia,
       {
         generadoPor,
@@ -374,7 +373,7 @@ const exportarOcurrenciaController = async (
 };
 /*
 |--------------------------------------------------------------------------
-| 6. EXPORTAR CONSOLIDADO DE OCURRENCIAS
+| 5. EXPORTAR CONSOLIDADO DE OCURRENCIAS
 |--------------------------------------------------------------------------
 |
 | Formatos permitidos:
@@ -442,23 +441,19 @@ const exportarConsolidadoOcurrenciasController = async (
      * - límite máximo de exportación;
      * - restricción del sereno a sus registros.
      */
-    const ocurrencias =
-      await getOcurrenciasExportablesService({
-        usuarioId: req.usuario.id,
-        roles: obtenerRoles(req.usuario),
-        filtros,
-      });
+    const ocurrencias = await getOcurrenciasExportablesService({
+      usuarioId: req.usuario.id,
+      roles: obtenerRoles(req.usuario),
+      filtros,
+    });
 
-    const generadoPor =
-      obtenerNombreUsuario(req.usuario);
+    const generadoPor = obtenerNombreUsuario(req.usuario);
 
-    const fechaArchivo =
-      new Date()
-        .toISOString()
-        .slice(0, 10);
+    const fechaArchivo = new Date()
+      .toISOString()
+      .slice(0, 10);
 
-    const nombreBase =
-      `ocurrencias-${fechaArchivo}`;
+    const nombreBase = `ocurrencias-${fechaArchivo}`;
 
     // ==================================================
     // JSON CONSOLIDADO
@@ -473,18 +468,10 @@ const exportarConsolidadoOcurrenciasController = async (
 
       const documento = {
         metadata: {
-          tipo_documento:
-            'CONSOLIDADO_OCURRENCIAS',
-
-          generado_por:
-            generadoPor,
-
-          fecha_generacion:
-            new Date().toISOString(),
-
-          total_registros:
-            data.length,
-
+          tipo_documento: 'CONSOLIDADO_OCURRENCIAS',
+          generado_por: generadoPor,
+          fecha_generacion: new Date().toISOString(),
+          total_registros: data.length,
           filtros,
         },
 
@@ -562,7 +549,7 @@ const exportarConsolidadoOcurrenciasController = async (
     // ==================================================
     // XLSX CONSOLIDADO
     // ==================================================
-    const xlsx = await generarOcurrenciasXlsx(
+    const xlsx = await generarOcurrenciasXlsxService(
       ocurrencias,
       {
         generadoPor,

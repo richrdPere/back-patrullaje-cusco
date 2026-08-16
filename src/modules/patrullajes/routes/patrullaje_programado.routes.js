@@ -2,7 +2,8 @@ const express = require("express");
 const router = express.Router();
 
 // Middleware
-const verificarToken = require("../../../middlewares/auth.middleware");
+const authMiddleware = require("../../../middlewares/auth.middleware");
+router.use(authMiddleware);
 
 // Controllers
 const {
@@ -19,13 +20,13 @@ const {
 // ============================
 // RUTAS PATRULLAJES PROGRAMADOS
 // ============================
-router.post("/crear", verificarToken, createPatrullajePController);
-router.get("/todos", verificarToken, getPatrullajesPAllController);
-router.get("/paginado", verificarToken, getPatrullajesPController);
-router.get("/detalle/:id", verificarToken, getPatrullajePByIdController);
-router.put("/finalizar/:id", verificarToken, finishPatrullajePController);
-router.put("/editar/:id", verificarToken, updatePatrullajePController);
-router.delete("/eliminar/:id", verificarToken, deletePatrullajePController);
-router.get("/recorrido/:patrullajeId", verificarToken, getRecorridoPatrullajePController);
+router.post("/crear", createPatrullajePController);
+router.get("/todos", getPatrullajesPAllController);
+router.get("/paginado", getPatrullajesPController);
+router.get("/detalle/:id", getPatrullajePByIdController);
+router.put("/finalizar/:id", finishPatrullajePController);
+router.put("/editar/:id", updatePatrullajePController);
+router.delete("/eliminar/:id", deletePatrullajePController);
+router.get("/recorrido/:patrullajeId", getRecorridoPatrullajePController);
 
 module.exports = router;

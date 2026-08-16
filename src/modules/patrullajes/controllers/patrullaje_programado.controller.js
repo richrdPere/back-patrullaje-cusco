@@ -20,10 +20,8 @@ const {
 const createPatrullajePController = async (req, res) => {
 
   try {
-    const resultado =
-      await createPatrullajePService(
-        req.body
-      );
+    const resultado = await createPatrullajePService(req.body);
+
     try {
       const io = getIO();
       resultado.serenos.forEach(id => {
@@ -46,7 +44,8 @@ const createPatrullajePController = async (req, res) => {
 
     return res.status(400).json({
       success: false,
-      message: error.message
+      message: "No se pudo crear el patrullaje",
+      error: error.message
     });
   }
 };
@@ -59,10 +58,7 @@ const getPatrullajesPController = async (req, res) => {
 
   try {
 
-    const resultado =
-      await getPatrullajesPService(
-        req.query
-      );
+    const resultado = await getPatrullajesPService(req.query);
 
     return res.status(200).json({
       success: true,
@@ -74,7 +70,8 @@ const getPatrullajesPController = async (req, res) => {
 
     return res.status(500).json({
       success: false,
-      message: error.message
+      message: "No se pudo listar el patrullaje",
+      error: error.message
     });
   }
 };
@@ -101,7 +98,8 @@ const getPatrullajePByIdController = async (req, res) => {
 
     return res.status(404).json({
       success: false,
-      message: error.message
+      message: "No se pudo obtener el patrullaje",
+      error: error.message
     });
   }
 };
@@ -127,7 +125,8 @@ const getPatrullajesPAllController = async (req, res) => {
 
     return res.status(500).json({
       success: false,
-      message: error.message
+      message: "No se pudo obtener todos los patrullajes",
+      error: error.message
     });
   }
 };
@@ -155,7 +154,8 @@ const finishPatrullajePController = async (req, res) => {
 
     return res.status(400).json({
       success: false,
-      message: error.message
+      message: "Error al finalizar el patrullaje",
+      error: error.message
     });
   }
 };
@@ -185,7 +185,8 @@ const updatePatrullajePController = async (req, res) => {
 
     return res.status(400).json({
       success: false,
-      message: error.message
+      message: "No se pudo actualizar el patrullaje",
+      error: error.message
     });
   }
 };
@@ -211,7 +212,8 @@ const deletePatrullajePController = async (req, res) => {
 
     return res.status(400).json({
       success: false,
-      message: error.message
+      message: "Error al eliminar el patrullaje.",
+      error: error.message
     });
   }
 };

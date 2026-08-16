@@ -134,7 +134,7 @@ const updateEstadoIncidenciaController = async (req, res) => {
       success: false,
       message: "Error al actualizar Estado de Incidencia.",
       error: error.message,
-      estadosPermitidos: error.estadosPermitidos,
+      // estadosPermitidos: error.estadosPermitidos,
     });
   }
 };
@@ -473,7 +473,7 @@ const updateEstadoMasivoIncidenciasController = async (req, res) => {
       success: false,
       message: "Error al actualizar Estado Masivo de Incidencias.",
       error: error.message,
-      estadosPermitidos: error.estadosPermitidos,
+      // estadosPermitidos: error.estadosPermitidos,
     });
   }
 };

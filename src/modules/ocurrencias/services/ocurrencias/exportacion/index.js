@@ -1,11 +1,11 @@
-const generarOcurrenciaJson = require("./generateOcurrenciaJson.service");
-const generarOcurrenciaPdf = require("./generateOcurrrenciaPdf.service");
+const generarOcurrenciaJsonService = require("./generateOcurrenciaJson.service");
+const generarOcurrenciaPdfService = require("./generateOcurrrenciaPdf.service");
 const generarOcurrenciasCsvService = require("./generateOcurrenciaCsv.service");
-const generarOcurrenciasXlsx = require("./generateOcurrenciasXlsx.service");
+const generarOcurrenciasXlsxService = require("./generateOcurrenciasXlsx.service");
 
 module.exports = {
-    generarOcurrenciaJson,
-    generarOcurrenciaPdf,
+    generarOcurrenciaJsonService,
+    generarOcurrenciaPdfService,
     generarOcurrenciasCsvService,
-    generarOcurrenciasXlsx,
+    generarOcurrenciasXlsxService,
 };

@@ -2,7 +2,8 @@ const express = require("express");
 const router = express.Router();
 
 // Middleware
-const verificarToken = require("../../../middlewares/auth.middleware");
+const authMiddleware = require("../../../middlewares/auth.middleware");
+router.use(authMiddleware);
 
 // Controllers
 const {
@@ -15,9 +16,9 @@ const {
 // ============================
 // RUTAS PATRULLAJES - MOVILES
 // ============================
-router.get("/patrullaje/activo", verificarToken, getPatrullajeActivoController);
-router.post('/patrullaje/:id/start', verificarToken, startPatrullajeController);
-router.post('/patrullaje/:id/end', verificarToken, endPatrullajeController);
-router.post('/patrullaje/location', verificarToken, sendLocationController);
+router.get("/patrullaje/activo", getPatrullajeActivoController);
+router.post('/patrullaje/:id/start', startPatrullajeController);
+router.post('/patrullaje/:id/end', endPatrullajeController);
+router.post('/patrullaje/location', sendLocationController);
 
 module.exports = router;

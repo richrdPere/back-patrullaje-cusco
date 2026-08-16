@@ -36,8 +36,7 @@ const createAlertaController = async (req, res) => {
   } catch (error) {
     return res.status(400).json({
       success: false,
-      message:
-        "No se pudo crear la alerta",
+      message: "No se pudo crear la alerta",
       error: error.message,
     });
   }
@@ -71,8 +70,7 @@ const getMisAlertasController = async (req, res) => {
   } catch (error) {
     return res.status(400).json({
       success: false,
-      message:
-        "No se pudieron obtener las alertas",
+      message: "No se pudieron obtener las alertas",
       error: error.message,
     });
   }
@@ -96,8 +94,7 @@ const getAlertaDetalleController = async (
     ) {
       return res.status(400).json({
         success: false,
-        message:
-          "El identificador de la alerta no es válido",
+        message: "El identificador de la alerta no es válido",
       });
     }
 
@@ -109,15 +106,13 @@ const getAlertaDetalleController = async (
 
     return res.status(200).json({
       success: true,
-      message:
-        "Detalle de alerta obtenido correctamente",
+      message: "Detalle de alerta obtenido correctamente",
       data: alerta,
     });
   } catch (error) {
     return res.status(404).json({
       success: false,
-      message:
-        "No se pudo obtener el detalle de la alerta",
+      message: "No se pudo obtener el detalle de la alerta",
       error: error.message,
     });
   }
@@ -141,15 +136,13 @@ const marcarRecibidaController = async (
 
     return res.status(200).json({
       success: true,
-      message:
-        "Alerta marcada como recibida",
+      message: "Alerta marcada como recibida",
       data: alerta,
     });
   } catch (error) {
     return res.status(400).json({
       success: false,
-      message:
-        "No se pudo actualizar la alerta",
+      message: "No se pudo actualizar la alerta",
       error: error.message,
     });
   }
@@ -170,15 +163,13 @@ const marcarLeidaController = async (req, res) => {
 
     return res.status(200).json({
       success: true,
-      message:
-        "Alerta marcada como leída",
+      message: "Alerta marcada como leída",
       data: alerta,
     });
   } catch (error) {
     return res.status(400).json({
       success: false,
-      message:
-        "No se pudo actualizar la alerta",
+      message: "No se pudo actualizar la alerta",
       error: error.message,
     });
   }
@@ -202,15 +193,13 @@ const responderAlertaController = async (
 
     return res.status(200).json({
       success: true,
-      message:
-        "Respuesta registrada correctamente",
+      message: "Respuesta registrada correctamente",
       data: alerta,
     });
   } catch (error) {
     return res.status(400).json({
       success: false,
-      message:
-        "No se pudo responder la alerta",
+      message: "No se pudo responder la alerta",
       error: error.message,
     });
   }
@@ -229,21 +218,18 @@ const marcarAtendidaController = async (
       await marcarAlertaAtendidaService({
         alerta_id: Number(req.params.id),
         usuario_id: req.usuario.id,
-        observacion:
-          req.body.observacion,
+        observacion: req.body.observacion,
       });
 
     return res.status(200).json({
       success: true,
-      message:
-        "Alerta marcada como atendida",
+      message: "Alerta marcada como atendida",
       data: alerta,
     });
   } catch (error) {
     return res.status(400).json({
       success: false,
-      message:
-        "No se pudo completar la alerta",
+      message: "No se pudo completar la alerta",
       error: error.message,
     });
   }
@@ -260,27 +246,19 @@ const getMisAlertasResumenController = async (
   try {
     const usuario_id = req.usuario.id;
 
-    const resumen =
-      await getMisAlertasResumenService({
-        usuario_id,
-      });
+    const resumen = await getMisAlertasResumenService({ usuario_id, });
 
     return res.status(200).json({
       success: true,
-      message:
-        "Resumen de alertas obtenido correctamente",
+      message: "Resumen de alertas obtenido correctamente",
       data: resumen,
     });
   } catch (error) {
-    console.error(
-      "Error al obtener resumen de alertas:",
-      error
-    );
+    console.error("Error al obtener resumen de alertas:", error);
 
     return res.status(400).json({
       success: false,
-      message:
-        "No se pudo obtener el resumen de alertas",
+      message: "No se pudo obtener el resumen de alertas",
       error: error.message,
     });
   }
@@ -322,20 +300,15 @@ const getAlertasEmitidasController = async (
 
     return res.status(200).json({
       success: true,
-      message:
-        "Alertas emitidas obtenidas correctamente",
+      message: "Alertas emitidas obtenidas correctamente",
       data: resultado,
     });
   } catch (error) {
-    console.error(
-      "Error al obtener alertas emitidas:",
-      error
-    );
+    console.error("Error al obtener alertas emitidas:", error);
 
     return res.status(400).json({
       success: false,
-      message:
-        "No se pudieron obtener las alertas emitidas",
+      message: "No se pudieron obtener las alertas emitidas",
       error: error.message,
     });
   }
@@ -378,10 +351,7 @@ const getAlertaDestinatariosController = async (
       data: resultado,
     });
   } catch (error) {
-    console.error(
-      "Error al obtener destinatarios de la alerta:",
-      error
-    );
+    console.error("Error al obtener destinatarios de la alerta:", error);
 
     const erroresNoEncontrado = [
       "La alerta solicitada no existe",
@@ -398,8 +368,7 @@ const getAlertaDestinatariosController = async (
     ) {
       return res.status(404).json({
         success: false,
-        message:
-          "No se pudo obtener los destinatarios de la alerta",
+        message: "No se pudo obtener los destinatarios de la alerta",
         error: error.message,
       });
     }
@@ -411,16 +380,14 @@ const getAlertaDestinatariosController = async (
     ) {
       return res.status(403).json({
         success: false,
-        message:
-          "No tiene autorización para consultar esta alerta",
+        message: "No tiene autorización para consultar esta alerta",
         error: error.message,
       });
     }
 
     return res.status(400).json({
       success: false,
-      message:
-        "No se pudieron obtener los destinatarios de la alerta",
+      message: "No se pudieron obtener los destinatarios de la alerta",
       error: error.message,
     });
   }
@@ -463,15 +430,9 @@ const cancelarAlertaController = async (
       data: resultado,
     });
   } catch (error) {
-    console.error(
-      "Error al cancelar alerta:",
-      error
-    );
+    console.error("Error al cancelar alerta:", error);
 
-    if (
-      error.message ===
-      "La alerta solicitada no existe"
-    ) {
+    if (error.message === "La alerta solicitada no existe") {
       return res.status(404).json({
         success: false,
         message:
@@ -480,14 +441,10 @@ const cancelarAlertaController = async (
       });
     }
 
-    if (
-      error.message ===
-      "No tiene permisos para cancelar esta alerta"
-    ) {
+    if (error.message === "No tiene permisos para cancelar esta alerta") {
       return res.status(403).json({
         success: false,
-        message:
-          "No tiene autorización para cancelar esta alerta",
+        message: "No tiene autorización para cancelar esta alerta",
         error: error.message,
       });
     }
@@ -500,16 +457,14 @@ const cancelarAlertaController = async (
     ) {
       return res.status(409).json({
         success: false,
-        message:
-          "La alerta no puede ser cancelada en su estado actual",
+        message: "La alerta no puede ser cancelada en su estado actual",
         error: error.message,
       });
     }
 
     return res.status(400).json({
       success: false,
-      message:
-        "No se pudo cancelar la alerta",
+      message: "No se pudo cancelar la alerta",
       error: error.message,
     });
   }

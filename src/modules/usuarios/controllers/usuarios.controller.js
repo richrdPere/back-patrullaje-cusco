@@ -31,7 +31,8 @@ const getUsuariosController = async (req, res) => {
 
     return res.status(500).json({
       success: false,
-      message: error.message
+      message: "Error al listar los usuarios.",
+      error: error.message
     });
   }
 };
@@ -58,7 +59,8 @@ const getUsuarioByIdController = async (req, res) => {
 
     return res.status(404).json({
       success: false,
-      message: error.message
+      message: "Error al obtener el usuario.",
+      error: error.message
     });
   }
 };
@@ -85,7 +87,8 @@ const createUsuarioController = async (req, res) => {
 
     return res.status(400).json({
       success: false,
-      message: error.message
+      message: "Error al crear un usuario.",
+      error: error.message
     });
   }
 };
@@ -112,7 +115,8 @@ const updateUsuarioController = async (req, res) => {
 
     return res.status(400).json({
       success: false,
-      message: error.message
+      message: "Error al actualizar el usuario.",
+      error: error.message
     });
   }
 };
@@ -144,7 +148,8 @@ const changeEstadoUsuarioController = async (req, res) => {
   } catch (error) {
     return res.status(400).json({
       success: false,
-      message: error.message
+      message: "Error al cambiar el estado del usuario.",
+      error: error.message
     });
   }
 };
@@ -170,7 +175,8 @@ const deleteUsuarioController = async (req, res) => {
 
     return res.status(400).json({
       success: false,
-      message: error.message
+      message: "Error al eliminar el usuario.",
+      error: error.message
     });
   }
 };
@@ -194,7 +200,8 @@ const getSerenosAndConductoresController = async (req, res) => {
 
     return res.status(500).json({
       success: false,
-      message: error.message,
+      message: "Error al listar los serenos y conductores.",
+      error: error.message,
     });
 
   }

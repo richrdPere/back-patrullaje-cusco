@@ -2,9 +2,12 @@ const express = require("express");
 const router = express.Router();
 
 // Middleware - multer S3
-const upload = require("../../../middlewares/upload-s3");
-const verificarToken = require("../../../middlewares/auth.middleware");
+const authMiddleware = require("../../../middlewares/auth.middleware");
+router.use(authMiddleware);
 
+const upload = require("../../../middlewares/upload-s3");
+
+// Controllers
 const {
     getMyProfileController,
     changePasswordController,
@@ -15,9 +18,9 @@ const {
 // ==========================
 // RUTAS PERFIL
 // ==========================
-router.get("/me", verificarToken, getMyProfileController);
-router.put("/update", verificarToken, updateMyProfileController);
-router.put("/password", verificarToken, changePasswordController);
-router.put("/photo", verificarToken, upload.single("foto"), uploadProfilePhotoController);
+router.get("/me", getMyProfileController);
+router.put("/update", updateMyProfileController);
+router.put("/password", changePasswordController);
+router.put("/photo", upload.single("foto"), uploadProfilePhotoController);
 
 module.exports = router;

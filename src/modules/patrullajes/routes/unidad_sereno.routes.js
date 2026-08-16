@@ -2,7 +2,8 @@ const express = require("express");
 const router = express.Router();
 
 // Middleware
-const verificarToken = require("../../../middlewares/auth.middleware");
+const authMiddleware = require("../../../middlewares/auth.middleware");
+router.use(authMiddleware);
 
 // Controllers
 const {
@@ -11,13 +12,11 @@ const {
     deleteAsignacionController
 } = require("../controllers/unidad_sereno.controller");
 
-// asignar serenos
-router.post("/asignar-serenos", verificarToken, assignSerenosController);
-
-// obtener serenos de una unidad
-router.get("/unidad/:unidad_id", verificarToken, getSerenosByUnidadController);
-
-// eliminar asignacion de sereno
-router.delete("/unidad/:unidad_id/usuario/:usuario_id", verificarToken, deleteAsignacionController);
+// ============================
+// RUTAS PATRULLAJES - UNIDAD SERENO
+// ============================
+router.post("/asignar-serenos", assignSerenosController);
+router.get("/unidad/:unidad_id", getSerenosByUnidadController);
+router.delete("/unidad/:unidad_id/usuario/:usuario_id", deleteAsignacionController);
 
 module.exports = router;

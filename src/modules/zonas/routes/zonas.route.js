@@ -1,6 +1,11 @@
 const express = require("express");
 const router = express.Router();
 
+// Middlewares
+const authMiddleware = require("../../../middlewares/auth.middleware");
+router.use(authMiddleware);
+
+// Controllers
 const {
     createZonaController,
     getZonasController,
@@ -9,17 +14,16 @@ const {
     deleteZonaController,
 } = require("../controllers/zonas.controller");
 
-// Middlewares
-const verificarToken = require("../../../middlewares/auth.middleware");
+
 
 // ============================
 // RUTAS ZONAS
 // ============================
-router.get("/todos", verificarToken, getZonasController);
-router.get("/detalle/:id", verificarToken, getZonaByIdController);
-router.post("/crear", verificarToken, createZonaController);
-router.put("/editar/:id", verificarToken, updateZonaController);
-router.delete("/eliminar/:id", verificarToken, deleteZonaController);
+router.get("/todos", getZonasController);
+router.get("/detalle/:id", getZonaByIdController);
+router.post("/crear", createZonaController);
+router.put("/editar/:id", updateZonaController);
+router.delete("/eliminar/:id", deleteZonaController);
 // router.get("/todos", verificarToken, getAllUnidades);
 
 module.exports = router;
